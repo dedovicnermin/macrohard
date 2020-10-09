@@ -12,7 +12,8 @@ const Chatroom = db.define('chatroom', {
     task_id: {
         type: DataTypes.INTEGER,
         references: {
-            model: 'tasks'
+            model: 'tasks',
+            referencesKey: 'task_id'
         }
     }
 }, {
@@ -20,7 +21,9 @@ const Chatroom = db.define('chatroom', {
     timestamps: false
 });
 
+Chatroom.hasOne(Task);
 Task.hasOne(Chatroom, {foreignKey: 'task_id'});
-Chatroom.belongsTo(Task, {onDelete: 'CASCADE'});
+
+
 
 module.exports = Chatroom;

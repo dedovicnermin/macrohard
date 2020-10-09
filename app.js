@@ -8,7 +8,6 @@ const express = require("express"),
     db = require("./config/db"),
     port = 3000;
 
-const User = require('./models/User');
 
 app.set("view engine", "ejs");
 app.use(logger('dev'));
@@ -43,8 +42,17 @@ app.use(errorController.pageNotFoundError);
 app.use(errorController.internalServerError);
 
 
-
+const UserChatroom = require('./models/UserChatroom');
 app.listen(port, () => {
+    UserChatroom.create({
+        user_id: 3,
+        badge_id: 1
+    }).then(obj => {
+        console.log(`success.`);
+    }).catch(err => {
+        console.log(err);
+    });
+
     console.log(`Server running at http://localhost:${port}`);
 });
 

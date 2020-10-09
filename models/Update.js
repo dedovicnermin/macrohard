@@ -37,8 +37,11 @@ const Update = db.define('update', {
    timestamps: false
 });
 
-Update.belongsTo(Task, {foreignKey: 'user_id', onDelete: 'CASCADE'});
-Task.hasMany(Update);
+Update.hasOne(User);
+User.hasMany(Update, {foreignKey: 'user_id'});
+
+Update.hasOne(Task);
+Task.hasMany(Update, {foreignKey: 'task_id'});
 
 
 

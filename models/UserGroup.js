@@ -22,8 +22,8 @@ const UserGroup = db.define('UserGroup', {
     timestamps: false
 });
 
-User.belongsToMany(Group, {through: 'UserGroup'});
-Group.belongsToMany(User, {through: 'UserGroup'});
+User.belongsToMany(Group, {through: 'UserGroup', foreignKey: 'group_id'});
+Group.belongsToMany(User, {through: 'UserGroup', foreignKey: 'user_id'});
 
 
 

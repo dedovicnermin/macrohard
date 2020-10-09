@@ -23,7 +23,7 @@ const UserProject = db.define('UserProject', {
     timestamps: false
 });
 
-User.belongsToMany(Project, {through: 'UserProject'});
-Project.belongsToMany(User, {through: 'UserProject'});
+User.belongsToMany(Project, {through: 'UserProject', foreignKey: 'proj_id'});
+Project.belongsToMany(User, {through: 'UserProject', foreignKey: 'user_id'});
 
 module.exports = UserProject;

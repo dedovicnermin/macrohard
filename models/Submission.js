@@ -22,7 +22,7 @@ const Submission = db.define('submission', {
     timestamps: false
 });
 
-Submission.belongsTo(Task, {onDelete: 'CASCADE', foreignKey: 'task_id'});
-Task.hasMany(Submission);
+Submission.hasOne(Task);
+Task.hasMany(Submission, {foreignKey: 'task_id'});
 
 module.exports = Submission

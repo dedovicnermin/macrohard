@@ -23,8 +23,8 @@ const UserChatroom = db.define('UserChatroom', {
 });
 
 
-User.belongsToMany(Chatroom, {through: 'UserChatroom'});
-Chatroom.belongsToMany(User, {through: 'UserChatroom'});
+User.belongsToMany(Chatroom, {through: 'UserChatroom', foreignKey: 'chat_id'});
+Chatroom.belongsToMany(User, {through: 'UserChatroom', foreignKey: 'user_id'});
 
 
 module.exports = UserChatroom;

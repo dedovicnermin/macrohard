@@ -22,16 +22,17 @@ const Group = db.define('group', {
     proj_id: {
         type: DataTypes.INTEGER,
         references: {
-            model: "projects"
+            model: "projects",
+            referencesKey: "proj_id"
         }
     }
 }, {
     tableName: 'groups',
-    timestamps: false
+    timestamps: false,
 });
 
-Group.belongsTo(Project, {onDelete: 'CASCADE', foreignKey: 'proj_id'});
-Project.hasMany(Group);
+Group.hasOne(Project);
+Project.hasMany(Group, {foreignKey: 'proj_id'});
 
 
 

@@ -33,11 +33,11 @@ const Message = db.define('message', {
 
 
 
-Message.belongsTo(Chatroom, {foreignKey: 'chat_id', onDelete: 'CASCADE'});
-Chatroom.hasMany(Message);
+Message.hasOne(Chatroom);
+Chatroom.hasMany(Message, {foreignKey: 'chat_id'});
 
-Message.belongsTo(User, {foreignKey: 'user_id', onDelete: 'CASCADE'});
-User.hasMany(Message);
+Message.hasOne(User);
+User.hasMany(Message, {foreignKey: 'user_id'});
 
 
 module.exports = Message;

@@ -3,6 +3,11 @@ const db = require('../config/db');
 const Project = require('./Project');
 
 const ProjectFile = db.define('ProjectFile', {
+    proj_file_id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true 
+    },
     proj_id: {
         type: DataTypes.INTEGER,
         references: {
@@ -17,7 +22,7 @@ const ProjectFile = db.define('ProjectFile', {
     timestamps: false
 });
 
-ProjectFile.belongsTo(Project, {onDelete: 'CASCADE', foreignKey: 'proj_id'});
-Project.hasMany(ProjectFile);
+ProjectFile.hasOne(Project);
+Project.hasMany(ProjectFile, {foreignKey: 'proj_id'});
 
 module.exports = ProjectFile;

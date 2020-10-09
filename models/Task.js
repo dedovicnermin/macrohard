@@ -36,5 +36,8 @@ const Task = db.define('task', {
     timestamps: false
 });
 
-Task.belongsTo(Group, {onDelete: 'CASCADE', foreignKey: 'group_id'});
-Group.hasMany(Task);
+Task.hasOne(Group);
+Group.hasMany(Task, {foreignKey: 'group_id'});
+
+
+module.exports = Task;

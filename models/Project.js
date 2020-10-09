@@ -22,7 +22,7 @@ const Project = db.define('project', {
     }
 }, {
     tableName: 'projects',
-    timestamps: false
+    timestamps: false,
 });
 
 module.exports = Project;

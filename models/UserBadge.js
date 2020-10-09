@@ -26,8 +26,8 @@ const UserBadge = db.define('UserBadge', {
     timestamps: false
 });
 
-User.belongsToMany(Badge, {through: 'UserBadge'});
-Badge.belongsToMany(User, {through: 'UserBadge'});
+User.belongsToMany(Badge, {through: 'UserBadge', foreignKey: 'badge_id'});
+Badge.belongsToMany(User, {through: 'UserBadge', foreignKey: 'user_id'});
 
 
 module.exports = UserBadge;

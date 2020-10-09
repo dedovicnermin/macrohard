@@ -1,6 +1,10 @@
 const {DataTypes} = require('sequelize');
 const db = require('../config/db');
 
+const Task = require('./Task'),
+      User = require('./User'),
+      Badge = require('./Badge');
+
 
 const Review = db.define('review', {
     review_id: {
@@ -34,6 +38,13 @@ const Review = db.define('review', {
     timestamps: false
 });
 
+Review.hasOne(Task);
+Task.hasMany(Review, {foreignKey: 'task_id'});
 
+Review.hasOne(User);
+User.hasMany(Review, {foreignKey: 'user_id'});
+
+Review.hasOne(Badge);
+Badge.hasMany(Review, {foreignKey: 'badge_id'});
 
 module.exports = Review;
