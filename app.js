@@ -4,6 +4,7 @@ const express = require("express"),
     app = express(),
     layouts = require("express-ejs-layouts"),
     logger = require('morgan'),
+    userController = require("./controllers/userController"),
     errorController = require("./controllers/errors"),
     db = require("./config/db"),
     port = 3000;
@@ -29,7 +30,7 @@ app.get("/test", (req, res) => {
     res.render("test");
 });
 
-
+app.use("/user", userController);
 
 
 
