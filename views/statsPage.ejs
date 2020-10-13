@@ -2,11 +2,23 @@
 
 
 <div class="container__stats">
-    <canvas id="pie-chart" width="800" height="450"> </canvas>
+    <canvas id="group-pie-chart-1" width="800" height="450"> </canvas>
 </div>
 <div id="test"></div>
 
 
+<!-- 
+  pie chart for projects
+    -tasks completed/not completed
+    -completed on time / completed not on time
+    - tasks not done / tasks overdue
+  one for groups
+    -tasks completed/not completed
+    -completed on time / completed not on time
+    - tasks not done / tasks overdue
+ -->
+
+ 
 
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
@@ -15,32 +27,74 @@
     $.ajaxSetup({async: false});
     var label = '';
     $.ajax({
-        url: "http://localhost:3000/user/stats/getstats",
+        url: "http://localhost:3000/user/1/1/stats/getstats",
         dataType: "JSON",
         success: function(data) {
-            alert(data.label);
-            label = data.label;
+            alert(JSON.stringify(data.p, null,4));
+            alert(JSON.stringify(data.g, null,4));
+              
+            // label = data.label;
         }
     });
 
-    
-new Chart(document.getElementById("pie-chart"), {
+// group pie charts
+
+new Chart(document.getElementById("group-pie-chart-1"), {
     type: 'pie',
     data: {
-      labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
+      labels: ["Tasks Done", "Tasks Not Done"],
       datasets: [{
-        label: "Population (millions)",
-        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+        label: "Stats",
+        backgroundColor: ["#00FF00","#FF0000"],
         data: [2478,5267,734,784,433]
       }]
     },
     options: {
       title: {
         display: true,
-        text: label
+        text: "Tasks Done / Tasks Not Done"
       }
     }
 });
+
+// new Chart(document.getElementById("pie-chart"), {
+//     type: 'pie',
+//     data: {
+//       labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
+//       datasets: [{
+//         label: "Population (millions)",
+//         backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+//         data: [2478,5267,734,784,433]
+//       }]
+//     },
+//     options: {
+//       title: {
+//         display: true,
+//         text: label
+//       }
+//     }
+// });
+
+
+// new Chart(document.getElementById("pie-chart"), {
+//     type: 'pie',
+//     data: {
+//       labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
+//       datasets: [{
+//         label: "Population (millions)",
+//         backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+//         data: [2478,5267,734,784,433]
+//       }]
+//     },
+//     options: {
+//       title: {
+//         display: true,
+//         text: label
+//       }
+//     }
+// });
+
+
 
 
 document.getElementById("test").innerHTML = window.location.pathname;

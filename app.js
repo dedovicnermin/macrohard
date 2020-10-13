@@ -43,7 +43,7 @@ app.use(errorController.pageNotFoundError);
 app.use(errorController.internalServerError);
 
 
-const UserChatroom = require('./models/UserChatroom');
+
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });

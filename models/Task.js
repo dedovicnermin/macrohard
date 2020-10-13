@@ -21,6 +21,13 @@ const Task = db.define('task', {
     task_score: {
         type: DataTypes.INTEGER
     },
+    task_dueDate: {
+        type: DataTypes.DATEONLY
+    },
+    task_overdue: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    },
     task_approval: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
@@ -36,7 +43,7 @@ const Task = db.define('task', {
     timestamps: false
 });
 
-Task.hasOne(Group);
+
 Group.hasMany(Task, {foreignKey: 'group_id'});
 
 
