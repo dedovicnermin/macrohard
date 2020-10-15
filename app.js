@@ -5,16 +5,19 @@ const express = require("express"),
     layouts = require("express-ejs-layouts"),
     logger = require('morgan'),
     errorController = require("./controllers/errors"),
+    chatController = require("./controllers/chatController"),
     db = require("./config/db"),
     port = 3000;
 
 
-app.set("view engine", "ejs");
+
+app.set("view engine", "ejs");  
 app.use(logger('dev'));
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(layouts);
 app.use(express.static("public"));
+const router = express.Router();
 
 
 db.authenticate()
@@ -28,8 +31,9 @@ app.get("/", (req, res) => {
 app.get("/test", (req, res) => {
     res.render("test");
 });
-
-
+app.get('/chatroom', (req, res) => {
+    app.use('chatroom', chatController);
+});
 
 
 
@@ -48,7 +52,7 @@ app.listen(port, () => {
 });
 
 
-
+module.exports = router ;
 
 
 

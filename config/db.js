@@ -1,6 +1,6 @@
 const Sequelize = require("sequelize");
 
-module.exports = new Sequelize('macrohard', 'nerm', 'worm', {
+module.exports = new Sequelize('macrohard', 'jiten', '123456', {
     host: 'localhost',
     dialect: 'postgres',
     operatorAliases: false,
