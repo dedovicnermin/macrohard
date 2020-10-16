@@ -1,0 +1,43 @@
+.nav {
+    background-color: #eee; 
+    display: inline-flex;
+    flex-direction: column;
+    position: fixed;
+    
+    min-height: 100vh;
+    border-right: 2px solid black;
+    justify-content: space-evenly;
+}
+
+
+.nav-primary {
+    width: 4%;
+    top:0;
+    left: 0;
+    
+    
+}
+
+.nav a {
+ /*make links appear below eachother */
+    text-decoration: none;
+    align-self: center;
+    flex-shrink: 1;
+}
+
+
+.nav a:hover {
+    /* dark grey on mouse-over */
+    background-color: lightgray;     
+}
+
+.svg {
+    width: 45px;
+    height: 60px;
+}
+
+.nav-secondary {
+    width: 5%; 
+    top: 0;
+    left: 4%;
+}
