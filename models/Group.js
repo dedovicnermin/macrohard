@@ -29,9 +29,10 @@ const Group = db.define('group', {
 }, {
     tableName: 'groups',
     timestamps: false,
+    underscore: true
 });
 
-Group.hasOne(Project);
+
 Project.hasMany(Group, {foreignKey: 'proj_id'});
 
 
