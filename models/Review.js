@@ -3,7 +3,8 @@ const db = require('../config/db');
 
 const Task = require('./Task'),
       User = require('./User'),
-      Badge = require('./Badge');
+      Badge = require('./Badge'),
+      Project = require('./Project');
 
 
 const Review = db.define('review', {
@@ -14,6 +15,12 @@ const Review = db.define('review', {
     },
     review_score: {
         type: DataTypes.INTEGER
+    },
+    proj_id: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'projects'
+        }
     },
     task_id: {
         type: DataTypes.INTEGER,
@@ -38,13 +45,15 @@ const Review = db.define('review', {
     timestamps: false
 });
 
-Review.hasOne(Task);
+Project.hasMany(Review, {foreignKey: 'proj_id'});
+
+// Review.hasOne(Task);
 Task.hasMany(Review, {foreignKey: 'task_id'});
 
-Review.hasOne(User);
+// Review.hasOne(User);
 User.hasMany(Review, {foreignKey: 'user_id'});
 
-Review.hasOne(Badge);
+// Review.hasOne(Badge);
 Badge.hasMany(Review, {foreignKey: 'badge_id'});
 
 module.exports = Review;
