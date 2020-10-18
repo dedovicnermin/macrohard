@@ -26,14 +26,13 @@ table {
     border-collapse: separate;
     border-spacing:  0;
     margin: 0 auto;
-    margin-top: 5%;
 }
 
 caption {
     font-weight: bolder;
     text-decoration: underline;
-    font-size: larger;
-    margin-bottom: 1%;
+    font-size: 3rem;
+    margin-bottom: 1rem;
 }
 
 th {
@@ -51,13 +50,13 @@ th,
 td {
     padding: 10px 15px;
     vertical-align: middle;
+    font-size: 2rem;
 }
 
 
 thead {
     background: #395870;
     color: #fff;
-    font-size: 15px;
     text-transform: uppercase;
 }
 
@@ -74,8 +73,9 @@ td {
     border-right: 1px solid #cecfd5;
 }
 tr td {
-    width: 175px;
-    height: 50px;
+    //change in page
+    // width: 175px;
+    // height: 50px;
     text-align: center;
 }
 
@@ -83,10 +83,7 @@ td:first-child {
     border-left: 1px solid #cecfd5;
 }
 
-tfoot {
-    text-align: left;
-    font-weight: bold;
-}
+
 
 
 

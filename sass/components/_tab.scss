@@ -65,6 +65,8 @@ $tab-wrap-border-radius: 6px;
         height: 50px;
         box-sizing: border-box;
         padding: 15px;
+        font-size: 2.5rem;
+        // font-weight: bold;
         &:hover {
             background-color: #f9f9f9;
             box-shadow: 0 1px 0 #f4f4f4 inset;
@@ -81,4 +83,8 @@ $tab-wrap-border-radius: 6px;
         transform: translateY(-3px);
         border-radius: $tab-wrap-border-radius;
     }
+
+    
 }
+
+

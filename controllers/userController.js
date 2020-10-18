@@ -49,7 +49,7 @@ const gatherTableInfo = async (projID, userID) => {
             where: {user_id: userID}
         });
         
-
+        
         if (userType.user_type === 'USER') {
             isFaculty = false;
         } else {
@@ -77,7 +77,7 @@ const gatherTableInfo = async (projID, userID) => {
                 console.log(avgs);
 
                 for (var k in avgs) {
-                    a.push({"USER": k, "AVG": avgs[k]});
+                    a.push({"TASK": k, "AVG": avgs[k]});
                 }
                 
             })
@@ -107,6 +107,7 @@ const gatherTableInfo = async (projID, userID) => {
                         "AVG": avgs[k]
                     });
                 }
+                console.log("a:");
                 console.log(a);
                 
                
@@ -114,7 +115,7 @@ const gatherTableInfo = async (projID, userID) => {
             .catch(err => console.log(err));
         }
 
-        return a;
+        return {rows:a, isFaculty: isFaculty};
 
         
 
