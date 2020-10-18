@@ -1,7 +1,9 @@
+html,
 * {
+    border: 0;
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: inherit;
 }
 
 
@@ -13,6 +15,8 @@ html {
 }
 
 body {
-    box-sizing: border-box;
-    padding: 3rem;
+    height: 100vh;
+    overflow-y: hidden;
+
 }
+

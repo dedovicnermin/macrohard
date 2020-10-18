@@ -7,9 +7,15 @@
 @import "base/utilities";
 
 //components
+@import "components/button";
+@import "components/nav";
+@import "components/tab";
+@import "components/table";
+@import "components/popup";
 
 
 @import "layout/grid";
 @import "layout/navigation";
 
 //pages
+@import "pages/statsPage";
