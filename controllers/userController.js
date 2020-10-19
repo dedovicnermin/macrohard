@@ -12,8 +12,7 @@ UserProject = require('../models/UserProject');
 
 userRouter.get('/:userId/projects', async (req, res) => {
     const obj = await gatherUserProjects(req.params.userId);
-    res.json(obj);
-    // res.render('projectsPage', {obj});
+    res.render('projectsPage', {obj});
 });
 
 //gather information for every project linked to this specific user
