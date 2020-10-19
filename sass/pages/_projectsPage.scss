@@ -1,0 +1,24 @@
+.projects-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    width: 85%;
+    height: 75vh;
+    position: absolute;
+    left: 12%;
+    top: 8%;
+    border: 1px solid black;
+    background-color: gray;
+    overflow-y: scroll;
+
+}
+
+#projects-page-title {
+    
+    font-size: 4rem;
+    position: absolute;
+    top: 4%;
+    left: 12%;
+    margin: 0 auto;
+}
