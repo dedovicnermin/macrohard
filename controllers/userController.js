@@ -31,11 +31,13 @@ const gatherUserProjects = async (userID) => {
                         proj_id: element.proj_id
                     }
                 });
+                const motivationMessages = ["Time to Eat!", "Get to it!", "You Got This!", "No Time Better Than Now!", "Aim for the Stars!", "No Limits on Success!"];
                 ret.push({
                     id: p.proj_id,
                     name: p.proj_name,
                     dueDate: p.proj_duedate,
-                    memberCount: p.proj_membercount
+                    memberCount: p.proj_membercount,
+                    motivation: motivationMessages[p.proj_id % motivationMessages.length+1]
                 });
             });
 

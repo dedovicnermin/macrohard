@@ -1,0 +1,128 @@
+.card {
+    //FUNCTIONALITY
+    perspective: 150rem;
+    -moz-perspective: 150rem;
+    position: relative;
+    height: 35rem;
+    width: 30rem;
+    display: inline-block;
+    margin: 1.5rem;
+    
+
+    &__side {
+        font-size: 2rem;
+        height: 35rem;
+        width: 30rem;
+        transition: all .8s ease;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        border-radius: 3px;
+        overflow: hidden;
+        box-shadow: 0 1.5rem 4rem rgba(#000, .15);
+        
+        &--front {
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            
+        }
+
+        &--back {
+            transform: rotateY(180deg);
+            // background-image: linear-gradient(to right bottom, #ff0000, #660000);
+
+        }
+    }
+
+    
+
+    &:hover &__side--front {
+        transform: rotateY(-180deg);
+    }
+    //when hovering on card selecting side^ 
+
+    &:hover &__side--back {
+        transform: rotateY(0);
+    }
+
+    //FRONT SIDE STYLING
+    &__picture {
+        background-size: cover;
+        height: 15rem;
+        width: 100%;
+        background-blend-mode: screen;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        background-image: url('../images/projectIcons/projDefault.png');
+        border: 1px solid black;
+        
+
+       
+
+            
+    
+    }
+
+
+    &__heading {
+        font-size: 1.75rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        text-decoration: underline;
+        text-align: center;
+        color: black;
+        width: 75%;
+        padding-top: 2rem;
+
+    }
+
+
+    &__details { 
+        padding-top: 3rem;
+        ul {
+            font-size: 2rem;
+            list-style: none;
+            width: 100%;
+            margin: 0 auto;
+            padding-inline-start: 0;
+            padding-left: 0;
+
+            li {
+                text-align: center;
+                font-size: 1.5rem;
+                padding: 1rem 0;
+                text-transform: uppercase;
+
+                &:not(:last-child) {
+                    border-bottom: 1px solid gray;
+                }
+            }
+        }
+    }
+
+
+
+    &__cta {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        text-align: center;
+    }
+
+    &__motivation {
+        text-align: center;
+        color: white;
+        margin-bottom: 8rem;
+    }
+
+}
+
+
