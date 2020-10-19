@@ -5,11 +5,51 @@ userRouter = express.Router(),
 Project = require("../models/Project"),
 Group = require("../models/Group"),
 Task = require("../models/Task"),
-User = require("../models/User");
+User = require("../models/User"),
+UserProject = require('../models/UserProject');
 
 
 
+userRouter.get('/:userId/projects', async (req, res) => {
+    const obj = await gatherUserProjects(req.params.userId);
+    res.json(obj);
+    // res.render('projectsPage', {obj});
+});
 
+//gather information for every project linked to this specific user
+// returns : projectID, projectName, projectDueDate, projectMemberCount
+const gatherUserProjects = async (userID) => {
+    try {
+        let ret = [];
+        const userProjects = await UserProject.findAll({
+            where: {user_id: userID}
+        });
+
+        const projects = async () => {
+            await asyncForEach(userProjects, async (element) => {
+                const p = await Project.findOne({
+                    where: {
+                        proj_id: element.proj_id
+                    }
+                });
+                ret.push({
+                    id: p.proj_id,
+                    name: p.proj_name,
+                    dueDate: p.proj_duedate,
+                    memberCount: p.proj_membercount
+                });
+            });
+
+        };
+
+        await projects();
+        return ret;
+
+    } catch (err) {
+        console.log(err);
+        res.render('error');
+    }
+};
 
 
 

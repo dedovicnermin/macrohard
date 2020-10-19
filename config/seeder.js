@@ -1,5 +1,6 @@
 
 
+
 const db = require('./db'),
     User = require('../models/User'),
     Project = require('../models/Project'),
@@ -20,7 +21,7 @@ const db = require('./db'),
 
 const queryInterface = db.getQueryInterface();
 
-// module.userInsert = queryInterface.bulkInsert('users', [
+// exports.userInsert = queryInterface.bulkInsert('users', [
 //     {
 //         user_id: 1,
 //         user_name: 'Rameez A',
@@ -102,7 +103,7 @@ const queryInterface = db.getQueryInterface();
 
 
 
-// module.projectInsert = queryInterface.bulkInsert('projects', [
+// exports.projectInsert = queryInterface.bulkInsert('projects', [
 //     {
 //         proj_id: 1,
 //         proj_name: 'Capstone Project', //3
@@ -123,11 +124,45 @@ const queryInterface = db.getQueryInterface();
 //     console.log(`fail: ${err}`);
 // });
 
+exports.userProjectInsert = queryInterface.bulkInsert('user_project', [
+    {
+        user_id: 1,
+        proj_id: 1,
+    },
+    {
+        user_id: 2,
+        proj_id: 1,
+    },
+    {
+        user_id: 3,
+        proj_id: 1,
+    },
+    {
+        user_id: 4,
+        proj_id: 1,
+    },
+    {
+        user_id: 5,
+        proj_id: 1,
+    },
+    {
+        user_id: 6,
+        proj_id: 1,
+    },
+    {
+        user_id: 7,
+        proj_id: 1,
+    }
+]).then(() => {
+    console.log('user_proj successfully entered rows');
+}).catch(err => {
+    console.log("FAIL: \n" + err);
+});
 
 
 
 
-// module.groupInsert = queryInterface.bulkInsert('groups', [
+// exports.groupInsert = queryInterface.bulkInsert('groups', [
 //     {
 //         group_id: 1,
 //         group_name: 'Group 1',
@@ -162,7 +197,7 @@ const queryInterface = db.getQueryInterface();
 
 
 
-// module.taskInsert = queryInterface.bulkInsert('tasks', [
+// exports.taskInsert = queryInterface.bulkInsert('tasks', [
 //     {
 //         task_id: 1,
 //         task_name: 'Task 1',
@@ -230,40 +265,40 @@ const queryInterface = db.getQueryInterface();
 
 
 
-module.ReviewInsert = queryInterface.bulkInsert('reviews', [
-    {
-        review_id: 1,
-        review_score: 5,
-        proj_id: 1,
-        task_id: 1,
-        user_id: 1
-    },
-    {
-        review_id: 2,
-        review_score: 1,
-        proj_id: 1,
-        task_id: 1,
-        user_id: 1
-    },
-    {
-        review_id: 3,
-        review_score: 5,
-        proj_id: 1,
-        task_id: 2,
-        user_id: 2
-    },
-    {
-        review_id: 4,
-        review_score: 1,
-        proj_id: 1,
-        task_id: 2,
-        user_id: 2
-    }
-]).then(() => {
-    console.log('success');
-}).catch(err => {
-    console.log(`fail: ${err}`);
-});
+// exports.ReviewInsert = queryInterface.bulkInsert('reviews', [
+//     {
+//         review_id: 1,
+//         review_score: 5,
+//         proj_id: 1,
+//         task_id: 1,
+//         user_id: 1
+//     },
+//     {
+//         review_id: 2,
+//         review_score: 1,
+//         proj_id: 1,
+//         task_id: 1,
+//         user_id: 1
+//     },
+//     {
+//         review_id: 3,
+//         review_score: 5,
+//         proj_id: 1,
+//         task_id: 2,
+//         user_id: 2
+//     },
+//     {
+//         review_id: 4,
+//         review_score: 1,
+//         proj_id: 1,
+//         task_id: 2,
+//         user_id: 2
+//     }
+// ]).then(() => {
+//     console.log('success');
+// }).catch(err => {
+//     console.log(`fail: ${err}`);
+// });
 
 
 

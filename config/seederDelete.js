@@ -8,7 +8,7 @@ Task = require('../models/Task'),
 //Submission = require('../models/Submission'),
 //Chatroom = require('../models/Chatroom'),
 //Update = require('../models/Update'),
-//UserProject = require('../models/UserProject'),
+UserProject = require('../models/UserProject'),
 //UserGroup = require('../models/UserGroup'),
 //UserTask = require('../models/UserTask'),
 //UserChatroom = require('../models/UserChatroom'),
@@ -20,7 +20,7 @@ Review = require('../models/Review');
 const queryInterface = db.getQueryInterface();
 
 
-module.userDelete = User.destroy(
+exports.userDelete = User.destroy(
     {where: {}}
 ).then(() => {
     console.log("success");
@@ -29,11 +29,13 @@ module.userDelete = User.destroy(
 });
 
 
-module.projectDelete = Project.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
+exports.projectDelete = Project.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
 
+exports.userProjectDelect = UserProject.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
 
-module.groupDelete = Group.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
+exports.groupDelete = Group.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
 
-module.taskDelete = Task.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
+exports.taskDelete = Task.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
 
-module.ReviewDelete = Review.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
+exports.ReviewDelete = Review.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
+
