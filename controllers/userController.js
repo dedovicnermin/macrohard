@@ -18,29 +18,60 @@ userRouter.get('/:userId/profile', async (req, res) => {
     res.json(obj);
 });
 
+//.post() -> when wanting to edit their profile
 
 const gatherProfile = async (userID) => {
-    //grabbing user_name, user_type, user_email, tasks_completed*, avg_contribution*, user_title*, user_phone*, user_location*, user_img
-    let ret = [];
+    //grabbing user_name, user_email, tasks_completed*, avg_contribution*, user_title*, user_phone*, user_location*, user_img
+    
     try {
+        
         const user = await User.findOne({
-            where: {user_id: userID}
-        });
-        await user();
-        ret.push({info: user});
-
-        const userBadges = await UserBadge.findAll({
             where: {user_id: userID},
-            include: [{
-                model: Badge,
-                where: {user_id: userID}
-            }]
+            attributes: {
+                exclude: ['user_password', 'user_id', 'user_type']
+            }
         });
-        await userBadges();
+        
+        const userBadges = await UserBadge.findAll({
+            where: {
+                user_id: userID
+            },
+            order: [
+                ['badge_id', 'ASC']
+            ]
+        });
+        let bInfo = [];
+        const badgeInfo = async () => {
+            await asyncForEach(userBadges, async (element) => {
+                const b = await Badge.findOne({
+                    where: {badge_id: element.badge_id},
+                });
+                bInfo.push({
+                    name: b.badge_name,
+                    description: b.badge_description,
+                    img: b.badge_img,
+                    count: element.count
+                });
+            });
+        };
+        await badgeInfo();
+
+        return {
+            user: user,
+            badges: bInfo
+        };
+        
+
+        
+        
+        
+        
+        
+        
         
     }
     catch (err) {
-
+        return {err: err};
     }
 
 };
