@@ -1,45 +1,102 @@
 
+<%- include('partials/singleNav')  %> 
 
 <div class="profile-background">
     <div class="container-profile">
         <div class="profile__header">
-            <div class="header__img header-item"></div>
-            <div class="header__name header-item">User Name</div>
-            <a href="#" class="btn btn__large header__btn header-item">Edit Profile</a>
+            <img src="/images/profileIcons/<%= obj.user.user_img %>" class="header__img header-item">
+            <div class="header__name header-item"><%= obj.user.user_name %></div>
+            <a href="#" class="btn btn__large header__btn header-item" data-popup-target="#editProfile">Edit Profile</a>
+
+
+            <div class="popup" id="editProfile">
+                <div class="popup__header">
+                    <div class="popup__header-title">Edit Profile:</div>
+                    <button data-close-button class="popup__header-close-button">&times;</button>
+                </div>
+                <div class="popup__body">
+                    <form action="#" method="">
+                        <fieldset>
+                            <label for="user-profile" style="width: 100%;">Profile Image:
+                                <select name="profile-imgs" id="profile-imgs" name="user-profile" style="width: 100%; height: 3.5rem; padding: 1.5rem;">
+                                    <option value="IMG1">IMG1</option>
+                                    <option value="IMG2">IMG2</option>
+                                    <option value="IMG3">IMG3</option>
+                                </select>
+                            </label>
+                            <label for="user-title" style="width: 100%;">Title:
+                                <input type="text" placeholder="engineer, student, etc.." name="user-title" style="width: 100%;  height: 3.5rem; padding: 1.5rem;">
+                            </label>
+                            <label for="user-phone" style="width: 100%;">Phone #:
+                                <input type="text" placeholder="XXX-XXX-XXXX" name="user-phone" style="width: 100%; height: 3.5rem; padding: 1.5rem;">
+                            </label>
+                            <label for="user-location" style="width: 100%;">Location:
+                                <input type="text" placeholder="Chicago IL, Houston TX, ..., etc." name="user-location" style="width: 100%; height: 3.5rem; padding: 1.5rem;">
+                            </label>
+                            <input type="submit" name="submit" value="Make Changes" id="submit" class="btn btn__large">
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
         </div>
 
-        <div class="profile__content ">
-            <div class="profile__content-overview profile-flex-item border">
-                <div class="identifier">Overview</div>
-                <div id="title">Title: Student</div>
-                <div id="phone">Phone: (773) 916-0295</div>
-                <div id="email">Email: user@email.com</div>
-                <div id="location">Location: Chicago, IL</div>
-            </div>
 
-            <div class="profile__content-stats profile-flex-item border">
-                <div class="identifier">Personal Statistics</div>
-                <div id="stat1">Projects:  Value</div>
-                <div id="stat2">Tasks: Value</div>
-                <div id="stat3">AVG. Contribution: Value</div>
-                <div id="stat4">Stat4:  Value</div>
-                <div id="stat5">Stat5:  Value</div>
+
+        <div class="profile__content ">
+            <div class="profile__content-overview">
+                <div class="title">Overview</div>
+                <div class="flexrow">
+                    <div class="identifier">Title:</div>
+                    <div class="value"><%= obj.user.user_title ? obj.user.user_title : 'Not specified'%></div>
+                </div>
+                <div class="flexrow">
+                    <div class="identifier">Phone:</div>
+                    <div class="value"><%= obj.user.user_phone ? obj.user.user_phone : 'Not specified'%></div>
+                </div>
+                <div class="flexrow">
+                    <div class="identifier">Email:</div>
+                    <div class="value"><%= obj.user.user_email ? obj.user.user_email : 'Not specified'%></div>
+                </div>
+                <div class="flexrow">
+                    <div class="identifier">Location:</div>
+                    <div class="value"><%= obj.user.user_location ? obj.user.user_location : 'Not specified'%></div>
+                </div>
                 
             </div>
+            
+        
 
-            <div class="profile__content-badges profile-flex-item border">
-                <div class="identifier">Badges</div>
-                <div class="badge"></div>
-                <div class="badge"></div>
-                <div class="badge"></div>
-                <div class="badge"></div>
-                <div class="badge"></div>
-                <div class="badge"></div>
-                <div class="badge"></div>
-                <div class="badge"></div>
-                <div class="badge"></div>
-                <div class="badge"></div>
-                <div class="badge"></div>
+            <div class="profile__content-stats">
+                <div class="title">Personal Statistics</div>
+                <div class="flexrow">
+                    <div class="identifier">Projects:</div>
+                    <div class="value2">*</div>
+                </div>
+                <div class="flexrow">
+                    <div class="identifier">Groups:</div>
+                    <div class="value2">*</div>
+                </div>
+                <div class="flexrow">
+                    <div class="identifier">Tasks:</div>
+                    <div class="value2">*</div>
+                </div>
+                <div class="flexrow">
+                    <div class="identifier">AVG Contribution:</div>
+                    <div class="value2"><%= obj.user.avg_contribution %></div>
+                </div>
+            </div>
+
+            <div class="profile__content-badges">
+                <div class="title">Badges</div>
+                <% obj.badges.forEach(badge => { %>
+                    <div class="badge flexrow-badge">
+                        <span class="badge__name"><%= badge.name %></span>
+                        <img src="/images/badges/<%= badge.img %>" class="badge__img">
+                        <p class="badge__des"><%= badge.description %></p>
+                        <p class="badge__count">x<%= badge.count %></p>
+                    </div>
+                <% }) %>            
+
             </div>
 
 
@@ -47,3 +104,7 @@
         
     </div>
 </div>
+
+<div id="overlay"></div>
+
+<script src="/js/popup.js"></script>

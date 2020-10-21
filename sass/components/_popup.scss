@@ -8,7 +8,7 @@
     border-radius: 10px;
     z-index: 10;
     background-color: white;
-    width: 500px;
+    width: 800px;
     max-width: 80%;
 
 
@@ -19,9 +19,10 @@
         justify-content: space-between;
         align-items: center;
         border-bottom: 1px solid black;
+        
 
         &-title {
-            font-size: 1.25rem;
+            font-size: 3rem;
             font-weight: bold;
         }
         &-close-button {
@@ -29,7 +30,7 @@
             border: none;
             outline: none;
             background: none;
-            font-size: 1.25rem;
+            font-size: 3rem;
             font-weight: bold;
         }
 
@@ -37,6 +38,10 @@
 
     &__body {
         padding: 10px 15px;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
     }
 
     &.active {
@@ -73,4 +78,32 @@
 #overlay.active {
     opacity: 1;
     pointer-events: all;
+}
+
+label, input {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  
+}
+
+input {
+    border: 1px solid black;
+    margin: .5rem 0;
+}
+label {
+    font-size: 2rem;
+    margin: 1rem 0;
+}
+
+select {
+    border: 1px solid black;
+    margin: 1rem 0;
+
+}
+
+#submit {
+    display: block;
+    margin: 10px auto;
 }

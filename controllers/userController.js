@@ -15,11 +15,12 @@ UserBadge = require('../models/UserBadge');
 
 userRouter.get('/:userId/profile', async (req, res) => {
     const obj = await gatherProfile(req.params.userId);
-    res.json(obj);
+    res.render('userProfile', {obj});
+    // res.json(obj);
 });
 
 //.post() -> when wanting to edit their profile
-userRouter.post("/;userId/profile", async (req, res) => {
+userRouter.post("/:userId/profile", async (req, res) => {
     
     User.update(
         {
