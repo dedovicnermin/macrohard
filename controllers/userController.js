@@ -6,7 +6,10 @@ Project = require("../models/Project"),
 Group = require("../models/Group"),
 Task = require("../models/Task"),
 User = require("../models/User"),
-UserProject = require('../models/UserProject');
+UserProject = require('../models/UserProject'),
+Badge = require('../models/Badge'),
+UserBadge = require('../models/UserBadge');
+
 
 
 
@@ -18,10 +21,23 @@ userRouter.get('/:userId/profile', async (req, res) => {
 
 const gatherProfile = async (userID) => {
     //grabbing user_name, user_type, user_email, tasks_completed*, avg_contribution*, user_title*, user_phone*, user_location*, user_img
+    let ret = [];
     try {
         const user = await User.findOne({
             where: {user_id: userID}
         });
+        await user();
+        ret.push({info: user});
+
+        const userBadges = await UserBadge.findAll({
+            where: {user_id: userID},
+            include: [{
+                model: Badge,
+                where: {user_id: userID}
+            }]
+        });
+        await userBadges();
+        
     }
     catch (err) {
 
