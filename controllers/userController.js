@@ -6,7 +6,95 @@ Project = require("../models/Project"),
 Group = require("../models/Group"),
 Task = require("../models/Task"),
 User = require("../models/User"),
-UserProject = require('../models/UserProject');
+UserProject = require('../models/UserProject'),
+Badge = require('../models/Badge'),
+UserBadge = require('../models/UserBadge');
+
+
+
+
+userRouter.get('/:userId/profile', async (req, res) => {
+    const obj = await gatherProfile(req.params.userId);
+    res.json(obj);
+});
+
+//.post() -> when wanting to edit their profile
+userRouter.post("/;userId/profile", async (req, res) => {
+    
+    User.update(
+        {
+            user_name: req.body.username,
+            user_title: req.body.title,
+            user_phone: req.body.phone,
+            user_location: req.body.location
+        },
+        {
+            returning: true,
+            where: {user_id: req.params.userId},
+        }
+    ).then( (rowsUpdate, [updatedUser]) => {
+        res.json(updatedBook)
+    }).catch(err => {
+        console.log(err);
+        res.json({error: "Unable to edit your profile at this time :("})
+    });
+});
+
+const gatherProfile = async (userID) => {
+    //grabbing user_name, user_email, tasks_completed*, avg_contribution*, user_title*, user_phone*, user_location*, user_img
+    
+    try {
+        
+        const user = await User.findOne({
+            where: {user_id: userID},
+            attributes: {
+                exclude: ['user_password', 'user_id', 'user_type']
+            }
+        });
+        
+        const userBadges = await UserBadge.findAll({
+            where: {
+                user_id: userID
+            },
+            order: [
+                ['badge_id', 'ASC']
+            ]
+        });
+        let bInfo = [];
+        const badgeInfo = async () => {
+            await asyncForEach(userBadges, async (element) => {
+                const b = await Badge.findOne({
+                    where: {badge_id: element.badge_id},
+                });
+                bInfo.push({
+                    name: b.badge_name,
+                    description: b.badge_description,
+                    img: b.badge_img,
+                    count: element.count
+                });
+            });
+        };
+        await badgeInfo();
+
+        return {
+            user: user,
+            badges: bInfo
+        };
+        
+
+        
+        
+        
+        
+        
+        
+        
+    }
+    catch (err) {
+        return {err: err};
+    }
+
+};
 
 
 
