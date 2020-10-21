@@ -10,6 +10,27 @@ UserProject = require('../models/UserProject');
 
 
 
+userRouter.get('/:userId/profile', async (req, res) => {
+    const obj = await gatherProfile(req.params.userId);
+    res.json(obj);
+});
+
+
+const gatherProfile = async (userID) => {
+    //grabbing user_name, user_type, user_email, tasks_completed*, avg_contribution*, user_title*, user_phone*, user_location*, user_img
+    try {
+        const user = await User.findOne({
+            where: {user_id: userID}
+        });
+    }
+    catch (err) {
+
+    }
+
+};
+
+
+
 userRouter.get('/:userId/projects', async (req, res) => {
     const obj = await gatherUserProjects(req.params.userId);
     res.render('projectsPage', {obj});
