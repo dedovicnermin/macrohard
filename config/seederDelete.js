@@ -13,29 +13,40 @@ UserProject = require('../models/UserProject'),
 //UserTask = require('../models/UserTask'),
 //UserChatroom = require('../models/UserChatroom'),
 //Message = require('../models/Message'),
-//Badge = require('../models/Badge'),
-Review = require('../models/Review');
-//UserBadge = require('../models/UserBadge');
+Badge = require('../models/Badge'),
+Review = require('../models/Review'),
+UserBadge = require('../models/UserBadge');
 
-const queryInterface = db.getQueryInterface();
+module.exports = {
+    userDelete: () => {
+        User.destroy(
+            {where: {}}
+        ).then(() => {
+            console.log("success");
+        }).catch(err => {
+            console.log(`fail: ${err}`);
+        });
+    },
+    projectDelete: () => {
+        Project.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
+    },
+    userProjectDelect: () => {
+        UserProject.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
+    },
+    groupDelete: () => {
+        Group.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
+    },
+    taskDelete: () => {
+        Task.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
+    },
+    reviewDelete: () => {
+        Review.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
+    },
+    badgeDelete: () => {
+        Badge.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
+    },
+    userBadgeDelete: () => {
+        UserBadge.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
+    }
 
-
-exports.userDelete = User.destroy(
-    {where: {}}
-).then(() => {
-    console.log("success");
-}).catch(err => {
-    console.log(`fail: ${err}`);
-});
-
-
-exports.projectDelete = Project.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
-
-exports.userProjectDelect = UserProject.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
-
-exports.groupDelete = Group.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
-
-exports.taskDelete = Task.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
-
-exports.ReviewDelete = Review.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
-
+};
