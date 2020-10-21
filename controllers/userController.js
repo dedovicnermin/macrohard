@@ -20,12 +20,6 @@ userRouter.get('/:userId/profile', async (req, res) => {
 
 //.post() -> when wanting to edit their profile
 userRouter.post("/;userId/profile", async (req, res) => {
-    const user = await User.findOne({
-        where: {user_id: req.params.userId}
-    });
-    user.user_name = req.body.username;
-    user.user_title = req.body.user_title;
-    user.user_
     
     User.update(
         {
@@ -43,8 +37,8 @@ userRouter.post("/;userId/profile", async (req, res) => {
     }).catch(err => {
         console.log(err);
         res.json({error: "Unable to edit your profile at this time :("})
-    })
-})
+    });
+});
 
 const gatherProfile = async (userID) => {
     //grabbing user_name, user_email, tasks_completed*, avg_contribution*, user_title*, user_phone*, user_location*, user_img
