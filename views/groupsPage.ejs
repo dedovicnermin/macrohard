@@ -1,0 +1,17 @@
+<%- include('partials/bothnav')  %> 
+
+<h1 id="groups-page-title">ProjectName*: Groups</h1>
+
+<div class="groups-container">
+
+    <% obj.groups.forEach(group => { %>
+        <div class="groupCard">
+            <img src="/images/groupIcons/<%= group.group_img %>">
+            <div class="groupCard__info">
+                <h3 class="groupCard__info--heading"><%= group.group_name %></h3>
+                <div class="grouCard__info--members"><%= group.total_members</div>
+                <a href="#" class="groupCard__info--btn btn btn__medium">Enter Group</a>
+            </div>
+        </div>
+    <% }) %>
+</div>
