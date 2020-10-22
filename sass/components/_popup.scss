@@ -94,13 +94,14 @@ input {
 }
 label {
     font-size: 2rem;
-    margin: 1rem 0;
+    margin: .5rem 0;
 }
 
 select {
     border: 1px solid black;
-    margin: 1rem 0;
-
+    text-align: center;
+    line-height: 24px;
+    margin: 5px 0;
 }
 
 #submit {
