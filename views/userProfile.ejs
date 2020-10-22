@@ -4,7 +4,7 @@
 <div class="profile-background">
     <div class="container-profile">
         <div class="profile__header">
-            <img src="/images/profileIcons/<%= obj.user.user_img %>" class="header__img header-item">
+            <img src="/images/profileIcons/<%= obj.user.user_img %>" class="header__img header-item" id="USERIMG">
             <div class="header__name header-item"><%= obj.user.user_name %></div>
             <a href="#" class="btn btn__large header__btn header-item" data-popup-target="#editProfile">Edit Profile</a>
 
@@ -15,26 +15,32 @@
                     <button data-close-button class="popup__header-close-button">&times;</button>
                 </div>
                 <div class="popup__body">
-                    <form action="#" method="">
+                    <form action="/user/<%= obj.user.user_id %>/profile" method="POST">
                         <fieldset>
-                            <label for="user-profile" style="width: 100%;">Profile Image:
-                                <select name="profile-imgs" id="profile-imgs" name="user-profile" style="width: 100%; height: 3.5rem; padding: 1.5rem;">
-                                    <option value="IMG1">IMG1</option>
-                                    <option value="IMG2">IMG2</option>
-                                    <option value="IMG3">IMG3</option>
+                            <label for="profile-img" style="width: 100%;">Profile Image:
+                                <select name="profileImg" id="sel" style="width: 100%; height: 3.5rem; font-size: 1.5rem; background-color: white;" >
+                                    <option value="default_img.png">White (Default)</option>
+                                    <option value="profileIconBlue.png">Blue</option>
+                                    <option value="profileIconGreen.png">Green</option>
+                                    <option value="profileIconOrange.png">Orange</option>
+                                    <option value="profileIconPurple.png">Purple</option>
+                                    <option value="profileIconRed.png">Red</option>
+                                    <option value="profileIconYellow.png">Yellow</option>
                                 </select>
                             </label>
+                            
                             <label for="user-title" style="width: 100%;">Title:
-                                <input type="text" placeholder="engineer, student, etc.." name="user-title" style="width: 100%;  height: 3.5rem; padding: 1.5rem;">
+                                <input type="text" placeholder="engineer, student, etc.." name="userTitle" style="width: 100%;  height: 3.5rem; padding: 1.5rem;" id="USERTITLE">
                             </label>
                             <label for="user-phone" style="width: 100%;">Phone #:
-                                <input type="text" placeholder="XXX-XXX-XXXX" name="user-phone" style="width: 100%; height: 3.5rem; padding: 1.5rem;">
+                                <input type="text" placeholder="XXX-XXX-XXXX" name="userPhone" style="width: 100%; height: 3.5rem; padding: 1.5rem;" id="USERPHONE">
                             </label>
                             <label for="user-location" style="width: 100%;">Location:
-                                <input type="text" placeholder="Chicago IL, Houston TX, ..., etc." name="user-location" style="width: 100%; height: 3.5rem; padding: 1.5rem;">
+                                <input type="text" placeholder="Chicago IL, Houston TX, ..., etc." name="userLocation" style="width: 100%; height: 3.5rem; padding: 1.5rem;" id="USERLOCATION">
                             </label>
-                            <input type="submit" name="submit" value="Make Changes" id="submit" class="btn btn__large">
                         </fieldset>
+                        <input type="submit" name="submit" value="Make Changes" id="submit" class="btn btn__large">
+                        
                     </form>
                 </div>
             </div>
@@ -47,11 +53,11 @@
                 <div class="title">Overview</div>
                 <div class="flexrow">
                     <div class="identifier">Title:</div>
-                    <div class="value"><%= obj.user.user_title ? obj.user.user_title : 'Not specified'%></div>
+                    <div class="value" id="titleValue"><%= obj.user.user_title ? obj.user.user_title : 'Not specified'%></div>
                 </div>
                 <div class="flexrow">
                     <div class="identifier">Phone:</div>
-                    <div class="value"><%= obj.user.user_phone ? obj.user.user_phone : 'Not specified'%></div>
+                    <div class="value" id="phoneValue"><%= obj.user.user_phone ? obj.user.user_phone : 'Not specified'%></div>
                 </div>
                 <div class="flexrow">
                     <div class="identifier">Email:</div>
@@ -59,7 +65,7 @@
                 </div>
                 <div class="flexrow">
                     <div class="identifier">Location:</div>
-                    <div class="value"><%= obj.user.user_location ? obj.user.user_location : 'Not specified'%></div>
+                    <div class="value" id="locationValue"><%= obj.user.user_location ? obj.user.user_location : 'Not specified'%></div>
                 </div>
                 
             </div>
@@ -107,4 +113,28 @@
 
 <div id="overlay"></div>
 
-<script src="/js/popup.js"></script>
+<script src="/js/popup.js" defer></script>
+<script defer>
+
+    let sel = document.getElementById('sel');
+    let img = document.getElementById('USERIMG').getAttribute('src').split('/');
+    sel.value = img[img.length - 1];
+
+    
+    let title = document.getElementById('titleValue').innerHTML;
+    let phone = document.getElementById('phoneValue').innerHTML;
+    let loc = document.getElementById('locationValue').innerHTML;
+
+    console.log(title + '\n' + phone + '\n' + loc);
+    if (title !== 'Not specified') {
+        document.getElementById('USERTITLE').value = title;
+    }
+    if (phone !== 'Not specified') {
+        document.getElementById('USERPHONE').value = phone;
+    }
+    if (loc !== 'Not specified') {
+        document.getElementById('USERLOCATION').value = loc;
+    }
+
+
+</script>

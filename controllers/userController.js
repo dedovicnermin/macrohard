@@ -16,28 +16,25 @@ UserBadge = require('../models/UserBadge');
 userRouter.get('/:userId/profile', async (req, res) => {
     const obj = await gatherProfile(req.params.userId);
     res.render('userProfile', {obj});
-    // res.json(obj);
 });
 
 //.post() -> when wanting to edit their profile
 userRouter.post("/:userId/profile", async (req, res) => {
-    
     User.update(
         {
-            user_name: req.body.username,
-            user_title: req.body.title,
-            user_phone: req.body.phone,
-            user_location: req.body.location
+            user_title: req.body.userTitle,
+            user_phone: req.body.userPhone,
+            user_location: req.body.userLocation,
+            user_img: req.body.profileImg
         },
         {
-            returning: true,
             where: {user_id: req.params.userId},
         }
-    ).then( (rowsUpdate, [updatedUser]) => {
-        res.json(updatedBook)
+    ).then( () => {
+        res.redirect(`/user/${req.params.userId}/profile`);
     }).catch(err => {
         console.log(err);
-        res.json({error: "Unable to edit your profile at this time :("})
+        res.render('error');
     });
 });
 
@@ -49,7 +46,7 @@ const gatherProfile = async (userID) => {
         const user = await User.findOne({
             where: {user_id: userID},
             attributes: {
-                exclude: ['user_password', 'user_id', 'user_type']
+                exclude: ['user_password', 'user_type']
             }
         });
         
