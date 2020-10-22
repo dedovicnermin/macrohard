@@ -364,27 +364,7 @@ module.exports = {
     }
 }
 
-// //inserting into users
-// exports.userInsert = 
 
-// //inserting into projects
-// exports.projectInsert = 
-// //inserting into user_project
-// exports.userProjectInsert = 
-// //inserting into groups
-// exports.groupInsert = 
-// //inserting into tasks
-// exports.taskInsert = 
-// //inserting into reviews
-// exports.reviewInsert = 
-
-
-// //inserting badges
-// exports.badgeInsert = 
-
-
-// //inserting user_badges on tester user (id:9)
-// exports.userBadgeInsert = ;
 
 
 

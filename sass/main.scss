@@ -1,10 +1,4 @@
-@import "abstracts/mixins";
-@import "abstracts/variables";
 
-@import "base/base";
-@import "base/animations";
-@import "base/typography";
-@import "base/utilities";
 
 //components
 @import "components/button";
@@ -13,6 +7,7 @@
 @import "components/table";
 @import "components/popup";
 @import "components/card";
+@import "components/groupCard";
 
 
 @import "layout/grid";
@@ -21,3 +16,13 @@
 //pages
 @import "pages/statsPage";
 @import "pages/projectsPage";
+@import "pages/profilePage";
+
+
+@import "abstracts/mixins";
+@import "abstracts/variables";
+
+@import "base/base";
+@import "base/animations";
+@import "base/typography";
+@import "base/utilities";
