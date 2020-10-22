@@ -8,7 +8,9 @@ Task = require("../models/Task"),
 User = require("../models/User"),
 UserProject = require('../models/UserProject'),
 Badge = require('../models/Badge'),
-UserBadge = require('../models/UserBadge');
+UserBadge = require('../models/UserBadge'),
+UserGroup = require('../models/UserGroup'),
+UserTask = require('../models/UserGroup');
 
 
 
@@ -58,6 +60,7 @@ const gatherProfile = async (userID) => {
                 ['badge_id', 'ASC']
             ]
         });
+
         let bInfo = [];
         const badgeInfo = async () => {
             await asyncForEach(userBadges, async (element) => {
@@ -74,9 +77,24 @@ const gatherProfile = async (userID) => {
         };
         await badgeInfo();
 
+        const projects = await UserProject.findAll({
+            where: {user_id: userID}
+        });
+        const groups = await UserGroup.findAll({
+            where: {user_id: userID}
+        });
+        const tasks = await UserTask.findAll({
+            where: {user_id: userID}
+        });
+
+        
+
         return {
             user: user,
-            badges: bInfo
+            badges: bInfo,
+            projects: projects.length,
+            groups: groups.length,
+            tasks: tasks.length
         };
         
 
