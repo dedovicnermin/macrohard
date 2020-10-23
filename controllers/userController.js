@@ -96,11 +96,7 @@ const gatherProfile = async (userID) => {
             groups: groups.length,
             tasks: tasks.length
         };
-        
-
-        
-        
-        
+    
         
         
         
@@ -166,8 +162,35 @@ userRouter.get('/:userId/:projectId/stats', async (req, res) => {
 
 
 
+// get groups for this project
+userRouter.get('/:userId/:projectId/groups', async (req, res) => {
+    try {
+        const groups = Group.findAll({
+            where: {proj_id: req.params.projectId}
+        });
+        res.render('groupPage', {groups})
+    } catch (err) {
+        console.log("error:\n\n\n:" + err);
+        res.render('error');
+    }
+});
 
-
+// add a group
+userRouter.post('/:userId/:projectId/groups', async (req, res) => {
+    try {
+        await Group.create(
+            {
+                group_name: req.body.groupName,
+                group_img: req.body.groupImg,
+                proj_id: req.params.projectId
+            }
+        );
+        res.redirect(`/user/${req.params.userId}/${req.params.projectId}/groups`);   
+    } catch (err) {
+        console.log(err);
+        res.render('error');
+    }
+});
 
 
 
