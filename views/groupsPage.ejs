@@ -6,17 +6,52 @@ create a group
  -->
 
 
-<h1 id="groups-page-title">Project Groups</h1>
+<h1 id="groups-page-title"><%= obj.proj_name %> Groups</h1>
 <div class="groups-container">
 
     <% obj.groups.forEach(group => { %>
         <div class="groupCard">
-            <img src="/images/groupIcons/<%= group.group_img %>">
+            <img src="/images/groupIcons/<%= group.group_img %>" class="groupCard__img">
             <div class="groupCard__info">
                 <h3 class="groupCard__info--heading"><%= group.group_name %></h3>
-                <div class="grouCard__info--members"><%= group.total_members</div>
-                <a href="#" class="groupCard__info--btn btn btn__medium">View Group</a>
+                <div class="grouCard__info--members">Members: <%= group.total_members %></div>
+                <a href="/user/<%= obj.user_id %>/<%= obj.proj_id %>/groups/<%= group.group_id %>" class="groupCard__info--btn btn btn__medium" stlye="font-size:2.5rem">View Group</a>
             </div>
         </div>
     <% }) %>
+    
 </div>
+
+
+<a href="#" data-popup-target="#addGroup" class="btn btn__large add-group-btn">ADD GROUP<span class="html_plus">&plus;</span></a>
+<div class="popup" id="addGroup">
+    <div class="popup__header">
+        <div class="popup__header-title">Add Group:</div>
+        <button data-close-button class="popup__header-close-button">&times;</button>
+    </div>
+    <div class="popup__body">
+        <form action="/user/<%= obj.user_id %>/<%= obj.proj_id %>/groups" method="POST">
+            <fieldset>
+                <label for="groupName">Group Name:
+                    <input type="text" name="groupName" placeholder="Enter Group Name:" style="width: 100%;  height: 3.5rem; padding: 1.5rem;">
+                </label>
+                <label for="groupImg" style="width: 100%;">Group Image:
+                    <select name="groupImg" id="sel" style="width: 100%; height: 3.5rem; font-size: 1.5rem; background-color: white;" >
+                        <option value="default_img.png">White</option>
+                        <option value="groupIconBlue.png">Blue</option>
+                        <option value="groupIconGreen.png">Green</option>
+                        <option value="groupIconOrange.png">Orange</option>
+                        <option value="groupIconPurple.png">Purple</option>
+                        <option value="groupIconRed.png">Red</option>
+                        <option value="groupIconYellow.png">Yellow</option>
+                    </select>
+                </label>
+                <input type="submit" name="submit" value="ADD" id="submit" class="btn btn__large">
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+<div id="overlay"></div>
+
+<script src="/js/popup.js" defer></script>

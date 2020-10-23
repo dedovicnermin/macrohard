@@ -45,7 +45,7 @@
     
     &:hover {
         transform: translateY(-.3rem);
-        box-shadow: 0 .5rem 1rem rgba(0,0,0,.2);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.4);
         
         &::after {
             transform: scaleX(1.2) scaleY(1.6);

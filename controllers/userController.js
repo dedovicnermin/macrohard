@@ -154,43 +154,39 @@ const gatherUserProjects = async (userID) => {
 
 
 
-userRouter.get('/:userId/:projectId/stats', async (req, res) => {
-    const obj = await gatherTableInfo(req.params.projectId, req.params.userId);
-    res.render('statsPage', {obj});
-});
-
-
-
-
 // get groups for this project
 userRouter.get('/:userId/:projectId/groups', async (req, res) => {
     try {
-        const obj = await Project.findOne({
+        const data = await Project.findOne({
             where: {proj_id: req.params.projectId},
             include: {
                 model: Group,
-                where: {proj_id: req.params.projectId}
+                where: {proj_id: req.params.projectId},
+                attributes: {
+                    exclude: ['proj_id']
+                }
             }
         });
-        res.json(obj);
-        // res.render('groupPage', {obj})
+        const {groups, proj_id, proj_name} = data;
+        const obj = {proj_id: proj_id, proj_name, user_id: req.params.userId, groups: groups}
+
+        res.render('groupsPage', {obj});
     } catch (err) {
-        console.log("error:\n\n\n:" + err);
-        res.json({err: err});
-        // res.render('error');
+        res.render('error', {err});
     }
 });
 
 // add a group
 userRouter.post('/:userId/:projectId/groups', async (req, res) => {
     try {
-        await Group.create(
+        const g = await Group.create(
             {
                 group_name: req.body.groupName,
                 group_img: req.body.groupImg,
                 proj_id: req.params.projectId
             }
         );
+
         res.redirect(`/user/${req.params.userId}/${req.params.projectId}/groups`);   
     } catch (err) {
         console.log(err);
@@ -199,6 +195,21 @@ userRouter.post('/:userId/:projectId/groups', async (req, res) => {
 });
 
 
+
+
+
+
+
+
+
+
+
+
+
+userRouter.get('/:userId/:projectId/stats', async (req, res) => {
+    const obj = await gatherTableInfo(req.params.projectId, req.params.userId);
+    res.render('statsPage', {obj});
+});
 
 userRouter.get('/:userId/:projectId/stats/getstats', async (req, res) => {
     try {
