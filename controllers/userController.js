@@ -165,13 +165,19 @@ userRouter.get('/:userId/:projectId/stats', async (req, res) => {
 // get groups for this project
 userRouter.get('/:userId/:projectId/groups', async (req, res) => {
     try {
-        const groups = Group.findAll({
-            where: {proj_id: req.params.projectId}
+        const obj = await Project.findOne({
+            where: {proj_id: req.params.projectId},
+            include: {
+                model: Group,
+                where: {proj_id: req.params.projectId}
+            }
         });
-        res.render('groupPage', {groups})
+        res.json(obj);
+        // res.render('groupPage', {obj})
     } catch (err) {
         console.log("error:\n\n\n:" + err);
-        res.render('error');
+        res.json({err: err});
+        // res.render('error');
     }
 });
 
