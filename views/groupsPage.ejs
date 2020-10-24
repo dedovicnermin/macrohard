@@ -15,7 +15,7 @@ create a group
             <div class="groupCard__info">
                 <h3 class="groupCard__info--heading"><%= group.group_name %></h3>
                 <div class="grouCard__info--members">Members: <%= group.total_members %></div>
-                <a href="/user/<%= obj.user_id %>/<%= obj.proj_id %>/groups/<%= group.group_id %>" class="groupCard__info--btn btn btn__medium" stlye="font-size:2.5rem">View Group</a>
+                <a href="/user/<%= obj.user_id %>/<%= obj.proj_id %>/<%= group.group_id %>/tasks" class="groupCard__info--btn btn btn__medium" stlye="font-size:2.5rem">View Group</a>
             </div>
         </div>
     <% }) %>

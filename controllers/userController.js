@@ -10,9 +10,11 @@ UserProject = require('../models/UserProject'),
 Badge = require('../models/Badge'),
 UserBadge = require('../models/UserBadge'),
 UserGroup = require('../models/UserGroup'),
-UserTask = require('../models/UserGroup');
+UserTask = require('../models/UserTask');
 
 
+
+//////////////////////////USER PROFILE PAGE//////////////////////////////
 
 
 userRouter.get('/:userId/profile', async (req, res) => {
@@ -109,6 +111,12 @@ const gatherProfile = async (userID) => {
 };
 
 
+/////////////////////////////////////////////////////////////////////
+
+
+
+
+//////////////////////////PROJECTS PAGE//////////////////////////////
 
 userRouter.get('/:userId/projects', async (req, res) => {
     const obj = await gatherUserProjects(req.params.userId);
@@ -152,6 +160,11 @@ const gatherUserProjects = async (userID) => {
     }
 };
 
+////////////////////////////////////////////////////////////////////
+
+
+
+//////////////////////////GROUPS PAGE//////////////////////////////
 
 
 // get groups for this project
@@ -197,6 +210,94 @@ userRouter.post('/:userId/:projectId/groups', async (req, res) => {
 
 
 
+////////////////////////////////////////////////////////////////////////////////////
+
+
+
+//////////////////////////TASKS PAGE//////////////////////////////
+
+const completeGather = async (taskId) => {
+    const us = await findUsers(taskId);
+    const data = await findUserInfo(us);
+    return data;    
+} 
+
+const findUserInfo = async (userIds) => {
+    let arr = [];
+    const eachLoop = async () => {
+        await asyncForEach(userIds, async (id) => {
+            const user = await User.findOne({
+                where: {user_id: id.user_id},
+                attributes: ['user_id', 'user_name', 'user_img'],
+                raw: true
+            });
+            arr.push(user);
+        });
+        return arr;
+    }
+    
+    let users = await eachLoop();
+    return users;
+    
+}
+
+const findUsers = async (id) => {
+    const findUsersList = await UserTask.findAll({
+        where: {task_id: id},
+        attributes: ['user_id'],
+        raw : true
+    });
+
+    return findUsersList;
+}
+
+userRouter.get('/:userId/:projectId/:groupId/tasks', async (req, res) => {
+    try {
+        const completed = [], notCompleted = [];
+        
+        const tasks = await Task.findAll({
+            where: {group_id: req.params.groupId},
+        });
+        
+            
+        const setup = async () => { 
+            await asyncForEach(tasks, async (task) => {
+                if (task.task_status == 'Complete') {
+                    const data = await completeGather(task.task_id);
+                    completed.push({
+                        taskId: task.task_id,
+                        taskName: task.task_name,
+                        dueDate: task.task_dueDate,
+                        status: task.task_status,
+                        members: data
+                    });
+                } else {
+                    const data = await completeGather(task.task_id);
+                    notCompleted.push({
+                        taskId: task.task_id,
+                        taskName: task.task_name,
+                        dueDate: task.task_dueDate,
+                        status: task.task_status,
+                        members: data
+                    });
+                }
+            });  
+        }
+        await setup();
+        res.json({completed: completed, notCompleted: notCompleted});
+
+        
+    } catch (err) {
+        console.log(err);
+        res.json({err: err});
+    }
+    
+});
+
+
+userRouter.post('/:userId/:projectId/:groupId/tasks', async (req, res) => {
+
+});
 
 
 
@@ -204,6 +305,13 @@ userRouter.post('/:userId/:projectId/groups', async (req, res) => {
 
 
 
+
+
+
+
+
+
+//////////////////////////STATS PAGE//////////////////////////////
 
 
 userRouter.get('/:userId/:projectId/stats', async (req, res) => {
