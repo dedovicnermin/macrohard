@@ -10,7 +10,7 @@ Task = require('../models/Task'),
 //Update = require('../models/Update'),
 UserProject = require('../models/UserProject'),
 //UserGroup = require('../models/UserGroup'),
-//UserTask = require('../models/UserTask'),
+UserTask = require('../models/UserTask'),
 //UserChatroom = require('../models/UserChatroom'),
 //Message = require('../models/Message'),
 Badge = require('../models/Badge'),
@@ -38,6 +38,9 @@ module.exports = {
     },
     taskDelete: () => {
         Task.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
+    },
+    userTaskDelete: () => {
+        UserTask.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
     },
     reviewDelete: () => {
         Review.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));

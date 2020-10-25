@@ -10,9 +10,11 @@ UserProject = require('../models/UserProject'),
 Badge = require('../models/Badge'),
 UserBadge = require('../models/UserBadge'),
 UserGroup = require('../models/UserGroup'),
-UserTask = require('../models/UserGroup');
+UserTask = require('../models/UserTask');
 
 
+
+//////////////////////////USER PROFILE PAGE//////////////////////////////
 
 
 userRouter.get('/:userId/profile', async (req, res) => {
@@ -109,6 +111,12 @@ const gatherProfile = async (userID) => {
 };
 
 
+/////////////////////////////////////////////////////////////////////
+
+
+
+
+//////////////////////////PROJECTS PAGE//////////////////////////////
 
 userRouter.get('/:userId/projects', async (req, res) => {
     const obj = await gatherUserProjects(req.params.userId);
@@ -152,6 +160,11 @@ const gatherUserProjects = async (userID) => {
     }
 };
 
+////////////////////////////////////////////////////////////////////
+
+
+
+//////////////////////////GROUPS PAGE//////////////////////////////
 
 
 // get groups for this project
@@ -197,6 +210,154 @@ userRouter.post('/:userId/:projectId/groups', async (req, res) => {
 
 
 
+////////////////////////////////////////////////////////////////////////////////////
+
+
+
+//////////////////////////TASKS PAGE//////////////////////////////
+
+const completeGather = async (taskId) => {
+    const us = await findUsers(taskId);
+    const data = await findUserInfo(us);
+    return data;    
+} 
+
+const findUserInfo = async (userIds) => {
+    let arr = [];
+    const eachLoop = async () => {
+        await asyncForEach(userIds, async (id) => {
+            const user = await User.findOne({
+                where: {user_id: id.user_id},
+                attributes: ['user_id', 'user_name', 'user_img'],
+                raw: true
+            });
+            arr.push(user);
+        });
+        return arr;
+    }
+    
+    let users = await eachLoop();
+    return users;
+    
+}
+
+const findUsers = async (id) => {
+    const findUsersList = await UserTask.findAll({
+        where: {task_id: id},
+        attributes: ['user_id'],
+        raw : true
+    });
+
+    return findUsersList;
+}
+
+const testOverDue = async (id) => {
+    try {
+        const taskDD = await Task.findOne({
+            where: {task_id: id},
+            attributes: ['task_dueDate'],
+            raw: true
+        });
+        const taskDate = new Date(taskDD.task_dueDate);
+
+        if (new Date() > taskDate) {
+            const waiting = await Task.update({
+               task_overdue: true
+            }, {where: {task_id: id}});
+            return "TRUE";
+        } else {
+            return "FALSE";
+        }
+        
+    } catch (err) {
+        console.log(err);
+        
+    } 
+}
+
+const getGroupName = async (id) => {
+    try {
+        const name = await Group.findOne({
+            where: {group_id: id},
+            attributes: ['group_name'],
+            raw: true
+        });
+        return name.group_name
+    } catch (err) {
+        return "Group";
+    }
+}
+
+userRouter.get('/:userId/:projectId/:groupId/tasks', async (req, res) => {
+    try {
+        const completed = [], notCompleted = [];
+        
+        const tasks = await Task.findAll({
+            where: {group_id: req.params.groupId},
+            order: [
+                ['task_id', 'ASC']
+            ]
+        });
+            
+        const setup = async () => { 
+            await asyncForEach(tasks, async (task) => {
+                let str = task.task_name;
+                str = str.replace(/\s/g, '');
+                if (task.task_status == 'Complete') {
+                    const data = await completeGather(task.task_id);                    
+                    completed.push({
+                        taskId: task.task_id,
+                        taskName: task.task_name,
+                        dueDate: task.task_dueDate,
+                        members: data,
+                        nameNoSpace: str
+                    });
+                } else {
+                    const test = await testOverDue(task.task_id);
+                    const data = await completeGather(task.task_id);
+                    notCompleted.push({
+                        taskId: task.task_id,
+                        taskName: task.task_name,
+                        dueDate: task.task_dueDate,
+                        overdue: test,
+                        members: data,
+                        nameNoSpace: str
+                    });
+                }
+            });  
+        }
+        await setup();
+        const groupName = await getGroupName(req.params.groupId);
+        res.render('groupTasksPage', {completed: completed, notCompleted: notCompleted, userId: req.params.userId, projId: req.params.projectId, groupId: req.params.groupId, groupName: groupName });
+        // res.json({completed: completed, notCompleted: notCompleted, userId: req.params.userId, projId: req.params.projectId, groupId: req.params.groupId, groupName: groupName });
+        
+    } catch (err) {
+        console.log(err);
+        res.render('error', {err});
+    }
+    
+});
+
+
+userRouter.post('/:userId/:projectId/:groupId/tasks', async (req, res) => {
+    try {
+        
+        const task = await Task.create(
+            {
+                task_name: req.body.taskName,
+                task_description: req.body.taskDescription,
+                group_id: req.params.groupId,
+                task_dueDate: new Date(req.body.dueDate),
+                task_description: req.body.taskDescription
+            }
+        );
+        res.redirect(`/user/${req.params.userId}/${req.params.projectId}/${req.params.groupId}/tasks`);
+
+    } catch (err) {
+        console.log(err);
+        res.render('error', {err});
+    }
+});
 
 
 
@@ -204,6 +365,13 @@ userRouter.post('/:userId/:projectId/groups', async (req, res) => {
 
 
 
+
+
+
+
+
+
+//////////////////////////STATS PAGE//////////////////////////////
 
 
 userRouter.get('/:userId/:projectId/stats', async (req, res) => {
