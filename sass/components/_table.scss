@@ -1,31 +1,13 @@
-.section__table {
-    position: absolute;
-    
-    left: 10%;
-    width: 80%;
-    height: 100vh;
-    background-color: whitesmoke;
 
-
-    &-container {
-        position: relative;
-    
-        width: 70%;
-        background-color: white;
-        margin: 0 auto;
-    }
-
-    &-todo {
-        margin-bottom: 25px;
-    }
-    
-}
 
 table {
     /* border-collapse: collapse; */
     border-collapse: separate;
     border-spacing:  0;
     margin: 0 auto;
+    display: block;
+    table-layout: fixed;
+   
 }
 
 caption {
@@ -37,6 +19,7 @@ caption {
 
 th {
     text-align: center;
+    height: 5rem;
 }
 
 th:first-child {
@@ -73,9 +56,6 @@ td {
     border-right: 1px solid #cecfd5;
 }
 tr td {
-    //change in page
-    // width: 175px;
-    // height: 50px;
     text-align: center;
 }
 
@@ -93,3 +73,8 @@ td:first-child {
     cursor: pointer;
 }
 
+tbody tr:hover,
+tbody tr:focus-within {
+  background: #f2f3ff;
+  outline: none;
+}
