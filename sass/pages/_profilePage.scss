@@ -1,0 +1,175 @@
+.profile-background {
+    position: relative;
+    top: 2%;
+    left: 5%;
+    width: 85%;
+    
+    
+
+}
+
+.container-profile {
+    position: relative;    
+    display: block;
+
+}
+
+.profile__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    border-bottom: 1px solid black;
+    font-size: 5rem;
+}
+.header-item {
+    margin: 50px;
+}
+
+.header__img {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+}
+
+.header__name {
+    font-size: 5rem;
+}
+
+
+
+
+.profile__content {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 6rem;
+    overflow: auto;
+    font-size: 3rem;
+
+    
+    
+    &-overview {
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 700px;
+        width: 25%;
+        background-color: white;
+        border: 1px solid black;
+        overflow-x: scroll;
+        
+    }
+    
+    &-stats {
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 700px;
+        width: 25%;
+        background-color: white;
+        border: 1px solid black;
+
+    }
+    
+    &-badges {
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center; 
+        overflow: scroll;
+        min-height: 700px;
+        max-height: 700px;
+        width: 40%;
+        background-color: white;
+        border: 1px solid black;
+        
+        
+    }
+    
+    
+}
+
+.badge {
+    margin: 10px;
+    position: relative;
+    &__name {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        border-bottom: 1px solid black;
+        transform: translateX(-50%);
+        font-size: 2rem;
+        margin-bottom: 5px;
+        
+
+    }
+    &__img {
+        width: 7rem;
+    }
+
+    &__des {
+        text-align: center;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    &__count {
+        margin-left: 1rem;
+    }
+}
+
+.flexrow-badge {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    height: 9rem;
+    position: relative;
+    font-size: 2.5rem;
+    border-bottom: 1px solid black;
+    margin: 2rem 0;
+}
+
+
+.title {
+    font-size: larger;
+    border-bottom: 1px solid black;
+    justify-self: flex-start;
+}
+
+
+ 
+
+.flexrow {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 90%;
+    position: relative;
+    font-size: 2.5rem;
+    border-bottom: 1px solid black;
+    margin-bottom: 2.5rem;
+    
+
+
+    & .identifier {
+        display: inline-block;
+        width: 35%;
+        
+    }
+
+    & .value {
+        display: inline-block;
+        width: 65%;
+    }
+
+    & .value2 {
+        display: inline-block;
+        margin-left: 5rem;
+        width: 65%;
+    }
+
+}

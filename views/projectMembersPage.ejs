@@ -1,0 +1,122 @@
+<%- include('partials/bothnav')  %> 
+
+
+
+<!-- memberCount top right somewhere -->
+<h2 id="project-memberpage-count">Members: <%= obj.memberCount %></h2>
+
+<h1 id="members-page-title"><%= obj.projectName %> Members</h1>
+<div id="project-members-container">
+    <% obj.members.forEach(member => { %>
+        <div class="memberRow">    
+            <!-- member class is flexrow -->
+            <div class="memberRow--img"><img src="/images/profileIcons/<%= member.memberImg %>"></div>
+            <div class="memberRow--name"><%= member.memberName %></div>
+            <div class="memberRow--email"><%= member.memberEmail %></div>
+            <div class="memberRow--type"><%= member.memberType %></div>
+        </div>
+        
+    <% }) %>
+</div>
+
+
+<!-- add member button / remove member button on faculty users isFaculty = true/false -->
+<% if (obj.isFaculty) { %>
+    <a href="#" data-popup-target="#addMemberToProject" class="btn btn__large project-members-btn">ADD MEMBER<span class="html_plus">&plus;</span></a>
+    <a href="#" data-popup-target="#removeMemberFromProject" class="btn btn__large project-members-btn">REMOVE MEMBER<span class="html_plus">&minus;</span></a>
+<% } %>
+
+<div class="popup" id="addMemberToProject">
+    <div class="popup__header">
+        <div class="popup__header-title">Add Member:</div>
+        <button data-close-button class="popup__header-close-button">&times;</button>
+    </div>
+
+    <div class="popup__body">
+        <form action="/user/<%= userId %>/<%= projId %>/addmember" method="POST" name="addMemberForm" onsubmit="return validateEmailAdd()">
+            <fieldset>
+                <label for="userEmail">User Email:
+                    <input type="email" name="userEmail" placeholder="Enter User email..." style="width: 100%; height: 3.5rem; padding: 1.5rem;" required title="Enter valid user email please!">
+                </label>
+                <input type="submit" name="submit" value="ADD MEMBER" id="submit" class="btn btn__medium">
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+
+
+
+<div class="popup" id="removeMemberFromProject">
+    <div class="popup__header">
+        <div class="popup__header-title">Remove Member:</div>
+        <button data-close-button class="popup__header-close-button">&times;</button>
+    </div>
+
+    <div class="popup__body">
+        <form action="/user/<%= userId %>/<%= projId %>/removemember" method="POST" name="removeMemberForm" onsubmit="return validateEmailRemove()">
+            <fieldset>
+                <label for="userEmail">User Email:
+                    <input type="email" name="userEmail" placeholder="Enter User email..." style="width: 100%; height: 3.5rem; padding: 1.5rem;" required title="Enter valid user email please!">
+                </label>
+                <input type="submit" name="submit" value="ADD MEMBER" id="submit" class="btn btn__medium">
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+
+<div id="overlay"></div>
+
+<script src="/js/popup.js" defer></script>
+<script   src="https://code.jquery.com/jquery-3.5.1.min.js"   integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="   crossorigin="anonymous"></script>
+<script defer>
+    $.ajaxSetup({async: false});
+    
+
+
+    function validateEmailAdd() {
+        let test;
+        $.ajax({
+          url: `http://localhost:3000/user/${document.forms["addMemberForm"]["userEmail"].value}/userexist`,
+          dataType: "JSON",
+          success: function(data) {
+            // console.log(data + typeof data);
+            test = data;
+          }
+        });
+
+        if (test.res == "false") {
+            alert("This email does not match our records. Please try again!");
+            return false;
+        }
+        
+    }
+
+    function validateEmailRemove() {
+        let test;
+        $.ajax({
+          url: `http://localhost:3000/user/${document.forms["removeMemberForm"]["userEmail"].value}/userexist`,
+          dataType: "JSON",
+          success: function(data) {
+            // console.log(data + typeof data);
+            test = data;
+          }
+        });
+
+        if (test.res == "false") {
+            alert("This email does not match our records. Please try again!");
+            return false;
+        }
+        
+    }
+
+    const rows = $(".memberRow").length;
+    if (rows >= 10) {
+        let style = $(".memberRow:last-child").css("border", "none");
+    }
+
+
+
+    
+</script>

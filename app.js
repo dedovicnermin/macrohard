@@ -3,6 +3,7 @@ const express = require("express"),
     app = express(),
     layouts = require("express-ejs-layouts"),
     logger = require('morgan'),
+    userController = require("./controllers/userController"),
     errorController = require("./controllers/errors"),
     db = require("./config/db"),
     port = 3000;
@@ -38,7 +39,9 @@ app.get("/test", (req, res) => {
 });
 
 
+
 app.use("/messages", chatController);
+
 app.use("/user", userController);
 
 
@@ -50,6 +53,13 @@ app.use("/user", userController);
 //errorHandeling
 app.use(errorController.pageNotFoundError);
 app.use(errorController.internalServerError);
+
+
+
+
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+});
 
 
 

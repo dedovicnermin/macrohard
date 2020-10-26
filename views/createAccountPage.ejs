@@ -1,0 +1,37 @@
+<div class="wrap">
+    <div class="keys">
+        <div class="C"> </div>
+        <div class="A"> </div>
+    </div>
+    <form class="create_account_form">
+        <h1>Create Account</h1>
+        <section>
+            <input type="text" name="full-name" autocomplete="off" required>
+            <label for="Full-Name" class="label-name"><span class="content-name">Full Name</span></label>
+        </section>
+        <section>
+            <input type="text" name="Email" autocomplete="off" required>
+            <label for="Email" class="label-email"><span class="content-email">Email</span></label>
+        </section>
+        <section>
+            <input type="password" name="Password" autocomplete="off" required>
+            <label for="Password" class="label-password"><span class="content-password">Password</span></label>
+        </section>
+        <section>
+            <input type="password" name="confirm-Password" autocomplete="off" required>
+            <label for="confirm-Password" class="label-confirm-password"><span class="content-confirm-password">Confirm Password</span></label>
+        </section>
+        <section class="selection" required>
+            <select name="user-type" required>
+                <option value="null"></option>
+                <option value="0">Faculty</option>
+                <option value="1">User</option>
+            </select>
+            <label for="user-type" class="label-user-type"><span>User Type</span></label>
+        </section>
+        <div class="butt">
+            <button onclick="location.href='login.html'">Back</button>
+            <input class="login" type="submit" name="create" value="Create Account" onclick="#">
+        </div>
+    </form>
+</div>

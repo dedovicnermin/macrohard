@@ -1,0 +1,45 @@
+<%- include('partials/bothnav')  %> 
+<h1 id="projects-page-title">Assigned Projects</h1>
+<div class="projects-container">
+    <% obj.forEach(proj => { %>
+        <div class="card">
+            <div class="card__side card__side--front">
+                <div class="card__picture"></div>
+                <h4 class="card__heading"><%= proj.name %></h4>
+                <div class="card__details">
+                    <ul>
+                        <li>Due: <%= proj.dueDate %></li>
+                        <li>Members: <%= proj.memberCount %></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card__side card__side--back">
+                <div class="card__cta">
+                    <div class="card__motivation"><%= proj.motivation %></div>
+                    <a href="#" class="btn btn__large">Enter Project!</a>
+                </div>
+            </div>
+        </div>
+
+        
+    <% }) %>
+</div>
+
+
+<script defer>
+    const setBackground = () => {
+        let cards = document.querySelectorAll('.card__side--back');
+        cards.forEach(card => {
+            card.style.backgroundColor = getRandomColor();
+        });
+    }
+
+    document.body.onload = setBackground;
+    function getRandomColor() {
+        const randomColor = Math.floor(Math.random()*16777215).toString(16);
+        return "#" + randomColor;
+    }
+    
+</script>
+
+

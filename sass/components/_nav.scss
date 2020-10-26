@@ -1,12 +1,18 @@
+
+
 .nav {
+    box-sizing: border-box;
     background-color: #eee; 
     display: inline-flex;
     flex-direction: column;
-    position: fixed;
-    
-    min-height: 100vh;
+    // position: fixed;
+    position: absolute;
+    top: 0;
     border-right: 2px solid black;
-    justify-content: space-evenly;
+    height: 100%;
+    align-items: center;
+    // justify-content: space-evenly;
+    
 }
 
 
@@ -14,8 +20,12 @@
     width: 4%;
     top:0;
     left: 0;
-    
-    
+
+
+    & .svg {
+        margin-top: 5rem;
+        margin-bottom: 5rem;
+    }
 }
 
 .nav a {
@@ -33,11 +43,14 @@
 
 .svg {
     width: 45px;
-    height: 60px;
+
+    height: 45px;
 }
 
 .nav-secondary {
     width: 5%; 
     top: 0;
     left: 4%;
+
+    justify-content: space-evenly;
 }
