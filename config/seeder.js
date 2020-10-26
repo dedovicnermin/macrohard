@@ -1,3 +1,4 @@
+
 const db = require('./db');
 const queryInterface = db.getQueryInterface();
 
@@ -387,6 +388,7 @@ module.exports = {
         });
     }
 }
+
 
 
 

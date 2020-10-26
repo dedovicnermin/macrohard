@@ -1,4 +1,6 @@
+
 const e = require('express');
+
 const Review = require('../models/Review');
 
 const express = require('express'),
@@ -6,6 +8,7 @@ userRouter = express.Router(),
 Project = require("../models/Project"),
 Group = require("../models/Group"),
 Task = require("../models/Task"),
+
 User = require("../models/User"),
 UserProject = require('../models/UserProject'),
 Badge = require('../models/Badge'),
@@ -192,6 +195,7 @@ userRouter.post('/:userId/:projectId/details', async (req, res) => {
 
 
 ////////////////////////////////////////////////////////////////////
+
 
 
 
@@ -841,17 +845,6 @@ async function asyncForEach(array, callback) {
         await callback(array[index]);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 module.exports = userRouter;

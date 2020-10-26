@@ -1,4 +1,3 @@
-"use strict";
 
 const express = require("express"),
     app = express(),
@@ -8,6 +7,15 @@ const express = require("express"),
     errorController = require("./controllers/errors"),
     db = require("./config/db"),
     port = 3000;
+
+
+
+var server = app.listen(port);
+app.io = require('socket.io')(server);
+var userController = require('./controllers/userController');
+var chatController = require('./controllers/chatController')(app.io);
+
+
 
 
 app.set("view engine", "ejs");
@@ -30,6 +38,10 @@ app.get("/test", (req, res) => {
     res.render("test");
 });
 
+
+
+app.use("/messages", chatController);
+
 app.use("/user", userController);
 
 
@@ -44,11 +56,10 @@ app.use(errorController.internalServerError);
 
 
 
+
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
-
-
 
 
 

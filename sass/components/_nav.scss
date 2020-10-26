@@ -1,4 +1,5 @@
 
+
 .nav {
     box-sizing: border-box;
     background-color: #eee; 
@@ -19,6 +20,7 @@
     width: 4%;
     top:0;
     left: 0;
+
 
     & .svg {
         margin-top: 5rem;
@@ -41,6 +43,7 @@
 
 .svg {
     width: 45px;
+
     height: 45px;
 }
 
@@ -48,5 +51,6 @@
     width: 5%; 
     top: 0;
     left: 4%;
+
     justify-content: space-evenly;
 }
