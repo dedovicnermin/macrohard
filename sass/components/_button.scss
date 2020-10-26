@@ -1,0 +1,108 @@
+.btn {
+    
+    
+    &__small {
+        width: 4rem;
+        padding: 1rem 1rem;
+        background-color: green;
+        color: black;
+    }
+    
+    &__medium {
+        width: 10rem;
+        padding: .5rem .5rem;
+        background-color: green;
+        color: black;
+    }
+    
+    &__large {
+        width: 15rem;
+        padding: 2rem 2rem;
+        background-color: red;
+        color: black;
+    }
+    
+    &__xlarge {
+        width: 40rem;
+        padding: 1rem 1rem;
+        background-color: darkred;
+        color: white;
+    }
+    
+    &:link, &:visited {
+        text-transform: none;
+        text-decoration: none;
+        display: inline-block;
+        border-radius: 10rem;
+        font-size: 1.6rem;
+        position: relative;
+        text-align: center;
+        border: none;
+        cursor: pointer;
+        
+        transition: all .2s;
+    }
+    
+    &:hover {
+        transform: translateY(-.3rem);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.2);
+        
+        &::after {
+            transform: scaleX(1.2) scaleY(1.6);
+            opacity: 0;
+        }
+    }
+    
+    &:active, &:focus {
+        transform: translateY(-1px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.2);
+    }
+    
+    &::after {
+        content: "";
+        display: inline-block;
+        height: 100%;
+        width: 100%;
+        border-radius: 10rem;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        transition: all .4s;
+    }
+    
+}
+
+
+// BTN TXT
+
+.btn-text {
+    
+    &:link, &:visited {
+        color: black;
+        display: inline-block;
+        text-decoration: none;
+        border-bottom: 1px solid black;
+        padding: 3px;
+        transition: all .2s;
+    }
+    
+    &:hover {
+        background-color: whitesmoke;
+        color: black;
+        box-shadow: 0 10px 20px rgba(black, .15);
+        transform: translateY(-2px);
+    }
+    
+    &:active {
+        box-shadow: 0 5px 10px rgba(black, .15);
+        transform: translateY(0);
+    }
+    
+}
+
+
+
+
+
+

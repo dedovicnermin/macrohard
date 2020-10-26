@@ -1,30 +1,46 @@
-const express = require('express');
-const app = express();
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
-const router = express.Router();
-app.get('/chatroom', function(req, res) {
-    res.render('chatroom.ejs');
+const chatRouter = require('express').Router();
+
+
+
+chatRouter.get('/chat', function(req, res) {
+    res.render('chat');
 });
 
-io.sockets.on('connection', function(socket) {
-    socket.on('username', function(username) {
-        socket.username = username;
-        io.emit('is_online', '🔵 <i>' + socket.username + ' join the chat..</i>');
+
+var roomName;
+module.exports = function(io) {
+    io.on('connection', function (socket) {
+        console.log('user has connected to chat controller...');
+        socket.on('admin', function() {
+            console.log('Successful socket test');
+        });
+        // setTimeout(() => {
+        //     socket.emit('news', {description: "yaya"});
+        // }, 3000);
+
+        socket.on("joinRoom", (room)=> {
+            console.log("joined room" +room);
+            roomName = room;
+            socket.join(room);
+            io
+                .to(room).emit("newUser", socket.username + " has entered the chat");
+            return io.emit("success", "You have joined this room called"+room);
+        })
+
+        socket.on('username', data => {
+            socket.username = data;
+            io.to(roomName).emit('is_online', '🔵 <i>' + socket.username + ' join the chat..</i>');
+        });
+
+        socket.on('disconnect', username => {
+            io.to(roomName).emit('is_online', '🔴 <i>' + socket.username + ' left the chat..</i>');
+        });
+
+        socket.on('chat_message', function(message) {
+            io.to(roomName).emit('chat_message', '<strong>' + socket.username + '</strong>: ' + message);
+        });
+
     });
-
-    socket.on('disconnect', function(username) {
-        io.emit('is_online', '🔴 <i>' + socket.username + ' left the chat..</i>');
-    })
-
-    socket.on('chat_message', function(message) {
-        io.emit('chat_message', '<strong>' + socket.username + '</strong>: ' + message);
-    });
-
-});
-
-const server = http.listen(8080, function() {
-    console.log('listening on *:8080');
-});
-
-module.exports = router;
+    
+    return chatRouter;
+}

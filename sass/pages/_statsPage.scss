@@ -1,0 +1,54 @@
+#statsPage__tab-wrap {
+    margin-top: 8%;
+}
+
+
+.stats-container {
+    width: 80%;
+    position: relative;
+    left: 5%;
+    top: 5%;
+    margin: 0 auto;
+}
+
+
+
+tr td {
+    width: 50rem;
+    height: 2rem;
+}
+
+
+.stats-content {
+    min-height: 800px;
+    max-height: 800px;
+    overflow: scroll;
+}
+
+
+
+
+
+
+// drop
+
+
+.top-line {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    // content: "";
+    position: absolute;
+    top: 0;
+    left: 5%;
+    height: 8.5rem;
+    border-bottom: solid 2px #0d141f;
+    width: 100%;
+    z-index: -1;
+    color: black;
+
+
+}
+
+
