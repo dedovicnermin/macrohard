@@ -12,7 +12,6 @@ const express = require("express"),
 
 var server = app.listen(port);
 app.io = require('socket.io')(server);
-var userController = require('./controllers/userController');
 var chatController = require('./controllers/chatController')(app.io);
 
 
@@ -56,10 +55,6 @@ app.use(errorController.internalServerError);
 
 
 
-
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
 
 
 
