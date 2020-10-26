@@ -1,3 +1,4 @@
+const e = require('express');
 const Review = require('../models/Review');
 
 const express = require('express'),
@@ -164,6 +165,160 @@ const gatherUserProjects = async (userID) => {
 
 
 
+
+
+
+
+//////////////////////////PROJECT DETAILS PAGE//////////////////////
+
+
+
+
+userRouter.get('/:userId/:projectId/details', async (req, res) => {
+    //only faculty can see edit button, pass data about if user/not user
+    //info needed isUser, # members in project, proj duedate, files associated with project
+
+    
+
+});
+
+userRouter.post('/:userId/:projectId/details', async (req, res) => {
+    //adding files, making updates to projDetails (button wont be shown to reg users so no check here)
+});
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////PROJECT MEMBERS PAGE//////////////////////
+
+const facultyTest = async (id) => {
+    try {
+        const userType = await User.findOne({
+            attributes: ['user_type'],
+            where: {user_id: id}
+        });
+        if (userType.user_type === 'USER') {
+            return false;
+        }
+        return true;
+    } catch (err) {
+        console.log("something went wrong within isFaculty() helper: \n\n\n" + err);
+    }
+}
+
+const findProjectMembers = async (id) => {
+    try {
+        const members = await UserProject.findAll({
+            where: {proj_id: id},
+            attributes: ['user_id'],
+            raw: true
+        });
+        // let projectMembersList = [];
+        // members.forEach(member => {
+        //     projectMembersList.push(member.user_id);
+        // });
+        
+        // //test
+        // if (projectMembersList.length == 0 || projectMembersList.length != members.length) {
+        //     console.log("\nfindProjectMembers() is getting rushed. returning before finishing\n");
+        // } else {
+        //     console.log("\nfindProjectMembers() working correctly \n")
+        // }
+        // return projectMembersList;
+        return members; //returns list of objects
+
+    } catch(err) {
+        console.log("something went wrong within findProjectMembers() helper: \n\n\n" + err);
+    }
+}
+
+//reliant on findUserInfo(userIds) -> tasks page helper
+const formatProjectMembers = (memberList) => {
+    let formatted = [];
+    memberList.forEach(member => {
+        formatted.push({
+            memberId: member.user_id,
+            memberName: member.user_name,
+            memberImg: member.user_img,
+            memberEmail: member.user_email,
+            memberType: member.user_type
+        });
+    });
+    return formatted; //returns list of objects
+}
+
+const gatherMembersPageData = async (projId, userId) => {
+
+    try {
+        const projectMembers = await findProjectMembers(projId);
+        const userInfo = await findUserInfo(projectMembers);
+        const isFaculty = await facultyTest(userId);
+        const formatted = formatProjectMembers(userInfo);
+        
+        return {
+            members: formatted,
+            isFaculty: isFaculty,
+            memberCount: formatted.length
+        };
+    } catch (err) {
+        console.log("something went wrong within gatherMembersPage() helper: \n\n\n" + err);
+    }
+}
+
+
+
+
+
+
+userRouter.get('/:userId/:projectId/members', async (req, res) => {
+    //get + display members to this project. show email bc of uniqueness and bridge to messaging. count of members. Title: projectName Members. display button if client is faculty so that they'd be able to add members. 
+    try {
+        const obj = await gatherMembersPageData(req.params.projectId, req.params.userId);
+    res.json(obj);
+    } catch (err) {
+        res.json({error: err});
+    }
+    
+});
+
+
+userRouter.post('/:userId/:projectId/members', async (req, res) => {
+
+})
+
+
+
+
+
+////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
 //////////////////////////GROUPS PAGE//////////////////////////////
 
 
@@ -228,7 +383,7 @@ const findUserInfo = async (userIds) => {
         await asyncForEach(userIds, async (id) => {
             const user = await User.findOne({
                 where: {user_id: id.user_id},
-                attributes: ['user_id', 'user_name', 'user_img'],
+                attributes: ['user_id', 'user_name', 'user_img', 'user_email', 'user_type'],
                 raw: true
             });
             arr.push(user);
@@ -362,6 +517,7 @@ userRouter.post('/:userId/:projectId/:groupId/tasks', async (req, res) => {
 
 
 
+////////////////////////////////////////////////////////////////////////////////////
 
 
 
