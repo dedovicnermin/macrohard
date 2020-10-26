@@ -230,24 +230,15 @@ const findProjectMembers = async (id) => {
             attributes: ['user_id'],
             raw: true
         });
-        // let projectMembersList = [];
-        // members.forEach(member => {
-        //     projectMembersList.push(member.user_id);
-        // });
         
-        // //test
-        // if (projectMembersList.length == 0 || projectMembersList.length != members.length) {
-        //     console.log("\nfindProjectMembers() is getting rushed. returning before finishing\n");
-        // } else {
-        //     console.log("\nfindProjectMembers() working correctly \n")
-        // }
-        // return projectMembersList;
         return members; //returns list of objects
 
     } catch(err) {
         console.log("something went wrong within findProjectMembers() helper: \n\n\n" + err);
     }
 }
+
+
 
 //reliant on findUserInfo(userIds) -> tasks page helper
 const formatProjectMembers = (memberList) => {
@@ -261,7 +252,22 @@ const formatProjectMembers = (memberList) => {
             memberType: member.user_type
         });
     });
-    return formatted; //returns list of objects
+    formatted.sort((a,b) => (a.memberName > b.memberName) ? 1 : ((b.memberName > a.memberName) ? -1 : 0));
+    return formatted; //returns list of objects in order by userName
+}
+
+const getProjectName = async (id) => {
+    try {
+        const name = await Project.findOne({
+            where: {proj_id: id},
+            attributes: ['proj_name'],
+            raw: true
+        });
+        return name.proj_name;
+    } catch (err) {
+        console.log(err);
+        return "";
+    }
 }
 
 const gatherMembersPageData = async (projId, userId) => {
@@ -270,9 +276,11 @@ const gatherMembersPageData = async (projId, userId) => {
         const projectMembers = await findProjectMembers(projId);
         const userInfo = await findUserInfo(projectMembers);
         const isFaculty = await facultyTest(userId);
+        const projName = await getProjectName(projId);
         const formatted = formatProjectMembers(userInfo);
         
         return {
+            projectName: projName,
             members: formatted,
             isFaculty: isFaculty,
             memberCount: formatted.length
@@ -283,6 +291,65 @@ const gatherMembersPageData = async (projId, userId) => {
 }
 
 
+//post request helpers:::
+const userEmailCheck = async (email) => {
+    const user = await User.findOne({
+        where: {user_email: email},
+        raw: true
+    });
+    return user;
+    //will return an object or null if cant find
+}
+
+
+//ADD MEMBER TO PROJ
+const addMemberToProject = async (email, projId) => {
+    const user = await User.findOne({
+        where: {user_email: email},
+        attributes: ['user_id'],
+        raw: true
+    });
+    
+    await UserProject.create(
+        {
+            user_id: user.user_id,
+            proj_id: projId
+        }
+    );
+    const count = await Project.findOne({
+        where: {proj_id: projId},
+        attributes: ['proj_membercount'],
+        raw: true
+    });
+
+    await Project.update({
+        proj_membercount: count.proj_membercount + 1
+    }, {where: {proj_id: projId}});
+    
+}
+
+
+//REMOVE MEMBER FROM PROJ
+const removeMemberFromProject = async (email, projId) => {
+    const user = await User.findOne({
+        where: {user_email: email},
+        attributes: ['user_id'],
+        raw: true
+    });
+    await UserProject.destroy({
+        where: {user_id: user.user_id, proj_id: projId}
+    });
+
+    const count = await Project.findOne({
+        where: {proj_id: projId},
+        attributes: ['proj_membercount'],
+        raw: true
+    });
+
+    await Project.update({
+        proj_membercount: count.proj_membercount - 1
+    }, {where: {proj_id: projId}});
+}
 
 
 
@@ -291,7 +358,8 @@ userRouter.get('/:userId/:projectId/members', async (req, res) => {
     //get + display members to this project. show email bc of uniqueness and bridge to messaging. count of members. Title: projectName Members. display button if client is faculty so that they'd be able to add members. 
     try {
         const obj = await gatherMembersPageData(req.params.projectId, req.params.userId);
-    res.json(obj);
+        // res.json(obj);
+        res.render('projectMembersPage', {obj, userId: req.params.userId, projId: req.params.projectId });
     } catch (err) {
         res.json({error: err});
     }
@@ -299,9 +367,45 @@ userRouter.get('/:userId/:projectId/members', async (req, res) => {
 });
 
 
-userRouter.post('/:userId/:projectId/members', async (req, res) => {
+userRouter.post('/:userId/:projectId/addmember', async (req, res) => {
+    //faculty or admin* adding member
+    // with user email - find userId and add it to user_projects. 
+    // update projects.memberCount +1
+    try {
+        await addMemberToProject(req.body.userEmail, req.params.projectId);
+        res.redirect(`/user/${req.params.userId}/${req.params.projectId}/members`);
+    } catch (err) {
+        res.render('error', {error: err});
+    }
 
-})
+});
+
+userRouter.post('/:userId/:projectId/removemember', async (req, res) => {
+    //faculty or admin* adding member
+    // with user email - find userId and remove from user_projects. 
+    // update projects.memberCount -1
+    try {
+        await removeMemberFromProject(req.body.userEmail, req.params.projectId);
+        res.redirect(`/user/${req.params.userId}/${req.params.projectId}/members`);
+    } catch (err) {
+        res.render('error', {error: err});
+    }
+
+});
+
+//AJAX request to confirm DB has an email that faculty entered:
+userRouter.get('/:userEmail/userexist', async (req, res) => {
+    try {
+        const check = await userEmailCheck(req.params.userEmail);
+        if (check) {
+            res.json({res: "true"});
+        }
+        res.json({res: "false"});
+    } catch (err) {
+        console.log("error within get request to -> /:userEmail/userexist");
+        res.json({error: err});
+    }
+});
 
 
 
@@ -514,6 +618,7 @@ userRouter.post('/:userId/:projectId/:groupId/tasks', async (req, res) => {
     }
 });
 
+//NEEDS POST REQUEST TO ADD A USER TO GROUP / UPDATE USER_GROUP TABLE
 
 
 
