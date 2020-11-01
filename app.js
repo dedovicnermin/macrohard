@@ -56,10 +56,6 @@ app.use(errorController.internalServerError);
 
 
 
-// app.listen(port, () => {
-//     console.log(`Server running at http://localhost:${port}`);
-// });
-
 
 
 
