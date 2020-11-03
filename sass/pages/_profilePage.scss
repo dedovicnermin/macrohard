@@ -1,9 +1,11 @@
+@import "../abstracts/variables";
+
 .profile-background {
     position: relative;
     top: 2%;
     left: 5%;
     width: 85%;
-    
+    background-color: #222034; // will replace with background image
     
 
 }
@@ -56,10 +58,11 @@
         align-items: center;
         min-height: 700px;
         width: 25%;
-        background-color: white;
-        border: 1px solid black;
+        background-color: $section-base-color;
+        border: $section-border;
+        border-radius: $section-border-radius;
+        opacity: $section-opacity;
         overflow-x: scroll;
-        
     }
     
     &-stats {
@@ -69,9 +72,10 @@
         align-items: center;
         min-height: 700px;
         width: 25%;
-        background-color: white;
-        border: 1px solid black;
-
+        background-color: $section-base-color;
+        border: $section-border;
+        border-radius: $section-border-radius;
+        opacity: $section-opacity;
     }
     
     &-badges {
@@ -83,9 +87,10 @@
         min-height: 700px;
         max-height: 700px;
         width: 40%;
-        background-color: white;
-        border: 1px solid black;
-        
+        background-color: #DDE6F5;
+        border: 4px solid black;
+        border-radius: 5px;
+        opacity: 0.8;
         
     }
     
@@ -138,6 +143,7 @@
     font-size: larger;
     border-bottom: 1px solid black;
     justify-self: flex-start;
+    opacity: 1;
 }
 
 
@@ -152,6 +158,7 @@
     font-size: 2.5rem;
     border-bottom: 1px solid black;
     margin-bottom: 2.5rem;
+    opacity: 1;
     
 
 

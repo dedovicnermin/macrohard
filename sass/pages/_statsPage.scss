@@ -1,5 +1,11 @@
+@import "../abstracts/variables";
+
 #statsPage__tab-wrap {
     margin-top: 8%;
+    background-color: $section-base-color;
+    border: $section-border;
+    border-radius: $section-border-radius;
+    opacity: $section-opacity;
 }
 
 
@@ -47,7 +53,7 @@ tr td {
     width: 100%;
     z-index: -1;
     color: black;
-
+    background-color: $nav-bar-icon-color;
 
 }
 
