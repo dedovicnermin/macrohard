@@ -1,6 +1,4 @@
 @import "../abstracts/variables";
-@import "./globalStylesPage";
-@import "../abstracts/mixins";
 
 .groups-container {
     display: flex;
@@ -12,7 +10,10 @@
     position: absolute;
     left: 12%;
     top: 8%;
-    @include boxStyle;
+    background-color: $section-base-color;
+    border: $section-border;
+    border-radius: $section-border-radius;
+    opacity: $section-opacity;
     overflow-y: scroll;
 
 }

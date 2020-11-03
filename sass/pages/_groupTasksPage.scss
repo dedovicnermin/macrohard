@@ -1,6 +1,4 @@
 @import "../abstracts/variables";
-@import "./globalStylesPage";
-@import "../abstracts/mixins";
 
 .section__table {
     position: absolute;
@@ -11,7 +9,10 @@
     top: 15%;
     width: 80%;
     height: 70%;
-    @include boxStyle;
+    background-color: $section-base-color;
+    border: $section-border;
+    border-radius: $section-border-radius;
+    opacity: $section-opacity;
 
 
     &-container {

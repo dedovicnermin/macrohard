@@ -470,10 +470,9 @@ select {
       height: 3.5rem;
       font-size: 2rem; }
 
-body {
-  background-image: url("../images/background/background.jpg"); }
-
 #statsPage__tab-wrap {
+  margin-top: 8%;
+  margin-bottom: 8%;
   background-color: #DDE6F5;
   border: 4px solid black;
   border-radius: 5px;
@@ -510,9 +509,6 @@ tr td {
   color: black;
   background-color: #3d3a5e; }
 
-body {
-  background-image: url("../images/background/background.jpg"); }
-
 .projects-container {
   display: flex;
   align-items: center;
@@ -534,18 +530,12 @@ body {
   left: 12%;
   margin: 0 auto; }
 
-body {
-  background-image: url("../images/background/background.jpg"); }
-
 .profile-background {
   position: relative;
   top: 2%;
   left: 5%;
   width: 85%;
-  background-color: #DDE6F5;
-  border: 4px solid black;
-  border-radius: 5px;
-  opacity: 0.8; }
+  background-color: #222034; }
 
 .container-profile {
   position: relative;
@@ -672,9 +662,6 @@ body {
     margin-left: 5rem;
     width: 65%; }
 
-body {
-  background-image: url("../images/background/background.jpg"); }
-
 .groups-container {
   display: flex;
   align-items: center;
@@ -708,9 +695,6 @@ body {
 .html_plus {
   margin-left: 2rem;
   font-size: 2.5rem; }
-
-body {
-  background-image: url("../images/background/background.jpg"); }
 
 .section__table {
   position: absolute;
@@ -762,9 +746,6 @@ body {
   left: 35%;
   width: 40%;
   font-size: 2.5rem; }
-
-body {
-  background-image: url("../images/background/background.jpg"); }
 
 #members-page-title {
   font-size: 4rem;
@@ -834,7 +815,7 @@ body {
   left: 35%; }
 
 body {
-  background-image: url("../images/background/background.jpg"); }
+  background-image: url("../../public/images/background/background.jpg"); }
 
 html,
 * {

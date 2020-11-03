@@ -1,9 +1,11 @@
 @import "../abstracts/variables";
-@import "../abstracts/mixins";
-@import "./globalStylesPage";
 
 #statsPage__tab-wrap {
-    @include boxStyle;
+    margin-top: 8%;
+    background-color: $section-base-color;
+    border: $section-border;
+    border-radius: $section-border-radius;
+    opacity: $section-opacity;
 }
 
 

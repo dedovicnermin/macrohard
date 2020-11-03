@@ -1,16 +1,7 @@
-@import "./variables";
-
 @mixin clearfix {
     &::after {
         content: "";
         display: table;
         clear: both;
     }
-}
-
-@mixin boxStyle {
-    background-color: $section-base-color;
-    border: $section-border;
-    border-radius: $section-border-radius;
-    opacity: $section-opacity;
 }

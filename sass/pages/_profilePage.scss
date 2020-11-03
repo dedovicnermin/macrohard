@@ -1,13 +1,11 @@
 @import "../abstracts/variables";
-@import "../abstracts/mixins";
-@import "./globalStylesPage";
 
 .profile-background {
     position: relative;
     top: 2%;
     left: 5%;
     width: 85%;
-    @include boxStyle;
+    background-color: #222034; // will replace with background image
     
 
 }
@@ -25,7 +23,6 @@
     width: 100%;
     border-bottom: 1px solid black;
     font-size: 5rem;
-
 }
 .header-item {
     margin: 50px;
