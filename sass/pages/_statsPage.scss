@@ -1,5 +1,9 @@
+@import "../abstracts/variables";
+@import "../abstracts/mixins";
+@import "./globalStylesPage";
+
 #statsPage__tab-wrap {
-    margin-top: 8%;
+    @include boxStyle;
 }
 
 
@@ -47,7 +51,7 @@ tr td {
     width: 100%;
     z-index: -1;
     color: black;
-
+    background-color: $nav-bar-icon-color;
 
 }
 
