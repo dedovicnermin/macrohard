@@ -37,10 +37,12 @@ const Update = db.define('update', {
    timestamps: false
 });
 
-Update.hasOne(User);
+Update.belongsTo(User, {foreignKey: 'user_id'});
+// Update.hasOne(User, {foreignKey: 'user_id'});
 User.hasMany(Update, {foreignKey: 'user_id'});
 
-Update.hasOne(Task);
+Update.hasOne(Task, {foreignKey: 'task_id'});
+// Update.belongsTo(Task);
 Task.hasMany(Update, {foreignKey: 'task_id'});
 
 

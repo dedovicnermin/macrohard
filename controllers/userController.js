@@ -1,20 +1,24 @@
 
-const e = require('express');
-
 const Review = require('../models/Review');
 
 const express = require('express'),
-userRouter = express.Router(),
-Project = require("../models/Project"),
-Group = require("../models/Group"),
-Task = require("../models/Task"),
+    userRouter = express.Router(),
+    Project = require("../models/Project"),
+    Group = require("../models/Group"),
+    Task = require("../models/Task"),
+    Update = require("../models/Update"),
+    User = require("../models/User"),
+    UserProject = require('../models/UserProject'),
+    Badge = require('../models/Badge'),
+    UserBadge = require('../models/UserBadge'),
+    UserGroup = require('../models/UserGroup'),
+    UserTask = require('../models/UserTask'),
+    Submission = require('../models/Submission'),
+    sequelize = require('sequelize');
 
-User = require("../models/User"),
-UserProject = require('../models/UserProject'),
-Badge = require('../models/Badge'),
-UserBadge = require('../models/UserBadge'),
-UserGroup = require('../models/UserGroup'),
-UserTask = require('../models/UserTask');
+
+
+
 
 
 
@@ -557,6 +561,7 @@ userRouter.get('/:userId/:projectId/:groupId/tasks', async (req, res) => {
         
         const tasks = await Task.findAll({
             where: {group_id: req.params.groupId},
+            attributes: ['task_id', 'task_name', 'task_description', 'task_status', 'task_score', 'task_dueDate', 'task_overdue', 'task_approval', 'group_id'],
             order: [
                 ['task_id', 'ASC']
             ]
@@ -590,6 +595,7 @@ userRouter.get('/:userId/:projectId/:groupId/tasks', async (req, res) => {
             });  
         }
         await setup();
+        
         const groupName = await getGroupName(req.params.groupId);
         res.render('groupTasksPage', {completed: completed, notCompleted: notCompleted, userId: req.params.userId, projId: req.params.projectId, groupId: req.params.groupId, groupName: groupName });
         // res.json({completed: completed, notCompleted: notCompleted, userId: req.params.userId, projId: req.params.projectId, groupId: req.params.groupId, groupName: groupName });
@@ -627,6 +633,441 @@ userRouter.post('/:userId/:projectId/:groupId/tasks', async (req, res) => {
 
 
 ////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////SPECIFIC TASK PAGE//////////////////////////////
+//Get
+//infoNeeded: task - name, approved, due, grade, description, members, taskStatus, if current user is in task or not
+// updates
+// submissions
+
+const fs = require('fs');
+const { resolveSoa } = require('dns');
+
+
+
+const removeFilesFromStorage = async (req) => {
+    const uploadFolder = req.app.locals.__basedir + '/uploads/';
+    await fs.readdir(uploadFolder, (err, files) => {
+        if (err) {
+            return;
+        }
+        if (files.length != 0) {
+            files.forEach(file => {
+                fs.unlinkSync(uploadFolder+file, err => {
+                    console.log("error with unlinking file from upload folder");
+                });
+            });
+        }
+    });    
+}
+
+
+const addFilesToStorage = async (subList, req) => {
+    const uploadFolder = req.app.locals.__basedir + '/uploads/';
+    if (subList) {
+        subList.forEach(sub => {
+            const outputFilepath = uploadFolder + '/' + sub.sub_name;
+            fs.createWriteStream(outputFilepath).write(sub.sub_doc);
+        });
+    }
+}
+
+const getTaskSubmissions = async (id) => {
+    try {
+        const submissions = await Submission.findAll({
+            where: {task_id: id},
+            attributes: ['sub_name', 'sub_doc']
+        });
+        let subdata = [];
+        submissions.forEach(sub => {
+            const data = sub.sub_doc;
+            subdata.push(data);
+        });
+        return submissions;
+    } catch (error) {
+        console.log("error found within getTaskSubmissions()\n\n" + error);
+        return {err: error};
+    }
+}
+
+
+const getTaskInfo = async (id, userId) => {
+    try {
+        const task = await Task.findOne({
+            where: {task_id: id},
+            raw: true,
+            attributes: ['task_id', 'task_name', 'task_description', 'task_status', 'task_score', 'task_approval', 'group_id', 'task_dueDate']
+        });
+        let score;
+        if (task.task_score == null || task.task_score == undefined) {
+            score = "- / 5"
+        } else {
+            score = task.task_score + " / 5";
+        }
+
+
+        let isUserInTask = false;
+        const users = await UserTask.findAll({
+            where: {task_id: id}, 
+            raw: true
+        });
+
+        users.forEach(user => {
+            if (user.user_id == userId) {
+                isUserInTask = true;
+            }
+        });
+
+        let memberInfo = [];
+        const mI = async () => {
+            await asyncForEach(users, async (ele) => {
+                const u = await User.findOne({
+                    attributes: ['user_id', 'user_name'],
+                    where: {
+                        user_id: ele.user_id,
+                        user_type: 'USER'
+                    },
+                    raw: true
+                });
+                memberInfo.push({memberId: u.user_id, memberName: u.user_name});
+            });
+        }
+        await mI();
+
+        
+        return {
+            taskId: task.task_id,
+            groupId: task.group_id,
+            taskName: task.task_name,
+            taskDescription: task.task_description,
+            taskStatus: task.task_status,
+            taskScore: score,
+            taskApproval: task.task_approval.toString().toUpperCase(),
+            taskDue: task.task_dueDate,
+            taskOverdue: task.task_overdue,
+            userInTask: isUserInTask,
+            memberInfo: memberInfo
+        };
+
+    } catch (err) {
+        console.log("error found within getTaskInfo()\n\n" + err);
+        return {err: err};
+    }
+}
+
+const getTaskUpdates = async (id) => {
+    try {
+        const updates = await Update.findAll({
+            where: {task_id: id},
+            raw: true,
+            include: [{
+                model: User,
+                attributes: ['user_name'],
+                required: true
+            }]
+        });
+        return updates;
+
+    } catch (error) {
+        console.log("error found within getTaskUpdate()\n\n" + error);
+        return {err: error};
+    }
+}
+
+
+
+
+
+
+
+
+const taskPageGather = async (id, userId, req) => {
+    try {
+        const submissions = await getTaskSubmissions(id);
+        await removeFilesFromStorage(req);
+        const taskInfo = await getTaskInfo(id, userId);
+        const updates = await getTaskUpdates(id);
+        await addFilesToStorage(submissions, req);
+        let updateFormatted = [];
+        updates.forEach(update => {
+            let grab = update.update_time.toString(); 
+            let date = grab.split('T');
+            let userName = Object.values(update).pop();
+            updateFormatted.push({
+                updateId: update.update_id,
+                title: update.update_title,
+                content: update.update_message,
+                postedBy: userName + " - " + date[0].replace("GM", "")
+            });
+        });
+        let submissionFormatted = [];
+        submissions.forEach(sub => {
+            submissionFormatted.push(sub.sub_name);
+        });
+        return {
+            task: taskInfo,
+            updates: updateFormatted,
+            submissions: submissionFormatted,
+            // subs: submissions
+        }
+    } catch (error) {
+        console.log("error found within taskPageGather()\n\n" + error);
+        return {err: error};
+    }
+    
+}
+
+
+
+//post
+//- post update
+//-post submission*
+//-edit task description*
+//-adding/removing user from group*
+//-comp/not comp change
+//- review peers form*
+
+userRouter.get('/:userId/:projId/:groupId/:taskId/:taskName', async (req, res) => {
+    const obj = await taskPageGather(req.params.taskId, req.params.userId, req);
+    const {task, updates, submissions} = obj;
+    const isFaculty = await facultyTest(req.params.userId);
+    // res.json({task, updates, submissions, userId: req.params.userId, projId: req.params.projId, groupId: req.params.groupId, taskId: req.params.taskId, isFaculty: isFaculty});
+    res.render('taskPage', {task, updates, submissions, userId: req.params.userId, projId: req.params.projId, groupId: req.params.groupId, taskId: req.params.taskId, isFaculty: isFaculty});
+});
+
+
+// submitting review
+userRouter.post('/:userId/:projId/:groupId/:taskId/submitreview', async (req, res) => {
+    
+    try {
+        const keys = Object.keys(req.body);
+        const values = Object.values(req.body);
+        const numReviews = parseInt(req.body.numReviews);
+        const badgesChosen = req.body.badgeAward;
+        
+        const forLoop = async _ => {
+            for (let i = 0; i < numReviews; i++) {
+                //enter review
+                let badgeID = (badgesChosen[i] == 'none') ? null : badgesChosen[i].toString().split(':')[1]
+                await Review.create({
+                    user_id: keys[i],
+                    review_score: values[i],
+                    task_id: req.params.taskId,
+                    badge_id: badgeID,
+                    proj_id: req.params.projId
+                });
+    
+        
+                //update user_badge count
+                if (badgeID != null) {
+                    const bCount = await UserBadge.findOne({
+                        where: {user_id: req.params.userId, badge_id: badgeID},
+                        attributes: ['count']
+                    });
+                    await UserBadge.update(
+                        {
+                            count: bCount.count + 1
+                        },
+                        {
+                            where: {user_id: keys[i], badge_id: badgeID}
+                        }
+                    );
+                }
+    
+                
+    
+                //update user avg contribution
+                const numReviews = await Review.findAll({
+                    where: {user_id: keys[i]},
+                    attributes: [
+                        [sequelize.fn('sum', sequelize.col('review_score')), 'review_sum'],
+                        [sequelize.fn('count', sequelize.col('review_score')), 'review_count']
+                    ],
+                    raw: true
+                });
+
+                
+                
+                let obj = numReviews[0];
+                let newCont = parseFloat(obj.review_sum / obj.review_count).toFixed(2);
+                await User.update(
+                    {
+                        avg_contribution: newCont
+                    },
+                    {
+                        where: {user_id: keys[i]}
+                    }
+                );    
+            }
+        }
+        await forLoop();
+        
+        
+        res.redirect(`/user/${req.params.userId}/${req.params.projId}/${req.params.groupId}/tasks`);
+        
+    } catch (err) {
+        console.log(err);
+        console.log("\n\n\n");
+        res.render('error', {err});
+    }
+});
+
+
+//faculty approving task
+userRouter.post('/:userId/:projId/:groupId/:taskId/approvetask', async (req, res) => {
+    try {
+        await Task.update(
+            {
+                task_approval: true,
+                task_score: parseInt(req.body.score)
+            },
+            {
+                where: {task_id: req.params.taskId}
+            }
+        );
+        res.redirect(`/user/${req.params.userId}/${req.params.projId}/${req.params.groupId}/tasks`);
+
+    } catch (err) {
+        console.log(err);
+        res.render('error');
+    }
+})
+
+
+//remove self from task
+userRouter.post('/:userId/:projId/:groupId/:taskId/removeself', async (req, res) => {
+    try {
+        await UserTask.destroy({
+            where: {user_id: req.params.userId, task_id: req.params.taskId}
+        });
+        res.redirect(`/user/${req.params.userId}/${req.params.projId}/${req.params.groupId}/tasks`);
+
+    } catch (err) {
+        console.log(err);
+        res.render('error');
+    }
+});
+
+//adding self to task
+userRouter.post('/:userId/:projId/:groupId/:taskId/addself', async (req, res) => {
+    try {
+        await UserTask.create({
+            user_id: req.params.userId,
+            task_id: req.params.taskId
+        });
+        res.redirect(`/user/${req.params.userId}/${req.params.projId}/${req.params.groupId}/tasks`);
+    } catch (err) {
+        console.log(err);
+        res.render('error');
+    }
+});
+
+
+//change task_status
+userRouter.post('/:userId/:projId/:groupId/:taskId/changestatus', async (req, res) => {
+    try {
+        await Task.update(
+            {
+                task_status: req.body.tStatus
+            },
+            {
+                where: {task_id: req.params.taskId}
+            }
+        );
+        
+        res.redirect(`/user/${req.params.userId}/${req.params.projId}/${req.params.groupId}/tasks`);
+    
+    } catch (err) {
+        console.log(err);
+        res.render('error');
+    }
+});
+
+
+
+
+//editing task name / description
+userRouter.post('/:userId/:projId/:groupId/:taskId/editdescription', async (req, res) => {
+    try {
+        await Task.update(
+            {
+                task_name: req.body.taskName,
+                task_description: req.body.taskDescription
+            },
+            {
+                where: {task_id: req.params.taskId},
+                returning: true,
+                plain: true
+            }
+        );
+        let str = req.body.taskName;
+        str = str.replace(/\s/g, '');
+        res.redirect(`/user/${req.params.userId}/${req.params.projId}/${req.params.groupId}/${req.params.taskId}/${str}`);
+        
+    } catch (err) {
+        console.log(err);
+        res.render('error');
+    }
+});
+
+
+userRouter.post('/:userId/:projId/:groupId/:taskId/addupdate', async (req, res) => {
+    try {
+        const name = await User.findOne({where:{user_id: req.params.userId}, raw: true});
+        await Update.create({
+            update_title: req.body.updateTitle,
+            update_message: req.body.updateMessage,
+            task_id: req.params.taskId,
+            user_id: req.params.userId
+        }).then(updated => {
+            let grab = updated.update_time.toString(); 
+            let date = grab.split('T');
+            const str = updated.update_title + "~" + updated.update_message + "~" + name.user_name + " - " + date[0].replace("GM", "");
+            res.send(str);
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.render('error');
+    }
+});
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
 
 
 
@@ -725,9 +1166,6 @@ const gatherTableInfo = async (projID, userID) => {
                         "AVG": avgs[k]
                     });
                 }
-                console.log("a:");
-                console.log(a);
-                
                
             })
             .catch(err => console.log(err));
@@ -769,7 +1207,7 @@ const gatherTaskInfo = async (projID) => {
                         group_id: element.group_id
                     }
                 });
-                console.log("found: " + element + "\n");
+                
                 tasks.push(t);
             });
             

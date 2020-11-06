@@ -9,20 +9,24 @@ const Submission = db.define('submission', {
         autoIncrement: true
     },
     sub_doc: {
-        type: DataTypes.BLOB
+        type: DataTypes.BLOB("long")
     },
     task_id: {
         type: DataTypes.INTEGER,
         references: {
             model: "tasks"
         }
+    },
+    sub_name: {
+        type: DataTypes.TEXT
     }
 }, {
     tableName: 'submissions',
     timestamps: false
 });
 
-Submission.hasOne(Task);
+// Submission.hasOne(Task);
+Submission.hasOne(Task, {foreignKey: 'task_id'});
 Task.hasMany(Submission, {foreignKey: 'task_id'});
 
 module.exports = Submission

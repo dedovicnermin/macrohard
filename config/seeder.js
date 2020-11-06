@@ -386,7 +386,37 @@ module.exports = {
         }).catch(err => {
             console.log(`fail: ${err}`);
         });
-    }
+    },
+    updateInsert: () => {
+        queryInterface.bulkInsert('updates', [
+            {
+                update_id: 1,
+                update_title: 'Update1',
+                update_message: 'Update1 message',
+                task_id: 1,
+                user_id: 1
+            },
+            {
+                update_id: 2,
+                update_title: 'Update2',
+                update_message: 'Update2 message',
+                task_id: 1,
+                user_id: 2
+            },
+            {
+                update_id: 3,
+                update_title: 'Update3',
+                update_message: 'Update3 message Update3 message Update3 message Update3 message Update3 message Update3 message Update3 message Update3 message',
+                task_id: 1,
+                user_id: 2
+            }
+        ]).then(() => {
+            console.log('success');
+        }).catch(err => {
+            console.log(`fail: ${err}`);
+        });
+    },
+    
 }
 
 

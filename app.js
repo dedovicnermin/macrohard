@@ -10,12 +10,19 @@ const express = require("express"),
 
 
 
+
+
+
+
 var server = app.listen(port);
 app.io = require('socket.io')(server);
 var chatController = require('./controllers/chatController')(app.io);
 
-
-
+//for uploads
+const fileRouter = express.Router();
+const upload = require('./config/multerConfig')(__dirname);
+require('./controllers/uploadController')(app, fileRouter, upload, __dirname);
+app.locals.__basedir = __dirname;
 
 app.set("view engine", "ejs");
 app.use(logger('dev'));

@@ -57,7 +57,7 @@
   z-index: -1;
   transition: all .4s; }
 
-.btn-text:link, .btn-text:visited {
+.btnText:link, .btnText:visited {
   color: black;
   display: inline-block;
   text-decoration: none;
@@ -65,13 +65,13 @@
   padding: 3px;
   transition: all .2s; }
 
-.btn-text:hover {
+.btnText:hover {
   background-color: whitesmoke;
   color: black;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
   transform: translateY(-2px); }
 
-.btn-text:active {
+.btnText:active {
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
   transform: translateY(0); }
 
