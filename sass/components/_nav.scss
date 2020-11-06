@@ -1,4 +1,4 @@
-
+@import "../abstracts/variables";
 
 .nav {
     box-sizing: border-box;
@@ -8,7 +8,7 @@
     // position: fixed;
     position: absolute;
     top: 0;
-    border-right: 2px solid black;
+    border-right: $section-border;
     height: 100%;
     align-items: center;
     // justify-content: space-evenly;
@@ -20,7 +20,7 @@
     width: 4%;
     top:0;
     left: 0;
-
+    background-color: $nav-bar-primary-background-color;
 
     & .svg {
         margin-top: 5rem;
@@ -43,7 +43,6 @@
 
 .svg {
     width: 45px;
-
     height: 45px;
 }
 
@@ -51,6 +50,6 @@
     width: 5%; 
     top: 0;
     left: 4%;
-
+    background-color: $nav-bar-secondary-background-color;
     justify-content: space-evenly;
 }
