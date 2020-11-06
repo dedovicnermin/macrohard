@@ -7,7 +7,7 @@ Group = require('../models/Group'),
 Task = require('../models/Task'),
 //Submission = require('../models/Submission'),
 //Chatroom = require('../models/Chatroom'),
-//Update = require('../models/Update'),
+Update = require('../models/Update'),
 
 UserProject = require('../models/UserProject'),
 //UserGroup = require('../models/UserGroup'),
@@ -51,6 +51,9 @@ module.exports = {
     },
     userBadgeDelete: () => {
         UserBadge.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
+    },
+    updateDelete: () => {
+        Update.destroy({where: {}}).then(() => console.log('success')).catch(err => console.log(`fail: ${err}`));
     }
 
 };

@@ -1,0 +1,458 @@
+
+
+<div class="taskPage">
+    <div class="taskPage__header">
+        <!-- backbutton: directs to group tasks -->
+        <a href="/user/<%= userId %>/<%= projId %>/<%= groupId %>/tasks" class="taskPage__header--backbtn"><img src="/images/SVGS/backbutton.svg" height="50px"> </a>
+        <div class="taskPage__header--name"><p id="headerTaskName"><%= task.taskName %></p></div>
+        <div class="header-divider"></div>
+        <div class="taskPage__header--approved"><p>Approved:    <%= task.taskApproval %></p></div>
+        <div class="header-divider"></div>
+        <div class="taskPage__header--due"><p>Due:    <%= task.taskDue %></p></div>
+        <div class="header-divider"></div>
+        <div class="taskPage__header--grade"><p>Score: <%= task.taskScore %></p></div>
+    </div>
+
+
+
+    <div id="taskPageLeft">
+    <div class="taskPage__updates">
+        <h3 id="taskPage-updates-title">Updates</h3>
+        <div class="taskPage__updates--container" id="updatesContainer">
+            <% updates.forEach(update => { %>
+                <div class="update">
+                    <h5 class="update__title"><%= update.title %></h5>
+                    <p class="update__content"><%= update.content %></p>
+                    <span class="update__timeSent"><%= update.postedBy %></span>
+                </div>
+            <% }) %>
+        </div>
+        <div class="taskPage__updates--btncontainer taskBtn-container">
+            <a class="btn btn__xlarge" style="font-size: 2rem; border-radius: 2rem;" data-popup-target="#addUpdate">Post Update</a>
+        </div>
+        
+    </div>
+
+
+    
+    <div class="taskPage__submissions" id="taskSubmissions">
+        <h3 id="taskPage-submissions-title">Submissions</h3>
+        <div class="taskPage__submissions--container" id="listfiles">
+            
+            <% submissions.forEach(sub => { %>
+                <div class="taskPage__submissions--row">
+                    <a href="http://localhost:3000/api/files/download/<%= sub %>"><%= sub %></a>
+                </div>    
+            <% }) %>
+        </div>
+    
+        <div class="taskPage__submissions--btncontainer taskBtn-container">
+            <a class="btn btn__xlarge" style="font-size: 2rem; border-radius: 2rem;" data-popup-target="#addSub">Post Submission</a>
+        </div>
+    </div>
+    </div>
+        
+    
+
+    
+    <div class="taskPage__taskInfo">
+        <h3 id="taskPage-taskinfo-title">Task Description</h3>
+        <div class="taskPage__taskInfo--container">
+            <div id="taskDescription">
+                <%= task.taskDescription %>
+            </div>
+        </div>
+        <div class="taskPage__taskInfo--btncontainer taskBtn-container">
+            <a class="btn btn__xlarge" id="tInfoEdit" data-popup-target="#editTask" style="font-size: 2rem; border-radius: 2rem;">Edit Description</a>
+        </div>
+        
+    </div>
+
+    <div class="taskPage__footer">
+        
+        <% if (task.userInTask) { %>
+            <a data-popup-target="#removeMemberFromTask" class="btn btn__small" style="border-radius: 50%; text-align: center; font-size: 2rem;">&minus;</a>
+        <% } else if (!task.userInTask) { %>
+            <a data-popup-target="#addMemberToTask" class="btn btn__small" style="border-radius: 50%; text-align: center; font-size: 2rem;">&plus;</a>
+        <% } %>
+        
+        <% if (task.taskApproval == true) { %>
+            <a data-popup-target="#reviewMembers" class="btn btn__xlarge" style="font-size: 2rem; border-radius: 2rem; text-align: center;">Review Members</a>
+        <% } %>
+        
+        
+        <a data-popup-target="#compNotComp" class="btn btn__xlarge" style="font-size: 2rem; border-radius: 2rem; text-align: center;">Complete / Not Complete</a>
+
+        <% if (isFaculty) {  %>
+            <a data-popup-target="#approveTask" class="btn btn__medium" style="font-size: 2rem; border-radius: 2rem; text-align: center;">Approve</a>
+        <% } %>
+        
+
+    </div>
+
+
+</div>
+
+
+
+<!-- approve popup -->
+<div class="popup" id="approveTask">
+    <div class="popup__header">
+        <div class="popup__header-title">Approve Task?</div>
+        <button data-close-button class="popup__header-close-button">&times;</button>
+    </div>
+    <div class="popup__body">
+        <form action="/user/<%= userId %>/<%= projId %>/<%= groupId %>/<%= taskId %>/approvetask" method="POST">
+            <fieldset>
+                <label for="taskScore">Provide Score: </label>
+                <div class="review" style="margin: 1.5rem 0;">
+                    <label style="margin-left: 1rem;">1
+                        <input type="radio" value="1" name="score">
+                    </label>
+                    <label>2
+                        <input type="radio" value="2" name="score">
+                    </label> 
+                    <label>3
+                        <input type="radio" value="3" name="score">
+                    </label>
+                    <label>4
+                        <input type="radio" value="4" name="score">
+                    </label>   
+                    <label>5
+                        <input type="radio" value="5" name="score">
+                    </label>
+                </div>
+
+                <label for="removeSelfConfimation" style="margin: 1.5rem 0;"> Click to Confirm:
+                    <input type="submit" name="approveReview" value="✓" class="btn btn__small" style="margin: 0 auto; font-size: larger;">
+                </label>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+
+<!-- add review popup -->
+<div class="popup" id="reviewMembers">
+    <div class="popup__header">
+        <div class="popup__header-title">Review Members:</div>
+        <button data-close-button class="popup__header-close-button">&times;</button>
+    </div>
+    <div class="popup__body">
+        <form action="/user/<%= userId %>/<%= projId %>/<%= groupId %>/<%= taskId %>/submitreview" method="POST">
+            <input type="hidden" name="numReviews" value="<%= task.memberInfo.length %>">
+            <% task.memberInfo.forEach(member => { %>
+                <% if (member.memberId != userId) { %>
+                 
+                
+                <fieldset id="<%= member.memberName %>" style="border: 1px solid black; margin: 2rem 0; width: 50rem; height: 10rem;" name="<%= member.memberName %>" >
+                    <label style="margin-bottom: 1.5rem; font-weight: bold; border-bottom: 1px solid black;"><%= member.memberName %> </label>
+                    <div class="review">
+                        <input type="hidden" name="userId" value="<%= member.memberId %>">
+                        <label style="margin-left: 1rem;">1
+                            <input type="radio" value="1" name="<%= member.memberId %>">
+                        </label>
+                        <label>2
+                            <input type="radio" value="2" name="<%= member.memberId %>">
+                        </label> 
+                        <label>3
+                            <input type="radio" value="3" name="<%= member.memberId %>">
+                        </label>
+                        <label>4
+                            <input type="radio" value="4" name="<%= member.memberId %>">
+                        </label>   
+                        <label>5
+                            <input type="radio" value="5" name="<%= member.memberId %>">
+                        </label>
+                        <label for="badgeAward" style="margin-right: 1rem;">Badge
+                            <select name="badgeAward" id="badgeAward" style="width: 10rem; height: 3.5rem; font-size: 1.5rem; background-color: white;">
+                                <option value="none" selected>No Badge</option>
+                                <option value="All-Star Badge:1">All-Star Badge</option>
+                                <option value="Altruistic Badge:2">Altruistic Badge</option>
+                                <option value="Communication Badge:3">Communication Badge</option>
+                                <option value="Hard Worker Badge:5">Hard Worker Badge</option>
+                                <option value="Leadership Badge:6">Leadership Badge</option>
+                            </select>
+                        </label>
+                    </div>
+                </fieldset>
+                <% } %>
+            <% }) %>
+            <input type="submit" value="Submit Reviews" class="btn btn__xlarge" id="submitReview " style="margin: 0 auto;">
+        </form>
+    </div>
+    
+   
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- add sumbission popup -->
+<div class="popup" id="addSub">
+    <div class="popup__header">
+        <div class="popup__header-title">Add Submission:</div>
+        <button data-close-button class="popup__header-close-button">&times;</button>
+    </div>
+
+    <div class="popup__body">
+        <form method="POST" id="fileUploadForm" enctype="multipart/form-data" >
+            
+                <label for="uploadfile" style="font-size: 2rem;">Upload File:</label>
+                <input type="file" id="uploadfile" placeholder="Upload File" name="uploadfile" style="height: 3rem; font-size: 1.5rem;">
+                <button type="submit" id="btnSubmit" style="width: 28.4rem; font-size: 2rem; margin-top: 1.5rem;" class="btnText">Upload</button>
+            
+            
+        </form>
+    </div>
+</div>
+
+
+
+<!-- add update popup -->
+<div class="popup" id="addUpdate">
+    <div class="popup__header">
+        <div class="popup__header-title">Add Update:</div>
+        <button data-close-button class="popup__header-close-button">&times;</button>
+    </div>
+
+    <div class="popup__body">
+        <form method="POST" id="updateForm">
+            <fieldset>
+                <label for="updateTitle" style="font-size: 2.5rem; margin: 0 1.5rem;">Title:
+                </label>
+                <input type="text" name="updateTitle" id="updateTit" placeholder="Enter update title..." style="width: 100%; height: 4rem; padding: 1.5rem; font-size: 2.4rem;" required pattern="\S(.*\S)?" title="Enter valid title please!">
+                <label for="updateMessage" style="font-size: 2.5rem; margin: 0 1.5rem;">Message:</label>
+                <textarea name="updateMessage" id="updateMsg" cols="30" rows="10" style="width: 100%; padding: 1.5rem; border: 1px solid black; font-size: 2.6rem" required pattern="\S(.*\S)?"></textarea>
+            </fieldset>
+            <input type="submit" name="submitUpdate" value="✓" id="submitUpdate" class="btn btn__small" style="margin: 0 auto;">
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+
+<!-- edit task popup -->
+<div class="popup" id="editTask">
+    <div class="popup__header">
+        <div class="popup__header-title">Edit Description:</div>
+        <button data-close-button class="popup__header-close-button">&times;</button>
+    </div>
+
+    <div class="popup__body">
+        <form action="/user/<%= userId %>/<%= projId %>/<%= groupId %>/<%= taskId %>/editdescription" method="POST">
+            <fieldset>
+                <label for="taskName">Task Name:
+                    <input type="text" name="taskName" placeholder="Enter Task Name..." style="width: 100%; height: 3.5rem; padding: 1.5rem;" required pattern="\S(.*\S)?" id="taskNameInput" title="Enter valid task name please!">
+                </label>
+
+                <label for="taskDescription">Task Description:   
+                </label>
+                <textarea name="taskDescription" cols="50" rows="30" id="taskDescInput" style="width: 100%; padding: 1.5rem; border: 1px solid black;" required pattern="\S(.*\S)?"></textarea>
+            </fieldset>
+            <input type="submit" name="submitTaskEdit" value="✓" id="submitTaskEdit" class="btn btn__small" style="margin: 0 auto;">
+        </form>
+    </div>
+</div>
+
+
+<!-- Task status comp / ~comp popup -->
+<div class="popup" id="compNotComp">
+    <div class="popup__header">
+        <div class="popup__header-title">Change Task Status:</div>
+        <button data-close-button class="popup__header-close-button">&times;</button>
+    </div>
+
+    <div class="popup__body">
+        <form action="/user/<%= userId %>/<%= projId %>/<%= groupId %>/<%= taskId %>/changestatus" method="POST">
+            <fieldset>
+                <label for="tStatus">Select Status:
+                    <select name="tStatus" id="sel" style="width: 100%; height: 3.5rem; font-size: 1.5rem; background-color: white;">
+                        <option value="Complete">Complete</option>
+                        <option value="Not Complete">Not Complete</option>
+                    </select>
+                </label>
+            </fieldset>
+            <input type="submit" value="Change Status" id="statusSubmit" class="btn btn__medium" style="margin: 0 auto;">
+        </form>
+    </div>
+</div>
+
+<!-- add self to task popup -->
+<div class="popup" id="addMemberToTask">
+    <div class="popup__header">
+        <div class="popup__header-title">Confim including self to task:</div>
+        <button data-close-button class="popup__header-close-button">&times;</button>
+    </div>
+
+    <div class="popup__body">
+        <form action="/user/<%= userId %>/<%= projId %>/<%= groupId %>/<%= taskId %>/addself" method="POST" name="addSelfToTask">
+            <fieldset>
+                <label for="addSelfConfimation"> Click to Confirm:
+                    <input type="submit" name="addSelfConfirmation" class="btn btn__small" value="✓" style="margin: 0 auto; font-size: larger;">
+                </label>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+
+<!-- remove self from task popup -->
+<div class="popup" id="removeMemberFromTask">
+    <div class="popup__header">
+        <div class="popup__header-title">Confim removing self from task:</div>
+        <button data-close-button class="popup__header-close-button">&times;</button>
+    </div>
+
+    <div class="popup__body">
+        <form action="/user/<%= userId %>/<%= projId %>/<%= groupId %>/<%= taskId %>/removeself" method="POST" name="removeSelfFromTask">
+            <fieldset>
+                <label for="removeSelfConfimation"> Click to Confirm:
+                    <input type="submit" name="removeSelfConfirmation" value="✓" class="btn btn__small" style="margin: 0 auto; font-size: larger;">
+                </label>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+<div id="overlay"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/popup.js" defer></script>
+<script   src="https://code.jquery.com/jquery-3.5.1.min.js"   integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="   crossorigin="anonymous"></script>
+<script defer>
+    
+    $(document).ready( () => {
+        // console.log(window.location.href);
+        var uri = window.location.toString();
+        if (uri.indexOf('?') > 0) {
+            var clean_uri = uri.substring(0, uri.indexOf("?"));
+            window.history.replaceState({}, document.title, clean_uri);
+        }
+
+
+        $('body').on('click', '#tInfoEdit', event => {
+            let taskName = $('#headerTaskName').html();
+            let taskDesc = $('#taskDescription').html().trim();
+
+
+            $("#taskNameInput").val(taskName);
+            $("#taskDescInput").val(taskDesc);
+        });
+
+
+        $('body').on('click', '#submitUpdate', function(event) {
+            event.preventDefault();
+            let title = $('#updateTit').val();
+            let msg = $('#updateMsg').val();
+            let g = window.location.pathname;
+            // -> /user/id/proj/group/task/taskname
+            let p = g.split('/');
+            
+            
+            $.ajax({
+                type: "POST",
+                url: `/user/${p[2]}/${p[3]}/${p[4]}/${p[5]}/addupdate`,
+                data: {updateTitle: title, updateMessage: msg},
+                async: false,
+                success: (data) => {
+                    console.log(data);
+                    let d = data.split('~');
+                    $('#updatesContainer').append(
+                        "<div class='update'><h5 class='update__title'>" + d[0] + "</h5>" +
+                            "<p class='update__content'>" + d[1] + "</p>" +
+                            "<span class='update__timeSent'>" + d[2] + "</span></div>"
+                    );
+                    $("#addUpdate").removeClass("active");
+                    $("#overlay").removeClass("active");
+                },
+                error: (e) => {
+                    console.log(e);
+                    console.log(e.responseText);
+                    alert("Unable to complete this request :'(");
+                }
+            });
+            
+
+        });
+
+
+        $('body').on('click', '#btnSubmit', function(event) {
+            event.preventDefault();
+            var form = $('#fileUploadForm')[0];
+            var data = new FormData(form);
+            
+            var url = window.location;
+            console.log(window.location);
+            var taskId = url.toString().split("/")[4];
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "/api/files/upload/" + taskId,
+                data: data,
+                async: false,
+                processData: false, //prevent jQuery from automatically transforming the data into a query string
+                contentType: false,
+                cache: false,
+                success: (data) => {
+                    console.log(data);
+                    const c = "taskPage__submissions--row";
+                    const h = "http://localhost:3000/api/files/download/";
+                    const full = h + data;
+                    $('#listfiles').append('<div class=' + c + '><a href=' + full + '>' + data + '</a></div>');
+                    $("#addSub").removeClass("active");
+                    $("#overlay").removeClass("active");
+                },
+                error: (e) => {
+                    console.log(e);
+                    console.log(e.responseText);
+                    $("#listFiles").text(e.responseText);
+                }
+            });
+        });
+
+
+        
+
+
+        
+
+    });
+
+    
+
+
+    
+
+
+    
+
+
+</script>
