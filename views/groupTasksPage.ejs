@@ -1,8 +1,18 @@
 <%- include('partials/bothnav') %>
 
+
+
 <h1 id="tasks-page-title"><%= groupName %> Tasks</h1>
 <section class="section__table">
     <div class="section__table-container">
+
+    <% if (notCompleted.length == 0 && completed.length == 0) { %>
+     <div class="center" style="display: flex; justify-content: center; align-items: center; font-size: 5rem; height: 100%;">
+        <strong>NO TASKS YET - ADD ONE!</strong>
+    </div>
+    <% } %> 
+        
+    <% if (notCompleted.length != 0) { %>
         <table class="section__table-todo" style="margin: 3rem 2rem;">
             <caption>Tasks Not Complete</caption>
             <thead>
@@ -14,7 +24,6 @@
                 </tr>
             </thead>
             <tbody>
-                
                 <% notCompleted.forEach(task => { %>
                  <tr onclick="window.location='/user/<%= userId %>/<%= projId %>/<%= groupId %>/<%= task.taskId %>/<%= task.nameNoSpace %>'" style="cursor: pointer;">
                      <td><%= task.taskName %></td>
@@ -33,6 +42,7 @@
                 <% }) %>
             </tbody>
         </table>
+    <% } %>
 
         <% if (completed.length != 0) { %>
         <table class="section__table-complete" style="margin: 3rem 2rem;">
@@ -66,7 +76,84 @@
     </div>
 </section>
 
-<a href="#" data-popup-target="#addTask" class="btn btn__large add-task-btn">ADD TASK<span class="html_plus">&plus;</span></a>
+<% if (inGroup && !isFaculty) { %>
+    <a href="#" data-popup-target="#removeSelfFromGroup" class="btn btn__medium addRemoveSelfGroup" style="text-align: center; font-size: 2rem; position: absolute; width: 25rem;">REMOVE SELF</a>
+<% } else if (!inGroup && !isFaculty) { %>
+    <a href="#" data-popup-target="#addSelfToGroup" class="btn btn__medium addRemoveSelfGroup" style="text-align: center; font-size: 2rem; position: absolute; width: 25rem;">ADD SELF</a>
+<% } %>
+
+
+
+<% if (inGroup || isFaculty) { %>
+    <a href="#" data-popup-target="#addTask" class="btn btn__large add-task-btn" style="font-size: 2rem;">ADD TASK<span class="html_plus">&plus;</span></a>
+<% } %>
+
+
+<% if (isFaculty) { %>
+    <a href="#" data-popup-target="#removeGroup" class="btn btn__medium" style="position: absolute; bottom: 2rem; right: 2rem; font-size: 2rem;">DELETE GROUP</a>
+<% } %>
+
+
+<!-- addSelf popup -->
+<div class="popup" id="addSelfToGroup">
+    <div class="popup__header">
+        <div class="popup__header-title">Confim including self to Group:</div>
+        <button data-close-button class="popup__header-close-button">&times;</button>
+    </div>
+
+    <div class="popup__body">
+        <form action="/user/<%= userId %>/<%= projId %>/<%= groupId %>/addself" method="POST">
+            <fieldset>
+                <label for="addSelfConfimation"> Click to Confirm:
+                    <input type="submit" name="addSelfConfirmation" class="btn btn__small" value="✓" style="margin: 0 auto; font-size: larger;">
+                </label>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+
+
+<!-- removeSelf popup -->
+<div class="popup" id="removeSelfFromGroup">
+    <div class="popup__header">
+        <div class="popup__header-title">Confim removing self from Group:</div>
+        <button data-close-button class="popup__header-close-button">&times;</button>
+    </div>
+
+    <div class="popup__body">
+        <form action="/user/<%= userId %>/<%= projId %>/<%= groupId %>/removeself" method="POST">
+            <fieldset>
+                <label for="removeSelfConfimation"> Click to Confirm:
+                    <input type="submit" name="removeSelfConfirmation" value="✓" class="btn btn__small" style="margin: 0 auto; font-size: larger;">
+                </label>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+
+<!-- removeGroup popup -->
+<div class="popup" id="removeGroup">
+    <div class="popup__header">
+        <div class="popup__header-title">Confim removing Group:</div>
+        <button data-close-button class="popup__header-close-button">&times;</button>
+    </div>
+
+    <div class="popup__body">
+        <form action="/user/<%= userId %>/<%= projId %>/<%= groupId %>/removegroup" method="POST">
+            <fieldset>
+                <label for="removeGroupConfimation"> Click to Confirm:
+                    <input type="submit" name="removeGroupConfirmation" value="✓" class="btn btn__small" style="margin: 0 auto; font-size: larger;">
+                </label>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+
+
+<!-- add Task Popup -->
 <div class="popup" id="addTask">
     <div class="popup__header">
         <div class="popup__header-title">Add Task:</div>
