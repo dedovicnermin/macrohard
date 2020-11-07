@@ -128,7 +128,8 @@ const gatherProfile = async (userID) => {
 
 userRouter.get('/:userId/projects', async (req, res) => {
     const obj = await gatherUserProjects(req.params.userId);
-    res.render('projectsPage', {obj});
+    const isFaculty = await facultyTest(req.params.userId);
+    res.render('projectsPage', {obj, userId: req.params.userId, isFaculty: isFaculty});
 });
 
 //gather information for every project linked to this specific user
@@ -167,6 +168,25 @@ const gatherUserProjects = async (userID) => {
         res.render('error');
     }
 };
+
+userRouter.post('/:userId/projects/addproject', async (req, res) => {
+    try {
+        const newProj = await Project.create({
+            proj_name: req.body.projName,
+            proj_duedate: new Date(req.body.dueDate),
+            proj_description: req.body.projDescription
+        });
+        await UserProject.create({
+            user_id: req.params.userId,
+            proj_id: newProj.proj_id  
+        });
+    
+        res.redirect(`/user/${req.params.userId}/projects`);
+    } catch (err) {
+        console.log(err);
+        res.render('error');
+    }
+});
 
 ////////////////////////////////////////////////////////////////////
 
@@ -444,7 +464,10 @@ userRouter.get('/:userId/:projectId/groups', async (req, res) => {
                 where: {proj_id: req.params.projectId},
                 attributes: {
                     exclude: ['proj_id']
-                }
+                },
+                order: [
+                    ['group_name', 'ASC']
+                ]
             }
         });
         const {groups, proj_id, proj_name} = data;
@@ -481,7 +504,7 @@ userRouter.post('/:userId/:projectId/groups', async (req, res) => {
 
 
 
-//////////////////////////TASKS PAGE//////////////////////////////
+//////////////////////////GROUP TASKS PAGE//////////////////////////////
 
 const completeGather = async (taskId) => {
     const us = await findUsers(taskId);
@@ -555,6 +578,23 @@ const getGroupName = async (id) => {
     }
 }
 
+const inGroupTest = async (userId, groupId) => {
+    try {
+        const test = await UserGroup.findOne({
+            where: {user_id: userId, group_id: groupId}
+        });
+        if (test) {
+            console.log(test);
+            console.log("user: " + userId + " is in group: " + groupId);
+            return true;
+        }
+        return false;
+    } catch (error) {
+        console.log(error);
+        res.render('error');
+    }
+}
+
 userRouter.get('/:userId/:projectId/:groupId/tasks', async (req, res) => {
     try {
         const completed = [], notCompleted = [];
@@ -596,8 +636,10 @@ userRouter.get('/:userId/:projectId/:groupId/tasks', async (req, res) => {
         }
         await setup();
         
+        const inGroup = await inGroupTest(req.params.userId, req.params.groupId);
+        const isFaculty = await facultyTest(req.params.userId);
         const groupName = await getGroupName(req.params.groupId);
-        res.render('groupTasksPage', {completed: completed, notCompleted: notCompleted, userId: req.params.userId, projId: req.params.projectId, groupId: req.params.groupId, groupName: groupName });
+        res.render('groupTasksPage', {completed: completed, notCompleted: notCompleted, userId: req.params.userId, projId: req.params.projectId, groupId: req.params.groupId, groupName: groupName, inGroup: inGroup, isFaculty: isFaculty });
         // res.json({completed: completed, notCompleted: notCompleted, userId: req.params.userId, projId: req.params.projectId, groupId: req.params.groupId, groupName: groupName });
         
     } catch (err) {
@@ -627,6 +669,61 @@ userRouter.post('/:userId/:projectId/:groupId/tasks', async (req, res) => {
         res.render('error', {err});
     }
 });
+
+
+userRouter.post('/:userId/:projId/:groupId/addself', async (req, res) => {
+    try {
+        UserGroup.create({
+            user_id: req.params.userId,
+            group_id: req.params.groupId
+        });
+        await Group.update(
+            {
+                total_members: sequelize.literal('total_members + 1')
+            }, {
+                where: {group_id: req.params.groupId}
+            }
+        );
+
+        res.redirect(`/user/${req.params.userId}/${req.params.projId}/${req.params.groupId}/tasks`);
+    } catch (error) {
+        console.log(error);
+        res.render('error');
+    }
+});
+
+userRouter.post('/:userId/:projId/:groupId/removeself', async (req, res) => {
+    try {
+        UserGroup.destroy({
+            where: {user_id: req.params.userId, group_id: req.params.groupId}
+        });
+        await Group.update(
+            {
+                total_members: sequelize.literal('total_members - 1')
+            }, {
+                where: {group_id: req.params.groupId}
+            }
+        );
+        res.redirect(`/user/${req.params.userId}/${req.params.projId}/${req.params.groupId}/tasks`);
+    } catch (error) {
+        console.log(error);
+        res.render('error');
+    }
+});
+
+userRouter.post('/:userId/:projId/:groupId/removegroup', async (req, res) => {
+    try {
+        await Group.destroy({
+            where: {group_id: req.params.groupId}
+        });
+        res.redirect(`/user/${req.params.userId}/${req.params.projId}/groups`);
+
+    } catch (error) {
+        console.log(error);
+        res.render('error');
+    }
+});
+
 
 //NEEDS POST REQUEST TO ADD A USER TO GROUP / UPDATE USER_GROUP TABLE
 
