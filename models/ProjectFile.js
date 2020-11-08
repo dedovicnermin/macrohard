@@ -15,14 +15,17 @@ const ProjectFile = db.define('ProjectFile', {
         }
     },
     file: {
-        type: DataTypes.BLOB
+        type: DataTypes.BLOB("long")
+    },
+    file_name: {
+        type: DataTypes.STRING(100)
     }
 }, {
     tableName: 'project_files',
     timestamps: false
 });
 
-ProjectFile.hasOne(Project);
+ProjectFile.hasOne(Project, {foreignKey: 'proj_id'});
 Project.hasMany(ProjectFile, {foreignKey: 'proj_id'});
 
 module.exports = ProjectFile;
