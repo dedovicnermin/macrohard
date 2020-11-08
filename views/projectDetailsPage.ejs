@@ -1,0 +1,198 @@
+<%- include('partials/bothnav') %>
+
+<div class="projPage">
+    <p id="projName" hidden><%= proj.projName %></p>
+    <div class="projPage__details">
+        <h3 class="proj-page-identifier" id="projname"><%= proj.projName %> Details</h3>
+        <div class="projPage__details--content">
+            <p style="margin-bottom: 3rem;" id="projDesc"><%= proj.description %></p>
+        </div>
+        
+    </div>
+
+    <div class="project-details-flex">
+
+    
+    <div class="projPage__stats">
+        <h3 class="proj-page-identifier">Project Stats</h3>
+        <div class="projPage__stats--row">
+            <h4 class="projPage__stats--row-title">Members:</h4>
+            <p class="projPage__stats--row-value"><%= proj.members %> </p>
+        </div>
+
+        <div class="projPage__stats--row">
+            <h4 class="projPage__stats--row-title">Due Date:</h4>
+            <p class="projPage__stats--row-value"><%= proj.dueDate %> </p>
+        </div>
+    </div>
+
+    <div class="projPage__files" id="listfiles">
+        <h3 class="proj-page-identifier">Project Files</h3>
+        <% pFiles.forEach(file => { %>
+            <div class="projPage__files--row">
+                <a href="http://localhost:3000/api/files/download/<%= file.file_name %>"><%= file.file_name %></a>
+            </div>
+        <% }) %>
+    </div>
+
+
+    </div>
+    <% if (isFaculty) { %>
+        <a href="#" class="btn btn__large"  id="editProjBtn" style="font-size: 1.8rem; position: absolute;  margin: 0 1rem;" data-popup-target="#editProj">Edit Project</a>
+        <a href="#" class="btn btn__large" id="addProjFileBtn" style="font-size: 1.8rem; position: absolute;  margin: 0 1rem;" data-popup-target="#addFile">Add File</a>
+    <% } %>
+</div>
+
+
+
+
+<!-- add file popup -->
+<div class="popup" id="addFile">
+    <div class="popup__header">
+        <div class="popup__header-title">Add Project File:</div>
+        <button data-close-button class="popup__header-close-button">&times;</button>
+    </div>
+
+    <div class="popup__body">
+        <form method="post" id="fileUploadForm" enctype="multipart/form-data" action="" >
+                <label for="uploadfile" style="font-size: 2rem;">Upload File:</label>
+                <input type="file" id="uploadfile" placeholder="Upload File" name="uploadfile" style="height: 3rem; font-size: 1.5rem;">
+                <button type="submit" id="btnSubmit" style="width: 28.4rem; font-size: 2rem; margin-top: 1.5rem;" class="btnText">Upload</button>
+        </form>
+    </div>
+</div>
+
+
+<!-- edit task popup -->
+<div class="popup" id="editProj">
+    <div class="popup__header">
+        <div class="popup__header-title">Edit Description:</div>
+        <button data-close-button class="popup__header-close-button">&times;</button>
+    </div>
+
+    <div class="popup__body">
+        <form method="POST">
+            <fieldset>
+                <label for="projName">Project Name:
+                    <input type="text" name="projName" placeholder="Enter Task Name..." style="width: 100%; height: 3.5rem; padding: 1.5rem;" required pattern="\S(.*\S)?" id="projNameInput" title="Enter valid project name please!">
+                </label>
+
+                <label for="projDescription">Project Description:   
+                </label>
+                <textarea name="projDescription" cols="50" rows="30" id="projDescInput" style="width: 100%; padding: 1.5rem; border: 1px solid black;" required pattern="\S(.*\S)?"></textarea>
+            </fieldset>
+            <input type="submit" name="submitTaskEdit" value="✓" id="submitProjEdit" class="btn btn__small" style="margin: 0 auto;">
+        </form>
+    </div>
+</div>
+
+<div id="overlay"></div>
+
+
+<script src="/js/popup.js"></script>
+<script   src="https://code.jquery.com/jquery-3.5.1.min.js"   integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="   crossorigin="anonymous"></script>
+
+<script defer>
+
+$(document).ready( () => {
+        // console.log(window.location.href);
+        
+
+
+        $('body').on('click', '#editProjBtn', function(event) {
+            
+            
+            let projName = $('#projname').text().replace('Details', "").trim();
+            let projDesc = $('#projDesc').text().trim();
+
+
+            $("#projNameInput").val(projName);
+            $("#projDescInput").val(projDesc);
+        });
+
+        $('body').on('click', '#submitProjEdit', e => {
+            e.preventDefault();
+            let t = $("#projNameInput").val();
+            let d = $("#projDescInput").val();
+
+            var url = window.location.pathname;
+            //pathname = /user/2/1/1/1/task1
+
+            var projId = url.toString().split("/")[3];
+            $.ajax({
+                type: 'POST',
+                url: `/user/${projId}/editproj`,
+                data: {projTitle: t, projDesc: d},
+                async: false,
+                success: (data) => {
+                    let d = data.split('~');
+                    $('#projname').text(d[0] + " Details");
+                    $('#projDesc').text(d[1]);
+
+                    $('#editProj').removeClass("active");
+                    $('#overlay').removeClass("active");
+                },
+                error: (e) => {
+                    console.log(e);
+                    console.log(e.responseText);
+                }
+            });
+
+
+
+        });
+        
+
+
+        $('body').on('click', '#btnSubmit', function(event) {
+            event.preventDefault();
+            var form = $('#fileUploadForm')[0];
+            var data = new FormData(form);
+            
+            var url = window.location.pathname;
+            //pathname = /user/2/1/1/1/task1
+
+            var projId = url.toString().split("/")[3];
+           
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "/api/files/upload/pfile/" + projId,
+                data: data,
+                async: false,
+                processData: false, //prevent jQuery from automatically transforming the data into a query string
+                contentType: false,
+                cache: false,
+                success: (data) => {
+                    console.log(data);
+                    const c = "projPage__files--row";
+                    const h = "http://localhost:3000/api/files/download/";
+                    const full = h + data;
+                    $('#listfiles').append('<div class=' + c + '><a href=' + full + '>' + data + '</a></div>');
+                    $("#addFile").removeClass("active");
+                    $("#overlay").removeClass("active");
+                },
+                error: (e) => {
+                    console.log(e);
+                    console.log(e.responseText);
+                    
+                }
+            });
+        });
+
+
+        
+
+
+        
+
+    });
+
+</script>
+        
+    
+    
+
+        
+
+    

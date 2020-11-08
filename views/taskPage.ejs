@@ -409,9 +409,12 @@
             var form = $('#fileUploadForm')[0];
             var data = new FormData(form);
             
-            var url = window.location;
-            console.log(window.location);
-            var taskId = url.toString().split("/")[4];
+            var url = window.location.pathname;
+            //pathname = /user/2/1/1/1/task1
+
+            console.log(url.toString().split("/"))
+            var taskId = url.toString().split("/")[5];
+            
             $.ajax({
                 type: "POST",
                 enctype: 'multipart/form-data',

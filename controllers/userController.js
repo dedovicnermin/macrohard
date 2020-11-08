@@ -9,6 +9,7 @@ const express = require('express'),
     Update = require("../models/Update"),
     User = require("../models/User"),
     UserProject = require('../models/UserProject'),
+    ProjectFile = require('../models/ProjectFile'),
     Badge = require('../models/Badge'),
     UserBadge = require('../models/UserBadge'),
     UserGroup = require('../models/UserGroup'),
@@ -198,19 +199,89 @@ userRouter.post('/:userId/projects/addproject', async (req, res) => {
 
 //////////////////////////PROJECT DETAILS PAGE//////////////////////
 
+const addProjFilesToStorage = async (filelist, req) => {
+    const uploadFolder = req.app.locals.__basedir + '/uploads/';
+    if (filelist) {
+        filelist.forEach(ele => {
+            const outputFilepath = uploadFolder + '/' + ele.file_name;
+            fs.createWriteStream(outputFilepath).write(ele.file);
+        });
+    }
+}
 
+const projDetailsGather = async (projId, userId, req) => {
+    try {
+        await removeFilesFromStorage(req);
+        const pFiles = await ProjectFile.findAll({
+            where: {proj_id: projId},
+            attributes: ['file_name', 'file'],
+            raw: true
+        });
+        const isFaculty = await facultyTest(userId);
+        await addProjFilesToStorage(pFiles, req);
+        const proj = await Project.findOne({
+            where: {proj_id: projId},
+            plain: true,
+            raw: true
+        });
+
+        
+        
+
+        const projInfo = {
+            projId : proj.proj_id,
+            projName: proj.proj_name,
+            dueDate: proj.proj_duedate,
+            members: proj.proj_membercount,
+            description: proj.proj_description
+        }
+        
+        return {
+            proj: projInfo,
+            isFaculty: isFaculty,
+            pFiles: pFiles
+        }
+    } catch (error) {
+        console.log(error);
+        return {};
+    }
+}
 
 
 userRouter.get('/:userId/:projectId/details', async (req, res) => {
     //only faculty can see edit button, pass data about if user/not user
     //info needed isUser, # members in project, proj duedate, files associated with project
 
-    
-
+    try {
+        const {proj, isFaculty, pFiles} = await projDetailsGather(req.params.projectId, req.params.userId, req);
+        // res.json({proj: proj, isFaculty: isFaculty, pFiles: pFiles});
+        res.render('projectDetailsPage', {proj: proj, isFaculty: isFaculty, pFiles: pFiles});
+    } catch (error) {
+        console.log(error);
+        res.render('error');
+    }
 });
 
-userRouter.post('/:userId/:projectId/details', async (req, res) => {
-    //adding files, making updates to projDetails (button wont be shown to reg users so no check here)
+userRouter.post('/:projectId/editproj', (req, res) => {
+    Project.update(
+        {
+            proj_name: req.body.projTitle,
+            proj_description: req.body.projDesc
+        },
+        {
+            where: {proj_id: req.params.projectId},
+            returning: true,
+            raw: true,
+            plain: true
+        }
+    ).then(result => {
+        const str = result[1].proj_name + "~" + result[1].proj_description;
+        res.send(str);
+    }).catch(err => {
+        console.log(err);
+        res.render('error');
+    });
+
 });
 
 
@@ -755,7 +826,7 @@ userRouter.post('/:userId/:projId/:groupId/removegroup', async (req, res) => {
 // submissions
 
 const fs = require('fs');
-const { resolveSoa } = require('dns');
+
 
 
 
