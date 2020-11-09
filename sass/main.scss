@@ -26,6 +26,11 @@
 @import "pages/globalStylesPage";
 @import "pages/projectDetailsPage";
 
+@import "pages/admin/nav";
+@import "pages/admin/adminHomePage";
+@import "pages/admin/adminCreatePage";
+@import "pages/admin/adminDeletePage";
+
 
 @import "abstracts/mixins";
 @import "abstracts/variables";

@@ -4,6 +4,7 @@ const express = require("express"),
     layouts = require("express-ejs-layouts"),
     logger = require('morgan'),
     userController = require("./controllers/userController"),
+    adminController = require("./controllers/adminController"),
     errorController = require("./controllers/errors"),
     db = require("./config/db"),
     port = 3000;
@@ -47,6 +48,8 @@ app.get("/test", (req, res) => {
 
 
 app.use("/messages", chatController);
+
+app.use("/admin", adminController);
 
 app.use("/user", userController);
 

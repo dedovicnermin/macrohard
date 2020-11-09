@@ -1,0 +1,164 @@
+<%- include('../partials/adminNav') %>
+
+<div class="adminCreate">
+
+
+    <div class="adminCreate__content">
+        <a href="#" class="btn btn__xlarge" data-popup-target="#createFaculty" style="font-size: 5rem; width: 50%;">CREATE FACULTY</a>
+        <a href="#" class="btn btn__xlarge" data-popup-target="#createProj" style="font-size: 5rem; width: 50%;">CREATE PROJECT</a>
+        <div class="adminCreate__content--msg" id="msg"></div>
+    </div>
+
+</div>
+
+
+<div class="popup" id="createFaculty">
+    <div class="popup__header">
+        <div class="popup__header-title">Create Faculty User:</div>
+        <button data-close-button class="popup__header-close-button">&times;</button>
+    </div>
+    <div class="popup__body">
+        <form method="POST">
+            <label for="userEmail" style="font-size: 2.5rem; margin: 0 1.5rem;">User Email:
+                <input type="text" name="userEmail" id="userEmail" placeholder="Enter user name..." style="width: 100%; height: 4rem; padding: 1.5rem; font-size: 2.4rem;" required pattern="\S(.*\S)?" title="Enter valid user name please!" required>
+            </label>
+
+            <label for="userName" style="font-size: 2.5rem; margin: 0 1.5rem;">User Name:
+                <input type="text" name="userName" id="userName" placeholder="Enter user name..." style="width: 100%; height: 4rem; padding: 1.5rem; font-size: 2.4rem;" required pattern="\S(.*\S)?" title="Enter valid user name please!" required>
+            </label>
+
+            <input type="submit" name="submitFaculty" value="✓" id="submitFaculty" class="btn btn__small" style="margin: 0 auto; font-size: larger; font-size: 3rem; width: 25%;">            
+        </form>
+    </div>
+</div>
+
+
+
+<div class="popup" id="createProj">
+    <div class="popup__header">
+        <div class="popup__header-title">Create Project:</div>
+        <button data-close-button class="popup__header-close-button">&times;</button>
+    </div>
+    <div class="popup__body">
+        <form method="POST">
+
+            <label for="facultyEmail" style="font-size: 2.5rem;">Faculty Assigned to Project:
+                <input type="email" name="facultyEmail" id="facultyEmail" placeholder="Enter faculty email..." style="width: 100%; height: 4rem; padding: 1.5rem; font-size: 2.4rem;" required pattern="\S(.*\S)?" title="Enter valid faculty email please!" required>
+            </label>
+
+            <label for="projName" style="font-size: 2.5rem; width: 100%;">Project Name:
+                <input type="text" name="projName" id="projName" placeholder="Enter project name..." style="width: 100%; height: 4rem; padding: 1.5rem; font-size: 2.4rem;" required pattern="\S(.*\S)?" title="Enter valid project name please!" required>
+            </label>
+
+            <label for="dueDate" style="font-size: 2.5rem;">Due Date:
+                <input type="date" name="dueDate" id="dueDate"  style="width: 100%; padding: 1.5rem; background-color: white; font-size: 3rem;" required>
+            </label>
+
+            <input type="submit" name="submitProj" value="✓" id="submitProj" class="btn btn__small" style="margin: 0 auto; font-size: 3rem; width: 25%;">            
+        </form>
+    </div>
+</div>
+
+<div id="overlay"></div>
+
+<script src="/js/popup.js" defer></script>
+<script   src="https://code.jquery.com/jquery-3.5.1.min.js"   integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="   crossorigin="anonymous"></script>
+<script defer>
+
+$(document).ready( () => {
+    $('body').on('click', '#submitFaculty', function(event) {
+        event.preventDefault();
+        let email = $('#userEmail').val();
+        let name = $('#userName').val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/admin/createuser',
+            data: {email: email, name: name},
+            async: true,
+            success: (data) => {
+                let str = data.toString().split('~');
+                console.log(str);
+                $('#msg').html("");
+                $('#msg').append(
+                    "<div class='msg-row'> Successfully created faculty member! </div>" +
+                    "<div class='msg-row'> Faculty Name : " + str[0] + "</div>" +
+                    "<div class='msg-row'> Faculty Email : " + str[1] + "</div>" +
+                    "<div class='msg-row'> Faculty Password : " + str[2] + "</div>"     
+                );
+                $("#overlay").removeClass('active');
+                $("#createFaculty").removeClass('active');
+            },
+            error: (e) => {
+                console.log(e);
+
+                $('#msg').html("");
+                $('#msg').append(
+                    "<div class='msg-row'> UNABLE TO CREATE FACULTY MEMBER </div>" +
+                    "<div class='msg-row'> Reason - " + e.responseText + "</div>"
+                );
+                $("#overlay").removeClass('active');
+                $("#createFaculty").removeClass('active');
+            }
+        });
+    });
+
+    $('body').on('click', "#submitProj", function(event) {
+        event.preventDefault();
+        let email = $('#facultyEmail').val();
+        let name = $('#projName').val();
+        let date = $('#dueDate').val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/admin/createproj',
+            data: {facultyEmail: email, projName: name, due: date},
+            async: true,
+            success: (data) => {
+                let str = data.toString().split('~');
+                if (str.length < 2) {
+                    $('#msg').html("");
+                    $('#msg').append(
+                        "<div class='msg-row'> UNABLE TO CREATE PROJECT </div>" +
+                        "<div class='msg-row'> Reason - Bad Information </div>"
+                    );
+                    $("#overlay").removeClass('active');
+                    $("#createProj").removeClass('active');
+                    return;
+                }
+                $('#msg').html("");
+                $('#msg').append(
+                    "<div class='msg-row'> Successfully created project! </div>" +
+                    "<div class='msg-row'> Project Name : " + str[0] + "</div>" +
+                    "<div class='msg-row'> Project Due Date : " + str[1] + "</div>" +
+                    "<div class='msg-row'> Faculty Name : " + str[2] + "</div>"
+                );
+                $("#overlay").removeClass('active');
+                $("#createProj").removeClass('active');
+                $('#facultyEmail').val("");
+                $('#projName').val("");
+                $('#dueDate').val("");
+            },
+            error: (e) => {
+                console.log(e);
+
+                $('#msg').html("");
+                $('#msg').append(
+                    "<div class='msg-row'> UNABLE TO CREATE PROJECT </div>" +
+                    "<div class='msg-row'> Reason - " + e.responseText + "</div>"
+                );
+                $("#overlay").removeClass('active');
+                $("#createProj").removeClass('active');
+            }
+        });
+
+    });
+
+
+
+});
+
+</script>
+
+
+

@@ -44,6 +44,7 @@ $tab-wrap-border-radius: 6px;
         background-color: #fff;
         box-shadow: 0 -1px 0 #fff inset;
         cursor: default;
+        font-weight: bolder;
         &:hover {
             box-shadow: 0 -1px 0 #fff inset;
             background-color: #fff;
@@ -62,11 +63,11 @@ $tab-wrap-border-radius: 6px;
         user-select: none;
         text-align: center;
         transition: 0.3s background-color ease, 0.3s box-shadow ease;
-        height: 50px;
+        height: 60px;
         box-sizing: border-box;
         padding: 15px;
-        font-size: 2.5rem;
-        // font-weight: bold;
+        font-size: 3rem;
+        
         &:hover {
             background-color: #f9f9f9;
             box-shadow: 0 1px 0 #f4f4f4 inset;
