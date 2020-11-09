@@ -8,13 +8,15 @@ table {
     margin: 0 auto;
 
     table-layout: fixed;
+    
    
 }
 
 caption {
     font-weight: bolder;
     text-decoration: underline;
-    font-size: 3rem;
+    font-size: 4rem;
+    //newest
     margin-bottom: 1rem;
 }
 
@@ -56,10 +58,13 @@ tbody tr:nth-child(even) {
 td {
     border-bottom: 1px solid #cecfd5;
     border-right: 1px solid #cecfd5;
+    
 }
 tr td {
 
     text-align: center;
+    //newest
+    font-size: 3rem;
 }
 
 td:first-child {
