@@ -16,7 +16,7 @@
             <div class="card__side card__side--back">
                 <div class="card__cta">
                     <div class="card__motivation"><%= proj.motivation %></div>
-                    <a href="/user/<%= userId %>/<%= proj.id %>/groups" class="btn btn__large">Enter Project!</a>
+                    <a href="/user/<%= userId %>/<%= proj.id %>/groups" class="btn btn__large" style="background-color: gold; border: 2.5px solid black;">Enter Project!</a>
                 </div>
             </div>
         </div>
@@ -26,7 +26,7 @@
 
 </div>
 <% if (isFaculty) { %>
-    <a href="#" data-popup-target="#addProj" class="btn btn__large add-proj-btn">ADD PROJECT<span class="html_plus">&plus;</span></a>
+    <a href="#" data-popup-target="#addProj" class="btn btn__large add-proj-btn" style="background-color: gold; border: 2.5px solid black;">ADD PROJECT<span class="html_plus">&plus;</span></a>
 <% } %>
 
 <div class="popup" id="addProj">
@@ -51,7 +51,7 @@
 
 
                 
-                <input type="submit" name="submit" value="ADD" id="submit" class="btn btn__large">
+                <input type="submit" name="submit" value="ADD" id="submit" class="btn btn__large" style="background-color: gold; border: 2.5px solid black; border-radius: 20rem;">
             </fieldset>
         </form>
     </div>
@@ -61,18 +61,18 @@
 
 <script src="/js/popup.js" defer></script>
 <script defer>
-    const setBackground = () => {
-        let cards = document.querySelectorAll('.card__side--back');
-        cards.forEach(card => {
-            card.style.backgroundColor = getRandomColor();
-        });
-    }
+    // const setBackground = () => {
+    //     let cards = document.querySelectorAll('.card__side--back');
+    //     cards.forEach(card => {
+    //         card.style.backgroundColor = getRandomColor();
+    //     });
+    // }
 
-    document.body.onload = setBackground;
-    function getRandomColor() {
-        const randomColor = Math.floor(Math.random()*16777215).toString(16);
-        return "#" + randomColor;
-    }
+    // document.body.onload = setBackground;
+    // function getRandomColor() {
+    //     const randomColor = Math.floor(Math.random()*16777215).toString(16);
+    //     return "#" + randomColor;
+    // }
     
 </script>
 

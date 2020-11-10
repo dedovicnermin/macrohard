@@ -4,29 +4,34 @@
     &__small {
         width: 4rem;
         padding: 1rem 1rem;
-        background-color: green;
+        background-color: gold;
         color: black;
+        border: 2px solid black;
+        border-radius: 10rem;
     }
     
     &__medium {
         width: 10rem;
         padding: .5rem .5rem;
-        background-color: green;
+        background-color: gold;
         color: black;
+        border: 2px solid black;
     }
     
     &__large {
         width: 15rem;
         padding: 2rem 2rem;
-        background-color: red;
+        background-color: gold;
         color: black;
+        border: 2px solid black;
     }
     
     &__xlarge {
         width: 40rem;
         padding: 1rem 1rem;
-        background-color: darkred;
-        color: white;
+        background-color: gold;
+        color: black;
+        border: 2px solid black;
     }
     
     &:link, &:visited {

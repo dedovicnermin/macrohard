@@ -21,36 +21,39 @@
 
         &--row {
             position: relative;
-            width: 75%;
+            width: 50%;
             height: 15%;
             border: 2px solid black;
-            background-color: white;
+            background-color: #dde6f5;
             margin: 3rem;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             
 
             &-title {
-                font-size: 4rem;
+                
+                font-size: 3.5rem;
                 font-weight: bold;
-                width: 15%;
-                transform: translateX(50%);
+                margin-left: 10%;
+                // width: 25%;
+                // transform: translateX(45%);
             }
 
             &-value {
+                
                 font-size: 3.5rem;
-                width: 25%;
-                transform: translateX(50%);
+                margin-right: 10%;
+                // width: 25%;
+                // transform: translateX(50%);
             }
         }
 
     }
     .admin-section-title {
-        background-color: white;
+        color: gold;
         font-size: 5rem;
         font-weight: bold;
-        text-decoration: underline;
         margin: 1rem 2rem;
 
     }

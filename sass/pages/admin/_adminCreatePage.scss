@@ -25,7 +25,8 @@
             flex-direction: column;
             justify-content: space-evenly;
             align-items: center;
-            background-color: white;
+            background-color: #dde6f5;
+            @include boxStyle;
         }
     }
 }

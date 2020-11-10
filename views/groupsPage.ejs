@@ -15,7 +15,7 @@ create a group
             <div class="groupCard__info">
                 <h3 class="groupCard__info--heading"><%= group.group_name %></h3>
                 <div class="grouCard__info--members">Members: <%= group.total_members %></div>
-                <a href="/user/<%= obj.user_id %>/<%= obj.proj_id %>/<%= group.group_id %>/tasks" class="groupCard__info--btn btn btn__medium" stlye="font-size:2.5rem">View Group</a>
+                <a href="/user/<%= obj.user_id %>/<%= obj.proj_id %>/<%= group.group_id %>/tasks" class="groupCard__info--btn btn btn__medium" stlye="font-size:2.5rem; background-color: gold; border: 2px solid black;">View Group</a>
             </div>
         </div>
     <% }) %>
@@ -23,7 +23,9 @@ create a group
 </div>
 
 
-<a href="#" data-popup-target="#addGroup" class="btn btn__large add-group-btn">ADD GROUP<span class="html_plus">&plus;</span></a>
+
+
+<a href="#" data-popup-target="#addGroup" class="btn btn__large add-group-btn" style="border: 2px solid black;">ADD GROUP<span class="html_plus">&plus;</span></a>
 <div class="popup" id="addGroup">
     <div class="popup__header">
         <div class="popup__header-title">Add Group:</div>
