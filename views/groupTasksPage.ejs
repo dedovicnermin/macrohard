@@ -77,9 +77,9 @@
 </section>
 
 <% if (inGroup && !isFaculty) { %>
-    <a href="#" data-popup-target="#removeSelfFromGroup" class="btn btn__medium addRemoveSelfGroup" style="text-align: center; font-size: 2rem; position: absolute; width: 25rem;">REMOVE SELF</a>
+    <a href="#" data-popup-target="#removeSelfFromGroup" class="btn btn__medium addRemoveSelfGroup" style="text-align: center; font-size: 2rem; position: absolute; width: 25rem; border-radius: 20rem;">REMOVE SELF</a>
 <% } else if (!inGroup && !isFaculty) { %>
-    <a href="#" data-popup-target="#addSelfToGroup" class="btn btn__medium addRemoveSelfGroup" style="text-align: center; font-size: 2rem; position: absolute; width: 25rem;">ADD SELF</a>
+    <a href="#" data-popup-target="#addSelfToGroup" class="btn btn__medium addRemoveSelfGroup" style="text-align: center; font-size: 2rem; position: absolute; width: 25rem; border-radius: 20rem;">ADD SELF</a>
 <% } %>
 
 
@@ -125,7 +125,7 @@
         <form action="/user/<%= userId %>/<%= projId %>/<%= groupId %>/removeself" method="POST">
             <fieldset>
                 <label for="removeSelfConfimation"> Click to Confirm:
-                    <input type="submit" name="removeSelfConfirmation" value="✓" class="btn btn__small" style="margin: 0 auto; font-size: larger;">
+                    <input type="submit" name="removeSelfConfirmation" value="✓" class="btn btn__small" style="margin: 0 auto; font-size: larger; width: 5rem; height: 5rem;">
                 </label>
             </fieldset>
         </form>
@@ -144,7 +144,7 @@
         <form action="/user/<%= userId %>/<%= projId %>/<%= groupId %>/removegroup" method="POST">
             <fieldset>
                 <label for="removeGroupConfimation"> Click to Confirm:
-                    <input type="submit" name="removeGroupConfirmation" value="✓" class="btn btn__small" style="margin: 0 auto; font-size: larger;">
+                    <input type="submit" name="removeGroupConfirmation" value="✓" class="btn btn__small" style="margin: 0 auto; font-size: larger; width: 5rem; height: 5rem;">
                 </label>
             </fieldset>
         </form>
@@ -173,7 +173,7 @@
                 <label for="taskDescription">Task Description:   
                 </label>
                 <textarea name="taskDescription" cols="50" rows="30" style="width: 100%; padding: 1.5rem; border: 1px solid black;" required pattern="\S(.*\S)?"></textarea>
-                <input type="submit" name="submit" value="ADD" id="submit" class="btn btn__medium">
+                <input type="submit" name="submit" value="ADD" id="submit" class="btn btn__medium" style="border-radius: 10rem; font-size: 1.5rem;">
             </fieldset>
 
             

@@ -23,6 +23,7 @@
         border-radius: 3px;
         overflow: hidden;
         box-shadow: 0 1.5rem 4rem rgba(#000, .15);
+        border: 2px solid black;
         
         &--front {
             background-color: #fff;
@@ -35,6 +36,7 @@
 
         &--back {
             transform: rotateY(180deg);
+            background-color: #9faec9;
             // background-image: linear-gradient(to right bottom, #ff0000, #660000);
 
         }
@@ -60,7 +62,7 @@
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
         background-image: url('../images/projectIcons/projDefault.png');
-        border: 1px solid black;
+        border-bottom: 2px solid black;
         
 
        

@@ -5,6 +5,7 @@ const express = require("express"),
     logger = require('morgan'),
     userController = require("./controllers/userController"),
     adminController = require("./controllers/adminController"),
+    loginController = require('./controllers/loginController'),
     errorController = require("./controllers/errors"),
     db = require("./config/db"),
     port = 3000;
@@ -41,11 +42,14 @@ db.authenticate()
 app.get("/", (req, res) => {
     res.send("Hello, World.");
 });
+
+
 app.get("/test", (req, res) => {
     res.render("test");
 });
 
-
+app.get("/login", loginController.getLogin);
+app.post("/login", loginController.login);
 
 app.use("/messages", chatController);
 

@@ -10,6 +10,7 @@
         background-size: cover;
         width: inherit;
         height: 45%;
+        border-bottom: 1px solid black;
     }
 
 
@@ -36,13 +37,18 @@
         }
 
         &--btn {
-            background-color: green;
+            background-color: gold;
             margin-bottom: 20px;
             width: 75%;
             height: 3.5rem;
             font-size: 2rem;
+            border: 2px solid black;
         }
     }
 
 
+}
+
+a.groupCard__info--btn.btn.btn__medium {
+    border: 2px solid black;
 }
