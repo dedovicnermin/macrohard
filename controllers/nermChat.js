@@ -9,40 +9,20 @@ const Messages = require("../models/Message");
 const queryInterface = db.getQueryInterface();
 const User = require('../models/User');
 
+
 var roomNumber;
 var userID;
-// chatRouter.get('/chat/:userID', async function(req, res) {
-//     try {
-//         userID = req.params.userID;
-//         var chats = await getChatrooms();
-//         var users = await getUsers(userID);
-//         var usersOfChatroom = await getUsersOfChatroom(chats);
-//         delete users[(users.findIndex(obj => obj.user_id == userID))];
-//         users.filter(n => n);
-//         res.render('chatrooms', {chatIDs: chats, user: users, userNames: usersOfChatroom});
-//     //res.json({chatIDs: chats, user: users, userNames: usersOfChatroom});
-//     } catch (error) {
-//         console.log(error);
-//         res.render('error');
-//     }
-    
-// });
-
-
-
 
 const sequelize = require('sequelize');
 const Op = sequelize.Op;
 const chatroomPageGather = async (userId) => {
     try {
         let chatIds = await getChatrooms(userId);
-        console.log(chatIds);
         let chatByUsernames = await getChatNames(userId, chatIds);
 
         return chatByUsernames;
     } catch (error) {
         console.log(error);
-        console.log('inside chatroomgather')
         return;
     }
 }
@@ -55,51 +35,40 @@ const getChatNames = async (userId, chatIds) => {
             for (let i = 0; i < chatIds.length; i++) {
                 const usersInChat = [];
                 const users = await UserChatroom.findAll({
-                    where: {chat_id: chatIds[i], user_id: {
-                        [Op.ne] : userId
-                    }},
+                    where: {chat_id: chatIds[i], [Op.ne] : userId},
                     attributes: ['user_id'],
                     raw: true
                 });
                 let twoloop = async () => {
                     
                     for (let j = 0; j < users.length; j++) {
-                        let u = users[j].user_id;
                         let user = await User.findOne({
-                            where: {user_id: u},
+                            where: {user_id: users[j]},
                             attributes: ['user_name'],
                             raw: true
                         });
-                        console.log(user.user_name);
                         usersInChat.push(user.user_name);
                     }
                 }
                 await twoloop();
-                
-                let obj = {};
-                obj.cId = chatIds[i];
-                obj.members = usersInChat;
-                
-                
-                chatByUsers.push(obj);
+                let id = chatIds[i];
+                chatByUsers.push({id: usersInChat});
             }
         }
         await loop();
         return chatByUsers;
     } catch (error) {
         console.log(error);
-        console.log("inside double loop")
         return;
     }
-    
 }
 
-const getChatrooms = async (id) => {
+async function getChatrooms(id) {
     try {
         let chatIds = [];
         const chats = await UserChatroom.findAll({
             where: {user_id: id},
-            attributes: ['chat_id'],
+            attributes: [chat_id],
             raw: true
         });
         chats.forEach(chat => {
@@ -108,7 +77,6 @@ const getChatrooms = async (id) => {
         return chatIds;
     } catch (error) {
         console.log(error);
-        console.log('inside get chatroomIds');
         return;
     }
     
@@ -122,7 +90,7 @@ const getChatrooms = async (id) => {
 
 chatRouter.get('/chat/:userID', async function(req, res) {
     try {
-        const chats = await chatroomPageGather(req.params.userID);
+        const chats = await chatroomPageGather(req.params.userId);
         // res.render('chatrooms', {chatIDs: chats, user: users, userNames: usersOfChatroom});
         res.json(chats);
     } catch (error) {
@@ -132,20 +100,6 @@ chatRouter.get('/chat/:userID', async function(req, res) {
     }
     
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -181,51 +135,44 @@ var time;
 var chatID;
 
 
-// async function getChatrooms() {
-//     var a = await UserChatroom.findAll({
-//         where: {
-//             user_id :userID,
-//         }
-//     });
-//     return a;
-// }
 
-// async function getUsersOfChatroom(chatrooms)
-// {
-//     var users = [];
-//     for (i = 0; i < chatrooms.length; i++)
-//     {
-//         var tmp = (await UserChatroom.findAll({
-//             where:
-//             {   
-//                 chat_id :chatrooms[i].chat_id
-//             },  
-//             attributes: {
-//                 exclude: ['chat_id']
-//             }
+
+async function getUsersOfChatroom(chatrooms)
+{
+    var users = [];
+    for (i = 0; i < chatrooms.length; i++)
+    {
+        var tmp = (await UserChatroom.findAll({
+            where:
+            {   
+                chat_id :chatrooms[i].chat_id
+            },  
+            attributes: {
+                exclude: ['chat_id']
+            }
             
     
-//         }) );
-//         stringBuilder= "";
-//         for(j = 0; j < tmp.length; j++)
-//         {
-//             stringBuilder = stringBuilder + ((await User.findOne({
-//                 where:
-//                 {
-//                     user_id : tmp[j].user_id
-//                 },
-//                 attributes: {
-//                     exclude: ['user_type', 'user_email', 'user_password',"tasks_completed", "avg_contribution", "user_title", "user_phone", "user_location", "user_img"]
-//                 }
-//             })).user_name)+", ";
+        }) );
+        stringBuilder= "";
+        for(j = 0; j < tmp.length; j++)
+        {
+            stringBuilder = stringBuilder + ((await User.findOne({
+                where:
+                {
+                    user_id : tmp[j].user_id
+                },
+                attributes: {
+                    exclude: ['user_type', 'user_email', 'user_password',"tasks_completed", "avg_contribution", "user_title", "user_phone", "user_location", "user_img"]
+                }
+            })).user_name)+", ";
             
-//         }
-//         var jsonElement = new Object();
-//         jsonElement.name = stringBuilder.replace(/,\s*$/, "");
-//         users.push(jsonElement)
-//     }
-//     return users;
-// }
+        }
+        var jsonElement = new Object();
+        jsonElement.name = stringBuilder.replace(/,\s*$/, "");
+        users.push(jsonElement)
+    }
+    return users;
+}
 
 async function getUserName(userID)
 {
@@ -270,16 +217,16 @@ async function getMessages(chatID) {
     return messages;
 }
 
-async function getUsers(user) {
-    var users = await User.findAll({
-        attributes: {
-            exclude: ['user_type', 'user_email', 'user_password',"tasks_completed", "avg_contribution", "user_title", "user_phone", "user_location", "user_img"]
-        }
+// async function getUsers(user) {
+//     var users = await User.findAll({
+//         attributes: {
+//             exclude: ['user_type', 'user_email', 'user_password',"tasks_completed", "avg_contribution", "user_title", "user_phone", "user_location", "user_img"]
+//         }
         
-    });
+//     });
 
-    return users;
-}
+//     return users;
+// }
 module.exports = function(io) {
     io.on('connection', function (socket) {
         console.log('user has connected to chat controller...');
