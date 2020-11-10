@@ -50,6 +50,8 @@ app.get("/test", (req, res) => {
 
 app.get("/login", loginController.getLogin);
 app.post("/login", loginController.login);
+app.get('/createaccount', loginController.getCreateAcount);
+app.post('/createaccount', loginController.createAccount);
 
 app.use("/messages", chatController);
 

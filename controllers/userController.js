@@ -1250,7 +1250,12 @@ userRouter.post('/:userId/:projId/:groupId/:taskId/addupdate', async (req, res) 
 
 userRouter.get('/:userId/:projectId/stats', async (req, res) => {
     const obj = await gatherTableInfo(req.params.projectId, req.params.userId);
-    res.render('statsPage', {obj, userId: req.params.userId, projId: req.params.projectId});
+    const projName = await Project.findOne({
+        where: {proj_id: req.params.projectId},
+        attributes: ["proj_name"],
+        raw: true
+    });
+    res.render('statsPage', {obj, userId: req.params.userId, projId: req.params.projectId, projName: projName.proj_name});
 });
 
 userRouter.get('/:userId/:projectId/stats/getstats', async (req, res) => {
