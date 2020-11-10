@@ -3,35 +3,28 @@
         <div class="c_button_icon"> </div>
         <div class="a_button_icon"> </div>
     </div>
-    <form class="create_account_form_container">
+    <form class="create_account_form_container" method="POST" action="/createaccount">
         <h1 class="create-account-page-title">Create Account</h1>
         <section class="login_input_section">
-            <input type="text" name="full-name" autocomplete="off" required>
+            <input class="login_input" type="text" name="full-name" autocomplete="off" required>
             <label for="Full-Name" class="label-name"><span class="content-name">Full Name</span></label>
         </section>
         <section class="login_input_section">
-            <input type="text" name="Email" autocomplete="off" required>
+            <input class="login_input" type="text" name="Email" autocomplete="off" required>
             <label for="Email" class="label-email"><span class="content-email">Email</span></label>
         </section>
         <section class="login_input_section">
-            <input type="password" name="Password" autocomplete="off" required>
+            <input class="login_input" type="password" name="Password" autocomplete="off" required>
             <label for="Password" class="label-password"><span class="content-password">Password</span></label>
         </section>
         <section class="login_input_section">
-            <input type="password" name="confirm-Password" autocomplete="off" required>
-            <label for="confirm-Password" class="label-confirm-password"><span class="content-confirm-password">Confirm Password</span></label>
+            <input class="login_input" type="password" name="confirm-Password" autocomplete="off" required>
+            <label for="confirm-Password" class="label-password"><span class="content-confirm-password">Confirm Password</span></label>
         </section>
-        <section class="login_input_section" required>
-            <select class="user_type_selection_options"name="user-type" required>
-                <option value="null"></option>
-                <option value="0">Faculty</option>
-                <option value="1">User</option>
-            </select>
-            <label for="user-type" class="label-user-type"><span>User Type</span></label>
-        </section>
+        
         <div class="login_button_container">
-            <button class="login_button" onclick="location.href='login.html'">Back</button>
-            <input class="login_button_input" type="submit" name="create" value="Create Account" onclick="#">
+            <button class="login_button" onclick="location.href='/login'">Back</button>
+            <button class="login_button" type="submit" name="create" onclick="">Create Account</button>
         </div>
     </form>
 </div>

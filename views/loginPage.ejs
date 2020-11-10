@@ -3,20 +3,19 @@
         <div class="m_button_icon"> </div>
         <div class="h_button_icon"> </div>
     </div>
-    <form class="login_form_container">
+    <form class="login_form_container" method="POST" action="/login">
         <h1 class="login-page-title">Macro Hard</h1>
         <section class="login_input_section">
-            <input type="text" name="email" autocomplete="off" style="font-size: 2rem;" required>
+            <input class="login_input" type="text" name="email" autocomplete="off" style="font-size: 2rem;" required>
             <label for="Email" class="label_email" style="font-size: 2.5rem;"><span class="content-email">Username/Email</span></label>
         </section>
         <section class="login_input_section">
-            <input type="password" name="password" autocomplete="off" style="font-size: 2rem;" required>
+            <input class="login_input" type="password" name="password" autocomplete="off" style="font-size: 2rem;" required>
             <label for="Password" class="label_password" style="font-size: 2.5rem;"><span class="content-password">Password</span></label>
         </section>
         <div class="login_button_container">
-            <input class="login_button_input" type="submit" name="login" value="Login">
-            <button class="login_button " onclick="location.href='recoverAccount.html'">Forgot Username/Password?</button>
-            <button class="login_button" onclick="location.href='createAccount.html'">Create Your Account</button>
+            <button class="login_button" type="submit" name="login">Login</button>
+            <button class="login_button" onclick="location.href='/createaccount'">Create Your Account</button>
         </div>
     </form>
 </div>
