@@ -25,6 +25,9 @@ const Message = db.define('message', {
         references: {
             model: 'users'
         }
+    },
+    msg_content: {
+        type: DataTypes.STRING(750)
     }
 }, {
     tableName: 'messages',
