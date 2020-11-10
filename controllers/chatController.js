@@ -1,8 +1,8 @@
 
 const chatRouter = require('express').Router();
 
-Chatroom = require("../models/Chatroom");
-UserBadge = require('../models/UserBadge');
+const Chatroom = require("../models/Chatroom");
+const UserBadge = require('../models/UserBadge');
 const db = require('../config/db');
 const UserChatroom = require('../models/UserChatroom');
 const Messages = require("../models/Message");
@@ -32,6 +32,7 @@ var userID;
 
 
 const sequelize = require('sequelize');
+// const Chatroom = require('../models/Chatroom');
 const Op = sequelize.Op;
 const chatroomPageGather = async (userId) => {
     try {
@@ -42,7 +43,7 @@ const chatroomPageGather = async (userId) => {
         return chatByUsernames;
     } catch (error) {
         console.log(error);
-        console.log('inside chatroomgather')
+        console.log('inside chatroomgather');
         return;
     }
 }
@@ -122,9 +123,10 @@ const getChatrooms = async (id) => {
 
 chatRouter.get('/chat/:userID', async function(req, res) {
     try {
-        const chats = await chatroomPageGather(req.params.userID);
+        const chatrooms = await chatroomPageGather(req.params.userID);
         // res.render('chatrooms', {chatIDs: chats, user: users, userNames: usersOfChatroom});
-        res.json(chats);
+        // res.json(chats);
+        res.render('chatrooms', {chatrooms, userId: req.params.userID});
     } catch (error) {
         console.log(error);
         // res.render('error');
@@ -133,166 +135,134 @@ chatRouter.get('/chat/:userID', async function(req, res) {
     
 });
 
+chatRouter.post('/chat/:userId', async (req, res) => {
+    //takes list of emails and creates a new chatroom
+    //needs to find user ID of each email, including self, and add to UserChat
+    try {
+        const emails = req.body.emails;
+        await emailToUIDandInput(emails, req.params.userId);
+        res.redirect(`http://localhost:3000/messages/chat/${req.params.userId}`);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-chatRouter.get('/:userID/:chatID', async function(req, res) {
-    roomNumber = req.params.chatID;
-    
-    res.render('chat');
+    } catch (error) {
+        console.log(error);
+        res.render('error');
+    }
 });
 
-
-
-
-
-var roomName;
-var time;
-var chatID;
-
-
-// async function getChatrooms() {
-//     var a = await UserChatroom.findAll({
-//         where: {
-//             user_id :userID,
-//         }
-//     });
-//     return a;
-// }
-
-// async function getUsersOfChatroom(chatrooms)
-// {
-//     var users = [];
-//     for (i = 0; i < chatrooms.length; i++)
-//     {
-//         var tmp = (await UserChatroom.findAll({
-//             where:
-//             {   
-//                 chat_id :chatrooms[i].chat_id
-//             },  
-//             attributes: {
-//                 exclude: ['chat_id']
-//             }
-            
-    
-//         }) );
-//         stringBuilder= "";
-//         for(j = 0; j < tmp.length; j++)
-//         {
-//             stringBuilder = stringBuilder + ((await User.findOne({
-//                 where:
-//                 {
-//                     user_id : tmp[j].user_id
-//                 },
-//                 attributes: {
-//                     exclude: ['user_type', 'user_email', 'user_password',"tasks_completed", "avg_contribution", "user_title", "user_phone", "user_location", "user_img"]
-//                 }
-//             })).user_name)+", ";
-            
-//         }
-//         var jsonElement = new Object();
-//         jsonElement.name = stringBuilder.replace(/,\s*$/, "");
-//         users.push(jsonElement)
-//     }
-//     return users;
-// }
-
-async function getUserName(userID)
-{
-    var userName = await(User.findOne({
-        where:
-        {
-            user_id: userID
-        },
-        attributes: {
-            exclude: ['user_id','user_type', 'user_email', 'user_password',"tasks_completed", "avg_contribution", "user_title", "user_phone", "user_location", "user_img"]
-        }
-    }));
-
-    return userName.user_name;
-}
-
-async function getMessages(chatID) {
-    var messages = []
-    getUserName(1);
-    var message = await Messages.findAll({
-        where : {
-            chat_id : chatID
-        },
-        attributes: {
-            exclude:['chat_id','msg_id']
-        },
-        order: [
-            ['msg_id', 'ASC']
-        ]
-    });
-    for( i = 0; i < message.length; i++)
-    {
-        var userName = await getUserName(message[i].user_id);
-        var jsonObject = new Object();
-
-        time =  " @ "  + ( message[i].msg_time/* .getTime() %12) + ":"  +  message[i].msg_time.getMinutes() */);
-        jsonObject.msg_content =userName + " : " + message[i].msg_content + time;
+const emailToUIDandInput = async (emails, selfId) => {
+    try {
+        let uIds = [];
+        uIds.push(selfId);
         
-        messages.push(jsonObject);
+
+        const chatroom = await Chatroom.create({
+            task_id: null
+        });
+
+        const userChatInput = async () => {
+            for (let i = 0; i < emails.length; i++) {
+                const u = await User.findOne({
+                    where: {user_email: emails[i]},
+                    attributes: ['user_id'],
+                    raw: true
+                });
+                uIds.push(u.user_id);
+            }
+        };
+        await userChatInput();
+        const inputToUserChat = async () => {
+            for (let i = 0; i < uIds.length; i++) {
+                await UserChatroom.create({
+                    user_id: uIds[i],
+                    chat_id: chatroom.chat_id
+                });
+            }
+        };
+        await inputToUserChat();
+        return;
         
+    } catch (error) {
+        console.log(error);
+        return;
     }
-    return messages;
 }
 
-async function getUsers(user) {
-    var users = await User.findAll({
-        attributes: {
-            exclude: ['user_type', 'user_email', 'user_password',"tasks_completed", "avg_contribution", "user_title", "user_phone", "user_location", "user_img"]
-        }
+
+
+
+
+
+
+chatRouter.get('/:userId/:chatId', async (req, res) => {
+    try {
+        const msgs = await retrieveMessages(req.params.chatId, req.params.userId);
+        msgs.forEach(msg => {
+            let time = msg.msg_time;
+            let splitTime = time.toString().split('GMT');
+            msg.msg_time = splitTime[0];
+        });
+        //passUserID to page
+        res.json(msgs);
+    } catch (error) {
+        console.log(error);
+        res.render('error');
+    }
+});
+
+const retrieveMessages = async (chatId, selfId) => {
+    try {
+        const messages = await Messages.findAll({
+            where: {chat_id: chatId},
+            order: [
+                ['msg_time', 'ASC']
+            ],
+            raw: true
+        });
+
+        return messages;
         
-    });
-
-    return users;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 module.exports = function(io) {
     io.on('connection', function (socket) {
         console.log('user has connected to chat controller...');
+        
         socket.join(roomNumber);
         socket.on('admin', function() {
             console.log('Successful socket test');
         });
  
         
-        socket.on('getMessages', async data => {
-            var tmp = await getMessages(data.chatId);
-            socket.emit("receiveMessages"+data.chatId, {messages: tmp});
-        })
+        // socket.on('getMessages', async data => {
+        //     var tmp = await getMessages(data.chatId);
+        //     socket.emit("receiveMessages"+data.chatId, {messages: tmp});
+        // })
 
         socket.on('chat_message', async data => {
 
@@ -322,55 +292,7 @@ module.exports = function(io) {
         });
 
 
-        socket.on('addChatroom', async data =>{
-                
-               
-                queryInterface.bulkInsert('chatrooms', [
-                    {
-                        task_id: null,
-                    }
-                ]).then(async () => {
-                     chatID = await Chatroom.findOne({
-                        where: {
-                            
-                        },
-                        order: [
-                            ['chat_id', 'DESC']
-                        ]
-                    });
-            
-                    chatID = chatID.chat_id;
-
-                    queryInterface.bulkInsert('user_chatroom', [
-                        {
-                            user_id: parseInt(data[data.length-1]),
-                            chat_id: chatID
-                        }
-                    ]).then(async () => {
-                        for(i = 0; i < data.length-2; i++)
-                        {
-                            queryInterface.bulkInsert('user_chatroom', [
-                                {
-                                user_id: parseInt(data[i]),
-                                chat_id: chatID
-                                }
-                            ]);
-                            
-                        }
-                        
-                    }).then(async() => {
-                        socket.emit(data[data.length-1], chatID)
-                    });
-                    
-
-                    
-                    
-                }).catch(err => {
-                    console.log(`fail: ${err}`);
-                });
-                
-            
-        })
+        
 
     });
     return chatRouter;

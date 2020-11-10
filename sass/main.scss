@@ -9,6 +9,8 @@
 
 @import "components/card";
 @import "components/groupCard";
+@import "components/chatroom";
+@import "components/chatmsg";
 
 
 @import "layout/grid";
@@ -25,6 +27,8 @@
 @import "pages/taskPage";
 @import "pages/globalStylesPage";
 @import "pages/projectDetailsPage";
+@import "pages/chatroomPage";
+@import "pages/chatPage";
 @import "pages/loginAndResetPage";
 
 @import "pages/admin/nav";
