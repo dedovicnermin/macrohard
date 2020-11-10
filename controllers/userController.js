@@ -28,7 +28,7 @@ const express = require('express'),
 
 userRouter.get('/:userId/profile', async (req, res) => {
     const obj = await gatherProfile(req.params.userId);
-    res.render('userProfile', {obj});
+    res.render('userProfile', {obj, userId: req.params.userId});
 });
 
 //.post() -> when wanting to edit their profile
@@ -255,7 +255,7 @@ userRouter.get('/:userId/:projectId/details', async (req, res) => {
     try {
         const {proj, isFaculty, pFiles} = await projDetailsGather(req.params.projectId, req.params.userId, req);
         // res.json({proj: proj, isFaculty: isFaculty, pFiles: pFiles});
-        res.render('projectDetailsPage', {proj: proj, isFaculty: isFaculty, pFiles: pFiles});
+        res.render('projectDetailsPage', {proj: proj, isFaculty: isFaculty, pFiles: pFiles, userId: req.params.userId, projId: req.params.projectId });
     } catch (error) {
         console.log(error);
         res.render('error');
@@ -544,7 +544,7 @@ userRouter.get('/:userId/:projectId/groups', async (req, res) => {
         const {groups, proj_id, proj_name} = data;
         const obj = {proj_id: proj_id, proj_name, user_id: req.params.userId, groups: groups}
 
-        res.render('groupsPage', {obj});
+        res.render('groupsPage', {obj, userId: req.params.userId, projId: req.params.projectId});
     } catch (err) {
         res.render('error', {err});
     }
@@ -1250,7 +1250,7 @@ userRouter.post('/:userId/:projId/:groupId/:taskId/addupdate', async (req, res) 
 
 userRouter.get('/:userId/:projectId/stats', async (req, res) => {
     const obj = await gatherTableInfo(req.params.projectId, req.params.userId);
-    res.render('statsPage', {obj});
+    res.render('statsPage', {obj, userId: req.params.userId, projId: req.params.projectId});
 });
 
 userRouter.get('/:userId/:projectId/stats/getstats', async (req, res) => {
