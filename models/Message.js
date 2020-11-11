@@ -36,10 +36,10 @@ const Message = db.define('message', {
 
 
 
-Message.hasOne(Chatroom);
+Message.hasOne(Chatroom, {foreignKey: 'chat_id'});
 Chatroom.hasMany(Message, {foreignKey: 'chat_id'});
 
-Message.hasOne(User);
+Message.hasOne(User, {foreignKey: 'user_id'});
 User.hasMany(Message, {foreignKey: 'user_id'});
 
 

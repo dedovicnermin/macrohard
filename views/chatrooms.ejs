@@ -1,0 +1,107 @@
+<%- include('partials/singlenav', {userId}) %>
+
+<div id="chatroom-page-title" style="margin: 0 auto">Chatrooms</div>
+<div class="chatroom-page">
+<div class="room-container">
+    <% chatrooms.forEach(chat => { %>
+        <div class="chatroom">
+            <input type="hidden" value="<%= chat.cId %>">
+            <div class="chatroom__header"><p style="margin-left: 1rem;">Members:</p></div>
+            <div class="chatroom__members">
+                <% chat.members.forEach(member => { %>
+                    <div class="chatroom__members--item"><%= member %></div> 
+                <% }) %>
+            </div>
+            <div class="chatroom__btncontainer">
+                <a href="http://localhost:3000/messages/<%= userId %>/<%= chat.cId %>" class="btn btn__xlarge" style="border: 2px solid black; ">ENTER CHATROOM</a>
+            </div>
+                
+            
+        </div>
+   <% }) %> 
+</div>
+   
+</div>
+
+<a href="#" data-popup-target="#addChatroom" class="btn btn__xlarge" id="createChatBtn" style="font-size: 2.5rem; width: 50%; border: 2px solid black;">CREATE CHATROOM</a>
+
+
+
+
+<div class="popup" id="addChatroom">
+    <div class="popup__header">
+        <div class="popup__header-title">Enter User Emails:</div>
+        <button data-close-button class="popup__header-close-button">&times;</button>
+    </div>
+    <div class="popup__body">
+        <form method="POST" action="http://localhost:3000/messages/chat/<%= userId %>">
+            <label for="emailInput">Enter Email: (then click enter)
+                <input type="email" placeholder="Enter email..." name="email" style="width: 100%; height: 3.5rem; padding: 1.5rem; font-size: 2.2rem;"  id="email" title="Enter valid email please!">
+            </label>
+            <label for="emails" style="font-size: 2.5rem; margin: 0 1.5rem;">Entered Emails:</label>
+            <textarea name="emails" id="emails" cols="30" rows="10" style="width: 100%; padding: 1.5rem; border: 1px solid black; font-size: 2.2rem" readonly></textarea>
+            
+            <input type="button" style="width: 100%; height: 2rem; font-size: 1.5rem;" onclick="reset()" value="Reset">
+            <input type="submit" style="width: 100%; height: 2rem; font-size: 1.5rem;">
+                
+            
+        </form>
+    </div>
+</div>
+
+
+
+
+
+<div id="overlay"></div>
+
+
+
+
+
+
+
+<script   src="https://code.jquery.com/jquery-3.5.1.min.js"   integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="   crossorigin="anonymous"></script>
+<script src="/js/popup.js"></script>
+<script type="text/javascript">
+    
+
+
+    $(document).ready( () => {
+        var url = (document.URL).split("/");
+        var userID = url[url.length-1];
+        
+
+
+        function reset() {
+            $('#emails').val("");
+        }
+                
+
+
+        $('#email').keydown(event => {
+            if (event.which == 13) {
+                event.preventDefault();
+                console.log("entered activated");
+                let e = $('#email').val();
+                if (e.toString().length == 0) {
+                    return;
+                }
+                $('#emails').removeAttr('readonly');
+                let es = $('#emails').val();
+                if (es.toString().length == 0) {
+                    $('#emails').val(e + "\n");    
+                } else {
+                    $('#emails').val(es + e + '\n');
+                }
+                $('#email').val("");
+                $('#emails').attr('readonly', 'readonly');
+            }
+        });
+    });
+
+
+</script>
+
+    
+    

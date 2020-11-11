@@ -1,0 +1,70 @@
+
+
+
+
+.msg-container {
+    position: relative;
+    border: 2px solid #dedede;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+    
+
+
+    &::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+}
+
+
+.darker {
+    border-color: #ccc;
+    background-color: #ddd;
+}
+
+
+.msg-container img {
+    float: left;
+    max-width: 9rem;
+    width: 100%;
+    margin-right: 20px;
+    border-radius: 50%;
+}
+
+.msg-container img.right {
+    float: right;
+    margin-left: 20px;
+    margin-right:0;
+}
+
+
+.time-right {
+    float: right;
+    color: #aaa;
+    margin-top: .5rem;
+    position: absolute;
+    bottom: 0;
+    right: 1rem;
+    
+}
+
+.time-left {
+    position: absolute;
+    bottom: 0;
+    float: left;
+    color: #999;
+    
+}
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

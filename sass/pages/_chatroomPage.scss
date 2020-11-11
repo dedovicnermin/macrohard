@@ -1,0 +1,42 @@
+.chatroom-page {
+    position: relative;
+    top: 3%;
+    left: 6%;
+    width: 90%;
+    height: 80vh;
+    @include boxStyle;
+    
+    
+    
+    overflow-y: scroll;
+}
+
+
+#chatroom-page-title {
+    display: inline-block;
+    font-size: 5rem;
+    color: gold;
+    position: relative;
+    left: 44%;
+    top: 3%;
+
+}
+
+#createChatBtn {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.room-container {
+    position: relative;
+    
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
