@@ -1,32 +1,11 @@
 
 const chatRouter = require('express').Router();
-
 const Chatroom = require("../models/Chatroom");
-const UserBadge = require('../models/UserBadge');
-const db = require('../config/db');
 const UserChatroom = require('../models/UserChatroom');
 const Messages = require("../models/Message");
-const queryInterface = db.getQueryInterface();
 const User = require('../models/User');
 
-var roomNumber;
-var userID;
-// chatRouter.get('/chat/:userID', async function(req, res) {
-//     try {
-//         userID = req.params.userID;
-//         var chats = await getChatrooms();
-//         var users = await getUsers(userID);
-//         var usersOfChatroom = await getUsersOfChatroom(chats);
-//         delete users[(users.findIndex(obj => obj.user_id == userID))];
-//         users.filter(n => n);
-//         res.render('chatrooms', {chatIDs: chats, user: users, userNames: usersOfChatroom});
-//     //res.json({chatIDs: chats, user: users, userNames: usersOfChatroom});
-//     } catch (error) {
-//         console.log(error);
-//         res.render('error');
-//     }
-    
-// });
+
 
 
 
@@ -124,13 +103,11 @@ const getChatrooms = async (id) => {
 chatRouter.get('/chat/:userID', async function(req, res) {
     try {
         const chatrooms = await chatroomPageGather(req.params.userID);
-        // res.render('chatrooms', {chatIDs: chats, user: users, userNames: usersOfChatroom});
-        // res.json(chats);
         res.render('chatrooms', {chatrooms, userId: req.params.userID});
     } catch (error) {
         console.log(error);
-        // res.render('error');
-        res.json(error);
+        res.render('error');
+        
     }
     
 });
@@ -139,7 +116,9 @@ chatRouter.post('/chat/:userId', async (req, res) => {
     //takes list of emails and creates a new chatroom
     //needs to find user ID of each email, including self, and add to UserChat
     try {
-        const emails = req.body.emails;
+        const es = req.body.emails;
+        const emails = es.toString().split('\n');
+        
         await emailToUIDandInput(emails, req.params.userId);
         res.redirect(`http://localhost:3000/messages/chat/${req.params.userId}`);
 
@@ -160,9 +139,10 @@ const emailToUIDandInput = async (emails, selfId) => {
         });
 
         const userChatInput = async () => {
-            for (let i = 0; i < emails.length; i++) {
+            for (let i = 0; i < emails.length - 1; i++) {
+                let e = emails[i].trim().replace(/^[ '"]+|[ '"]+$|( ){2,}/g,'$1');
                 const u = await User.findOne({
-                    where: {user_email: emails[i]},
+                    where: {user_email: e},
                     attributes: ['user_id'],
                     raw: true
                 });
@@ -201,13 +181,42 @@ chatRouter.get('/:userId/:chatId', async (req, res) => {
             let splitTime = time.toString().split('GMT');
             msg.msg_time = splitTime[0];
         });
+        const messages = await formatMsg(msgs);
+
         //passUserID to page
-        res.json(msgs);
+        // res.json(messages);
+
+        res.render('chat', {messages, userId: req.params.userId});
     } catch (error) {
         console.log(error);
         res.render('error');
     }
 });
+
+
+const formatMsg = async (msgs) => {
+    try {
+        const loop = async () => {
+            for (let i = 0; i < msgs.length; i++) {
+                const name = await User.findOne({
+                    where: {user_id: msgs[i].user_id},
+                    attributes: ['user_name', 'user_img'],
+                    raw: true
+                });
+                msgs[i].userName = name.user_name;
+                msgs[i].img = name.user_img;
+            }
+        };
+        await loop();
+        return msgs;
+
+    } catch (error) {
+        console.log(error);
+        return -1;
+    }
+
+}
+
 
 const retrieveMessages = async (chatId, selfId) => {
     try {
@@ -233,63 +242,36 @@ const retrieveMessages = async (chatId, selfId) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 module.exports = function(io) {
-    io.on('connection', function (socket) {
-        console.log('user has connected to chat controller...');
+    
+    io.on('connection', function (socket) {   
+        const q = socket.handshake.query.userroom.toString().split('~');
+        socket.userId = q[0];
+        socket.chatId = q[1];
+        socket.join(socket.chatId);
+        console.log('user with userID: ' + socket.userId + ' has connected and is now in chatroomID: ' + socket.chatId);
         
-        socket.join(roomNumber);
-        socket.on('admin', function() {
-            console.log('Successful socket test');
-        });
  
         
-        // socket.on('getMessages', async data => {
-        //     var tmp = await getMessages(data.chatId);
-        //     socket.emit("receiveMessages"+data.chatId, {messages: tmp});
-        // })
-
-        socket.on('chat_message', async data => {
-
-           
-            var currentdate = new Date();
-            time =  " @ "  + (currentdate.getHours() %12) + ":"  + currentdate.getMinutes();
-
-           queryInterface.bulkInsert('messages' , [
-                {
-                    chat_id: parseInt(data.room),
-                    user_id: parseInt(data.user),
-                    msg_content: data.message
-                }
-            ]) 
-
-            var user = await User.findOne({
-                where: {
-                    user_id: data.user
-                },
-                attributes: {
-                    exclude: ['user_type', 'user_email', 'user_password',"tasks_completed", "avg_contribution", "user_title", "user_phone", "user_location", "user_img"],
-                    
-                }
-        
-            });
-            io.to(data.room).emit('chat_message', '<strong>' + user.user_name + '</strong>: ' + data.message + " :"+ time);
+        socket.on('postMsg', async (obj) => {
+            try {
+                const msg = await Messages.create({
+                    chat_id: socket.chatId,
+                    user_id: socket.userId,
+                    msg_content: obj.msg
+                });
+                const user = await User.findOne({
+                    where: {user_id: socket.userId},
+                    attributes: ['user_name', 'user_img'],
+                    raw: true
+                });
+                io.to(socket.chatId).emit('new_msg', {msg: msg, time: obj.time, userName: user.user_name, img: user.user_img});
+            } catch (error) {
+                io.to(socket.chatId).emit('new_msg');
+            }
         });
+
+        
 
 
         

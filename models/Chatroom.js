@@ -21,8 +21,8 @@ const Chatroom = db.define('chatroom', {
     timestamps: false
 });
 
-Chatroom.hasOne(Task);
-Task.hasOne(Chatroom, {foreignKey: 'task_id'});
+// Chatroom.hasOne(Task);
+// Task.hasOne(Chatroom, {foreignKey: 'task_id'});
 
 
 
