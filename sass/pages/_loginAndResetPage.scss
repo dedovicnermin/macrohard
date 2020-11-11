@@ -71,10 +71,10 @@
 
 .create_account_container {
     margin: auto;
-    margin-top: 5%;
+    margin-top: 10%;
     border-radius: 5px;
     border: 4px solid black;
-    height: 750px;
+    height: 650px;
     width: 40%;
     display: flex;
     flex-direction: column;
@@ -98,15 +98,15 @@
     // font-family: 'Orb', sans-serif;
     font-weight: 600;
 
-    // input {
-    //     width: 100%;
-    //     height: 50%;
-    //     padding-top: 20px;
-    //     border: none;
-    //     border-radius: 5px;
-    //     background: #88A6C2;
-    //     font-size: 16px;
-    // }
+    .login_input {
+        width: 100%;
+        height: 50%;
+        padding-top: 20px;
+        border: none;
+        border-radius: 5px;
+        background: #88A6C2;
+        font-size: 16px;
+    }
 
     // button {
     //     width: 100%;
@@ -118,15 +118,15 @@
     //     font-size: 16px;
     // }
 
-    label {
-        // position: absolute;
-        // bottom: 0px;
-        // left: 2px;
-        // top: 2px;
-        // width: 100%;
-        // height: 100%;
-        // pointer-events: none;
-        // border-radius: 5px;
+    .label-email, .label-password, .label-name {
+        position: absolute;
+        bottom: 0px;
+        left: 2px;
+        top: 2px;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        border-radius: 5px;
     }
 
 }
@@ -142,28 +142,51 @@
     text-align: center;
 }
 
-.recover_email_form_container, .login_form_container, .create_account_form_container {
+
+
+
+.login_form_container {
     min-width: inherit;
     opacity: 1;
+    display: flex;
+    flex-direction: column;
 }
+
+.create_account_form_container {
+    min-width: inherit;
+    opacity: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+
+
 
 .login_button_container {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    width: 80%;
+    margin: auto;
 
     .login_button {
         background: #222034;
         color: #b2acb4;
         box-shadow: 0 1px 0 #333333;
         border-radius: 5px;
+        height: 3em;
+        align-self: center;
+        text-align: center;
+        width: 35%;
     }
 
-    .login_button_input {
-        background: #222034;
-        color: #b2acb4;
-        box-shadow: 0 1px 0 #333333;
-        border-radius: 5px;
-    }
+    // .login_button_input {
+    //     background: #222034;
+    //     color: #b2acb4;
+    //     box-shadow: 0 1px 0 #333333;
+    //     border-radius: 5px;
+    // }
 }
 
 .user_type_selection_options{

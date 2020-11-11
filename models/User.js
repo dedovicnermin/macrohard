@@ -39,7 +39,7 @@ const User = db.define('user', {
     },
     user_img: {
         type: DataTypes.STRING(50),
-        defaultValue: 'default_img.jpg'
+        defaultValue: 'default_img.png'
     }
 }, {
     tableName: 'users',
