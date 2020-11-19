@@ -1,0 +1,24 @@
+.settingsPage {
+    position: relative;
+    top: 3%;
+    left: 6%;
+    width: 90%;
+    height: 80vh;
+    @include boxStyle;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#settings-page-title {
+    display: inline-block;
+    font-size: 5rem;
+    color: gold;
+    position: relative;
+    left: 44%;
+    top: 3%;
+
+}
