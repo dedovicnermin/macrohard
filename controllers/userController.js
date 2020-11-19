@@ -303,6 +303,45 @@ userRouter.post('/:projectId/editproj', (req, res) => {
 
 
 
+//////////////////////////USER SETTINGS PAGE//////////////////////
+
+userRouter.get('/:userId/settings', (req, res) => {
+    res.render('settingsPage', {userId: req.params.userId});
+});
+
+userRouter.post('/:userId/settings', async (req, res) => {
+    try {
+        await User.destroy({
+            where: {user_id: req.params.userId}
+        });
+        res.render('loginPage');
+    } catch (error) {
+        res.render('error');
+    }
+})
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //////////////////////////PROJECT MEMBERS PAGE//////////////////////

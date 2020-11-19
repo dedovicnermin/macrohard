@@ -1,0 +1,35 @@
+<%- include('partials/singlenav', {userId})  %> 
+
+<div id="settings-page-title" style="margin: 0 auto">User Settings</div>
+<div class="settingsPage">
+    <a href="#" data-popup-target="#deleteAccount" class="btn btn__xlarge" style="font-size: 2.5rem; width: 50%; border: 2px solid black;">DELETE ACCOUNT</a>
+</div>
+
+
+
+
+<div class="popup" id="deleteAccount">
+    <div class="popup__header">
+        <div class="popup__header-title">Confim the Removal of Account:</div>
+        <button data-close-button class="popup__header-close-button">&times;</button>
+    </div>
+
+    <div class="popup__body">
+        <form action="/user/<%= userId %>/settings" method="POST">
+            <fieldset>
+                <label for="removeSelfConfimation"> Click to Confirm:
+                    <input type="submit" name="removeSelfConfirmation" value="✓" class="btn btn__small" style="margin: 0 auto; font-size: larger; margin-top: 2rem;">
+                </label>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+
+<div id="overlay"></div>
+<script src="/js/popup.js"></script>
