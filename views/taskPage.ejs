@@ -84,7 +84,7 @@
             <a data-popup-target="#compNotComp" class="btn btn__xlarge" style="font-size: 2rem; border-radius: 2rem; text-align: center;">Complete / Not Complete</a>
         <% } %>
 
-        <% if (isFaculty && task.taskApproval == "FALSE") {  %>
+        <% if (isFaculty && task.taskApproval == "FALSE" && task.taskStatus == 'Complete') {  %>
             <a data-popup-target="#approveTask" class="btn btn__medium" style="font-size: 2rem; border-radius: 2rem; text-align: center;">Approve</a>
         <% } %>
         

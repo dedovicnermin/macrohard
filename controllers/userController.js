@@ -969,7 +969,6 @@ const getTaskInfo = async (id, userId) => {
             });
         }
         await mI();
-
         
         return {
             taskId: task.task_id,
@@ -1137,7 +1136,7 @@ userRouter.post('/:userId/:projId/:groupId/:taskId/submitreview', async (req, re
                     attributes: ['count']
                 });
 
-                if (checkTenthTask && checkTenthTask.count == 0) {
+                if (checkTenthTask && checkTenthTask.count == 9) {
                     await UserBadge.update(
                         {
                             count: 1
