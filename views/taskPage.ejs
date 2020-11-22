@@ -58,7 +58,7 @@
     <div class="taskPage__taskInfo">
         <h3 id="taskPage-taskinfo-title">Task Description</h3>
         <div class="taskPage__taskInfo--container">
-            <div id="taskDescription">
+            <div id="taskDescription" style="white-space: pre-line;"> 
                 <%= task.taskDescription %>
             </div>
         </div>
@@ -70,20 +70,21 @@
 
     <div class="taskPage__footer">
         
-        <% if (task.userInTask) { %>
+        <% if (task.userInTask && !isFaculty) { %>
             <a data-popup-target="#removeMemberFromTask" class="btn btn__small" style="border-radius: 50%; text-align: center; font-size: 2rem;">&minus;</a>
-        <% } else if (!task.userInTask) { %>
+        <% } else if (!task.userInTask && !isFaculty) { %>
             <a data-popup-target="#addMemberToTask" class="btn btn__small" style="border-radius: 50%; text-align: center; font-size: 2rem;">&plus;</a>
         <% } %>
         
-        <% if (task.taskApproval == "TRUE") { %>
+        <% if (task.taskApproval == "TRUE" && !isFaculty && task.memberInfo.length != 1) { %>
             <a data-popup-target="#reviewMembers" class="btn btn__xlarge" style="font-size: 2rem; border-radius: 2rem; text-align: center;">Review Members</a>
         <% } %>
         
-        
-        <a data-popup-target="#compNotComp" class="btn btn__xlarge" style="font-size: 2rem; border-radius: 2rem; text-align: center;">Complete / Not Complete</a>
+        <% if (task.taskApproval == "FALSE") { %>
+            <a data-popup-target="#compNotComp" class="btn btn__xlarge" style="font-size: 2rem; border-radius: 2rem; text-align: center;">Complete / Not Complete</a>
+        <% } %>
 
-        <% if (isFaculty) {  %>
+        <% if (isFaculty && task.taskApproval == "FALSE") {  %>
             <a data-popup-target="#approveTask" class="btn btn__medium" style="font-size: 2rem; border-radius: 2rem; text-align: center;">Approve</a>
         <% } %>
         
@@ -103,7 +104,7 @@
     </div>
     <div class="popup__body">
         <form action="/user/<%= userId %>/<%= projId %>/<%= groupId %>/<%= taskId %>/approvetask" method="POST">
-            <fieldset>
+            <fieldset style="font-size: 1.8rem;">
                 <label for="taskScore">Provide Score: </label>
                 <div class="review" style="margin: 1.5rem 0;">
                     <label style="margin-left: 1rem;">1
@@ -124,7 +125,7 @@
                 </div>
 
                 <label for="removeSelfConfimation" style="margin: 1.5rem 0;"> Click to Confirm:
-                    <input type="submit" name="approveReview" value="✓" class="btn btn__small" style="margin: 0 auto; font-size: larger;">
+                    <input type="submit" name="approveReview" value="✓" class="btn btn__small" style="margin: 0 auto; font-size: xx-large; padding: 0rem 1rem; margin-top: 1rem;">
                 </label>
             </fieldset>
         </form>
@@ -141,12 +142,15 @@
     <div class="popup__body">
         <form action="/user/<%= userId %>/<%= projId %>/<%= groupId %>/<%= taskId %>/submitreview" method="POST">
             <input type="hidden" name="numReviews" value="<%= task.memberInfo.length %>">
+            <% if (task.memberInfo.length == 1) { %>
+                <label>Unfair to review yourself :(</label>
+            <% } %>
             <% task.memberInfo.forEach(member => { %>
                 <% if (member.memberId != userId) { %>
                  
                 
-                <fieldset id="<%= member.memberName %>" style="border: 1px solid black; margin: 2rem 0; width: 50rem; height: 10rem;" name="<%= member.memberName %>" >
-                    <label style="margin-bottom: 1.5rem; font-weight: bold; border-bottom: 1px solid black;"><%= member.memberName %> </label>
+                <fieldset id="<%= member.memberName %>" style="border: 1px solid black; margin: 2rem 0; width: 50rem;" name="<%= member.memberName %>" >
+                    <label style="font-weight: bold; border-bottom: 1px solid black;"><%= member.memberName %> </label>
                     <div class="review">
                         <input type="hidden" name="userId" value="<%= member.memberId %>">
                         <label style="margin-left: 1rem;">1
@@ -165,20 +169,23 @@
                             <input type="radio" value="5" name="<%= member.memberId %>">
                         </label>
                         <label for="badgeAward" style="margin-right: 1rem;">Badge
-                            <select name="badgeAward" id="badgeAward" style="width: 10rem; height: 3.5rem; font-size: 1.5rem; background-color: white;">
+                            <select name="<%= member.memberId %>" id="badgeAward" style="width: 11rem; height: 3.5rem; font-size: 2rem; background-color: white;">
                                 <option value="none" selected>No Badge</option>
-                                <option value="All-Star Badge:1">All-Star Badge</option>
-                                <option value="Altruistic Badge:2">Altruistic Badge</option>
-                                <option value="Communication Badge:3">Communication Badge</option>
-                                <option value="Hard Worker Badge:5">Hard Worker Badge</option>
-                                <option value="Leadership Badge:6">Leadership Badge</option>
+                                <option value="1">All-Star Badge</option>
+                                <option value="2">Altruistic Badge</option>
+                                <option value="3">Communication Badge</option>
+                                <option value="5">Hard Worker Badge</option>
+                                <option value="6">Leadership Badge</option>
                             </select>
                         </label>
                     </div>
                 </fieldset>
                 <% } %>
             <% }) %>
-            <input type="submit" value="Submit Reviews" class="btn btn__xlarge" id="submitReview " style="margin: 0 auto;">
+            <% if (task.memberInfo.length != 1) { %>
+                <input type="submit" value="Submit Reviews" class="btn btn__xlarge" id="submitReview " style="margin: 0 auto;">
+            <% } %>
+            
         </form>
     </div>
     
@@ -202,11 +209,11 @@
     </div>
 
     <div class="popup__body">
-        <form method="POST" id="fileUploadForm" enctype="multipart/form-data" >
+        <form method="POST" id="fileUploadForm" enctype="multipart/form-data" class="upload-forms" >
             
-                <label for="uploadfile" style="font-size: 2rem;">Upload File:</label>
-                <input type="file" id="uploadfile" placeholder="Upload File" name="uploadfile" style="height: 3rem; font-size: 1.5rem;">
-                <button type="submit" id="btnSubmit" style="width: 28.4rem; font-size: 2rem; margin-top: 1.5rem;" class="btnText">Upload</button>
+                <label for="uploadfile" >Upload File:</label>
+                <input type="file" id="uploadfile" placeholder="Upload File" name="uploadfile">
+                <button type="submit" id="btnSubmit" style="width: 28.4rem; font-size: 2rem; margin-top: 1.5rem; margin: 0 auto;" class="btn btn__medium">Upload</button>
             
             
         </form>
@@ -225,13 +232,13 @@
     <div class="popup__body">
         <form method="POST" id="updateForm">
             <fieldset>
-                <label for="updateTitle" style="font-size: 2.5rem; margin: 0 1.5rem;">Title:
+                <label for="updateTitle">Title:
                 </label>
-                <input type="text" name="updateTitle" id="updateTit" placeholder="Enter update title..." style="width: 100%; height: 4rem; padding: 1.5rem; font-size: 2.4rem;" required pattern="\S(.*\S)?" title="Enter valid title please!">
-                <label for="updateMessage" style="font-size: 2.5rem; margin: 0 1.5rem;">Message:</label>
-                <textarea name="updateMessage" id="updateMsg" cols="30" rows="10" style="width: 100%; padding: 1.5rem; border: 1px solid black; font-size: 2.6rem" required pattern="\S(.*\S)?"></textarea>
+                <input type="text" name="updateTitle" id="updateTit" placeholder="Enter update title..."  required pattern="\S(.*\S)?" title="Enter valid title please!">
+                <label for="updateMessage">Message:</label>
+                <textarea name="updateMessage" id="updateMsg" cols="30" rows="10"  required pattern="\S(.*\S)?"></textarea>
             </fieldset>
-            <input type="submit" name="submitUpdate" value="✓" id="submitUpdate" class="btn btn__small" style="margin: 0 auto;">
+            <input type="submit" name="submitUpdate" value="✓" id="submitUpdate" class="btn btn__small" style="margin: 0 auto; padding: 0rem 1rem; margin-top: 1rem; font-size: xx-large;">
         </form>
     </div>
 </div>
@@ -260,7 +267,7 @@
                 </label>
                 <textarea name="taskDescription" cols="50" rows="30" id="taskDescInput" style="width: 100%; padding: 1.5rem; border: 1px solid black;" required pattern="\S(.*\S)?"></textarea>
             </fieldset>
-            <input type="submit" name="submitTaskEdit" value="✓" id="submitTaskEdit" class="btn btn__small" style="margin: 0 auto;">
+            <input type="submit" name="submitTaskEdit" value="✓" id="submitTaskEdit" class="btn btn__small" style="margin: 0 auto; padding: 0rem 1rem; margin-top: 1rem; font-size: xx-large;">
         </form>
     </div>
 </div>
@@ -277,7 +284,7 @@
         <form action="/user/<%= userId %>/<%= projId %>/<%= groupId %>/<%= taskId %>/changestatus" method="POST">
             <fieldset>
                 <label for="tStatus">Select Status:
-                    <select name="tStatus" id="sel" style="width: 100%; height: 3.5rem; font-size: 1.5rem; background-color: white;">
+                    <select name="tStatus" id="sel" style="width: 100%; height: 3.5rem; background-color: white;">
                         <option value="Complete">Complete</option>
                         <option value="Not Complete">Not Complete</option>
                     </select>
@@ -299,7 +306,7 @@
         <form action="/user/<%= userId %>/<%= projId %>/<%= groupId %>/<%= taskId %>/addself" method="POST" name="addSelfToTask">
             <fieldset>
                 <label for="addSelfConfimation"> Click to Confirm:
-                    <input type="submit" name="addSelfConfirmation" class="btn btn__small" value="✓" style="margin: 0 auto; font-size: larger;">
+                    <input type="submit" name="addSelfConfirmation" class="btn btn__small" value="✓" style="margin: 0 auto; font-size: larger; padding: 0rem 1rem; margin-top: 1rem;">
                 </label>
             </fieldset>
         </form>
@@ -318,7 +325,7 @@
         <form action="/user/<%= userId %>/<%= projId %>/<%= groupId %>/<%= taskId %>/removeself" method="POST" name="removeSelfFromTask">
             <fieldset>
                 <label for="removeSelfConfimation"> Click to Confirm:
-                    <input type="submit" name="removeSelfConfirmation" value="✓" class="btn btn__small" style="margin: 0 auto; font-size: larger;">
+                    <input type="submit" name="removeSelfConfirmation" value="✓" class="btn btn__small" style="margin: 0 auto; font-size: larger; padding: 0rem 1rem; margin-top: 1rem;">
                 </label>
             </fieldset>
         </form>
@@ -356,6 +363,8 @@
             var clean_uri = uri.substring(0, uri.indexOf("?"));
             window.history.replaceState({}, document.title, clean_uri);
         }
+
+        
 
 
         $('body').on('click', '#tInfoEdit', event => {

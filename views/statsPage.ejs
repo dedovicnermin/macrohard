@@ -28,19 +28,22 @@
       <canvas id="project-pie-chart-3" width="400" height="150" style="margin-top: 175px; margin-bottom: 50px;"></canvas>
     </div>
     
-    <div class="tab__content stats-content">
+    <div class="tab__content stats-content" style="height: 100%;">
+      <% if (obj.rows.length > 0) { %>
       <table class="table__stats">
+        
+         
         <caption>Individual Stats - Based on Review Average</caption>
         <thead>
           <% if (!obj.isFaculty) { %>
             <tr>
-              <th scope="col">TaskID</th>
+              <th scope="col">Task Name</th>
               <th scope="col">AVG</th>
             </tr>
           <% } else { %>
             <tr>
-              <th scope="col">UserID</th>
-              <th scope="col">TaskID</th>
+              <th scope="col">User Name</th>
+              <th scope="col">Task Name</th>
               <th scope="col">AVG</th>
             </tr>
           <% } %>
@@ -49,21 +52,25 @@
             <% if (!obj.isFaculty) { %>
               <% obj.rows.forEach(elem => { %>
                 <tr>
-                  <td><%= elem.TASK %></td>
+                  <td><%= elem.TASKNAME %></td>
                   <td><%= elem.AVG %></td>
                 </tr>
+                
               <% }) %>
             <% } else { %> 
               <% obj.rows.forEach(elem => { %>
                 <tr>
-                  <td><%= elem.USER %></td>
-                  <td><%= elem.TASK %></td>
+                  <td><%= elem.USERNAME %></td>
+                  <td><%= elem.TASKNAME %></td>
                   <td><%= elem.AVG %></td>
                 </tr>
               <% }) %>
             <% } %>
           </tbody>
       </table>
+    <% } else { %>
+      <div style="font-size: 5.5rem; text-align: center; margin-top: 2.5rem;">No Reviews!</div>
+    <% } %>
     </div>
           
   </div>
@@ -126,9 +133,14 @@
             title: {
               display: true,
               text: "All Tasks: Done / Tasks Not Done",
-              fontSize: 20,
+              fontSize: 25,
               fontColor: '#000'
             },
+            legend: {
+              labels: {
+                fontSize: 20 
+              }
+            }
           }
         });
         
@@ -146,8 +158,13 @@
             title: {
               display: true,
               text: "Tasks Completed: On Time / Overdue",
-              fontSize: 20,
+              fontSize: 25,
               fontColor: '#000'
+            },
+            legend: {
+              labels: {
+                fontSize: 20 
+              }
             }
           }
         });
@@ -167,8 +184,13 @@
             title: {
               display: true,
               text: "Tasks Not Completed: Not Overdue / Overdue",
-              fontSize: 20,
+              fontSize: 25,
               fontColor: '#000'
+            },
+            legend: {
+              labels: {
+                fontSize: 20 
+              }
             }
           }
         });

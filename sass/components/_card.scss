@@ -3,16 +3,16 @@
     perspective: 150rem;
     -moz-perspective: 150rem;
     position: relative;
-    height: 35rem;
-    width: 30rem;
+    min-height: 35rem;
+    min-width: 30rem;
     display: inline-block;
     margin: 1.5rem;
     
 
     &__side {
         font-size: 2rem;
-        height: 35rem;
-        width: 30rem;
+        min-height: 35rem;
+        min-width: 30rem;
         transition: all .8s ease;
         position: absolute;
         top: 0;
@@ -73,22 +73,22 @@
 
 
     &__heading {
-        font-size: 1.75rem;
+        font-size: 2.25rem;
         font-weight: 500;
         text-transform: uppercase;
         text-decoration: underline;
         text-align: center;
         color: black;
-        width: 75%;
-        padding-top: 2rem;
+        width: 90%;
+        margin-top: 1.5rem;
 
     }
 
 
     &__details { 
-        padding-top: 3rem;
+        margin-top: 2rem;
         ul {
-            font-size: 2rem;
+            // font-size: 2rem;
             list-style: none;
             width: 100%;
             margin: 0 auto;
@@ -97,7 +97,7 @@
 
             li {
                 text-align: center;
-                font-size: 1.5rem;
+                font-size: 2rem;
                 padding: 1rem 0;
                 text-transform: uppercase;
 

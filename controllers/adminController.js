@@ -131,14 +131,19 @@ adminRouter.get('/delete', async (req, res) => {
             raw: true,
             order: [
                 ['user_id', 'ASC']
-            ]
+            ],
+            where: {
+                user_type: {
+                    [sequelize.Op.not]: 'ADMIN'
+                }
+            }
         });
         res.render('admin/deletePage', {projects: projects, users: users});
     } catch (error) {
         console.log(error);
         res.render('error');
     }
-})
+});
 
 
 
