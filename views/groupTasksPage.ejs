@@ -77,15 +77,15 @@
 </section>
 
 <% if (inGroup && !isFaculty) { %>
-    <a href="#" data-popup-target="#removeSelfFromGroup" class="btn btn__medium addRemoveSelfGroup" style="text-align: center; font-size: 2rem; position: absolute; width: 25rem; border-radius: 20rem;">REMOVE SELF</a>
+    <a href="#" data-popup-target="#removeSelfFromGroup" class="btn btn__medium addRemoveSelfGroup" style="text-align: center; font-size: 2.25rem; position: absolute; width: 25rem; border-radius: 20rem;">REMOVE SELF</a>
 <% } else if (!inGroup && !isFaculty) { %>
-    <a href="#" data-popup-target="#addSelfToGroup" class="btn btn__medium addRemoveSelfGroup" style="text-align: center; font-size: 2rem; position: absolute; width: 25rem; border-radius: 20rem;">ADD SELF</a>
+    <a href="#" data-popup-target="#addSelfToGroup" class="btn btn__medium addRemoveSelfGroup" style="text-align: center; font-size: 2.25rem; position: absolute; width: 25rem; border-radius: 20rem;">ADD SELF</a>
 <% } %>
 
 
 
 <% if (inGroup || isFaculty) { %>
-    <a href="#" data-popup-target="#addTask" class="btn btn__large add-task-btn" style="font-size: 2rem;">ADD TASK<span class="html_plus">&plus;</span></a>
+    <a href="#" data-popup-target="#addTask" class="btn btn__large add-task-btn" style="font-size: 2.5rem;">ADD TASK<span class="html_plus">&plus;</span></a>
 <% } %>
 
 
@@ -105,7 +105,7 @@
         <form action="/user/<%= userId %>/<%= projId %>/<%= groupId %>/addself" method="POST">
             <fieldset>
                 <label for="addSelfConfimation"> Click to Confirm:
-                    <input type="submit" name="addSelfConfirmation" class="btn btn__small" value="✓" style="margin: 0 auto; font-size: larger;">
+                    <input type="submit" name="addSelfConfirmation" class="btn btn__small" value="✓" style="margin: 0 auto; font-size: xx-large; padding: 1rem 3rem; margin-top: 1rem; ">
                 </label>
             </fieldset>
         </form>
@@ -125,7 +125,7 @@
         <form action="/user/<%= userId %>/<%= projId %>/<%= groupId %>/removeself" method="POST">
             <fieldset>
                 <label for="removeSelfConfimation"> Click to Confirm:
-                    <input type="submit" name="removeSelfConfirmation" value="✓" class="btn btn__small" style="margin: 0 auto; font-size: larger; width: 5rem; height: 5rem;">
+                    <input type="submit" name="removeSelfConfirmation" value="✓" class="btn btn__small" style="margin: 0 auto; font-size: xx-large; padding: 1rem 3rem; margin-top: 1rem;">
                 </label>
             </fieldset>
         </form>
@@ -136,7 +136,7 @@
 <!-- removeGroup popup -->
 <div class="popup" id="removeGroup">
     <div class="popup__header">
-        <div class="popup__header-title">Confim removing Group:</div>
+        <div class="popup__header-title">Confim Removing Group:</div>
         <button data-close-button class="popup__header-close-button">&times;</button>
     </div>
 
@@ -144,7 +144,7 @@
         <form action="/user/<%= userId %>/<%= projId %>/<%= groupId %>/removegroup" method="POST">
             <fieldset>
                 <label for="removeGroupConfimation"> Click to Confirm:
-                    <input type="submit" name="removeGroupConfirmation" value="✓" class="btn btn__small" style="margin: 0 auto; font-size: larger; width: 5rem; height: 5rem;">
+                    <input type="submit" name="removeGroupConfirmation" value="✓" class="btn btn__small" style="margin: 0 auto; font-size: xx-large; padding: 1rem 3rem; margin-top: 1rem; ">
                 </label>
             </fieldset>
         </form>
@@ -167,13 +167,13 @@
                 </label>
 
                 <label for="dueDate" id="date-input-flex">Due Date:
-                    <input type="date" name="dueDate" id  style="width: 100%; padding: 1.5rem;" required>
+                    <input type="date" name="dueDate" id  style="width: 100%; padding: 1.5rem; background-color: white;" required>
                 </label>
 
                 <label for="taskDescription">Task Description:   
                 </label>
-                <textarea name="taskDescription" cols="50" rows="30" style="width: 100%; padding: 1.5rem; border: 1px solid black;" required pattern="\S(.*\S)?"></textarea>
-                <input type="submit" name="submit" value="ADD" id="submit" class="btn btn__medium" style="border-radius: 10rem; font-size: 1.5rem;">
+                <textarea name="taskDescription" cols="50" rows="20" style="width: 100%; padding: 1.5rem; border: 1px solid black;" required pattern="\S(.*\S)?"></textarea>
+                <input type="submit" name="submit" value="ADD" id="submit" class="btn btn__medium" >
             </fieldset>
 
             

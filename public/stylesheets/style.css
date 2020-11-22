@@ -7,25 +7,28 @@
   border-radius: 10rem; }
 
 .btn__medium {
-  width: 10rem;
+  width: 18rem;
   padding: .5rem .5rem;
   background-color: gold;
   color: black;
-  border: 2px solid black; }
+  border: 2px solid black;
+  border-radius: 2rem; }
 
 .btn__large {
-  width: 15rem;
+  width: 20rem;
   padding: 2rem 2rem;
   background-color: gold;
   color: black;
-  border: 2px solid black; }
+  border: 2px solid black;
+  border-radius: 5rem; }
 
 .btn__xlarge {
   width: 40rem;
-  padding: 1rem 1rem;
+  padding: .5rem 1rem;
   background-color: gold;
   color: black;
-  border: 2px solid black; }
+  border: 2px solid black;
+  border-radius: 2rem; }
 
 .btn:link, .btn:visited {
   text-transform: none;
@@ -344,34 +347,50 @@ label, input {
 
 input {
   border: 1px solid black;
-  margin: .5rem 0; }
+  margin: 1rem 0;
+  font-size: 2.4rem;
+  width: 100%;
+  min-height: 4rem;
+  padding: 1rem; }
 
 label {
-  font-size: 2rem;
-  margin: .5rem 0; }
+  font-size: 2.5rem;
+  margin: 1rem 0; }
+
+textarea {
+  padding: 1.5rem;
+  font-size: 2.6rem;
+  border: 1px solid black;
+  margin: 1rem 0; }
 
 select {
   border: 1px solid black;
   text-align: center;
   line-height: 24px;
-  margin: 5px 0; }
+  margin: 5px 0;
+  font-size: 2.4rem; }
 
 #submit {
   display: block;
   margin: 10px auto; }
 
+.upload-forms {
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+
 .card {
   perspective: 150rem;
   -moz-perspective: 150rem;
   position: relative;
-  height: 35rem;
-  width: 30rem;
+  min-height: 35rem;
+  min-width: 30rem;
   display: inline-block;
   margin: 1.5rem; }
   .card__side {
     font-size: 2rem;
-    height: 35rem;
-    width: 30rem;
+    min-height: 35rem;
+    min-width: 30rem;
     transition: all .8s ease;
     position: absolute;
     top: 0;
@@ -406,18 +425,17 @@ select {
     background-image: url("../images/projectIcons/projDefault.png");
     border-bottom: 2px solid black; }
   .card__heading {
-    font-size: 1.75rem;
+    font-size: 2.25rem;
     font-weight: 500;
     text-transform: uppercase;
     text-decoration: underline;
     text-align: center;
     color: black;
-    width: 75%;
-    padding-top: 2rem; }
+    width: 90%;
+    margin-top: 1.5rem; }
   .card__details {
-    padding-top: 3rem; }
+    margin-top: 2rem; }
     .card__details ul {
-      font-size: 2rem;
       list-style: none;
       width: 100%;
       margin: 0 auto;
@@ -425,7 +443,7 @@ select {
       padding-left: 0; }
       .card__details ul li {
         text-align: center;
-        font-size: 1.5rem;
+        font-size: 2rem;
         padding: 1rem 0;
         text-transform: uppercase; }
         .card__details ul li:not(:last-child) {
@@ -563,14 +581,16 @@ body {
   background-color: #DDE6F5;
   border: 4px solid black;
   border-radius: 5px;
-  opacity: 1; }
+  opacity: 1;
+  height: 100%; }
 
 .stats-container {
-  width: 80%;
+  width: 85%;
   position: relative;
   left: 5%;
   top: 5%;
-  margin: 0 auto; }
+  margin: 0 auto;
+  height: 85%; }
 
 tr td {
   width: 50rem;
@@ -578,7 +598,7 @@ tr td {
 
 .stats-content {
   min-height: 800px;
-  max-height: 800px;
+  max-height: 925px;
   overflow: scroll; }
 
 .top-line {
@@ -604,10 +624,10 @@ body {
   align-items: center;
   justify-content: space-evenly;
   flex-wrap: wrap;
-  width: 85%;
-  height: 75vh;
+  width: 90%;
+  height: 80vh;
   position: absolute;
-  left: 12%;
+  left: 6%;
   top: 8%;
   border: 1px solid black;
   background-color: #9faec9;
@@ -628,7 +648,7 @@ body {
 .add-proj-btn {
   position: absolute;
   top: 90%;
-  left: 35%;
+  left: 33%;
   width: 40%;
   font-size: 2.5rem; }
 
@@ -726,7 +746,7 @@ body {
     width: 7rem; }
   .badge__des {
     text-align: center;
-    margin-top: 2.5rem;
+    margin-top: 3.5rem;
     margin-bottom: 1rem; }
   .badge__count {
     margin-left: 1rem; }
@@ -815,10 +835,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  left: 14%;
-  top: 15%;
-  width: 80%;
-  height: 70%;
+  left: 12%;
+  top: 8%;
+  width: 85%;
+  height: 75vh;
   background-color: #DDE6F5;
   border: 4px solid black;
   border-radius: 5px;
@@ -851,7 +871,7 @@ body {
 #tasks-page-title {
   font-size: 4rem;
   position: absolute;
-  top: 10%;
+  top: 4%;
   left: 16%;
   color: gold; }
 
@@ -1136,10 +1156,10 @@ body {
   margin-top: 7rem; }
 
 #taskDescription {
-  margin: 1rem; }
+  margin: 1rem;
+  font-size: 2.5rem; }
 
 .review {
-  height: 4rem;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -1495,8 +1515,8 @@ body {
   font-size: 15px;
   position: absolute;
   bottom: 0px;
-  left: 2px;
-  top: 2px;
+  left: 4px;
+  top: 10px;
   width: 100%;
   height: 100%;
   pointer-events: none;

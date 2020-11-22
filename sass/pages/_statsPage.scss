@@ -4,15 +4,17 @@
 
 #statsPage__tab-wrap {
     @include boxStyle;
+    height: 100%;
 }
 
 
 .stats-container {
-    width: 80%;
+    width: 85%;
     position: relative;
     left: 5%;
     top: 5%;
     margin: 0 auto;
+    height: 85%;
 }
 
 
@@ -25,7 +27,7 @@ tr td {
 
 .stats-content {
     min-height: 800px;
-    max-height: 800px;
+    max-height: 925px;
     overflow: scroll;
 }
 

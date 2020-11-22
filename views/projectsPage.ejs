@@ -1,6 +1,9 @@
 <%- include('partials/singleNav', {userId})  %> 
 <h1 id="projects-page-title">Assigned Projects</h1>
 <div class="projects-container">
+    <% if (obj.length == 0) { %>
+        <div style="font-size: 4rem; font-weight: bold;">NO PROJECTS UNDER THIS ACCOUNT</div>
+    <% } %>
     <% obj.forEach(proj => { %>
         <div class="card">
             <div class="card__side card__side--front">
@@ -38,16 +41,16 @@
         <form action="/user/<%= userId %>/projects/addproject" method="POST">
             <fieldset>
                 <label for="projName">Project Name:
-                    <input type="text" name="projName" placeholder="Enter Project Name:" style="width: 100%;  height: 3.5rem; padding: 1.5rem;" required pattern="\S(.*\S)?">
+                    <input type="text" name="projName"  style="padding: 1.5rem;" required pattern="\S(.*\S)?">
                 </label>
 
                 <label for="dueDate" >Due Date:
-                    <input type="date" name="dueDate" id  style="width: 100%; padding: 1.5rem; background-color: white;" required>
+                    <input type="date" name="dueDate" id  style="padding: 1.5rem; background-color: white;" required>
                 </label>
                 
                 <label for="projDescription">Project Description:   
                 </label>
-                <textarea name="projDescription" cols="50" rows="30" style="width: 100%; padding: 1.5rem; border: 1px solid black;" required pattern="\S(.*\S)?"></textarea>
+                <textarea name="projDescription" cols="60" rows="20" style="width: 100%; padding: 1.5rem; border: 1px solid black;" required pattern="\S(.*\S)?"></textarea>
 
 
                 

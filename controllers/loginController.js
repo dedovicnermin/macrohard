@@ -12,6 +12,7 @@ exports.login = (req, res) => {
         attributes: ['user_type', 'user_email', 'user_password', "user_id"]
     }).then(user => {
         if (user && user.user_password == req.body.password) {
+            if (user.user_type == "ADMIN") res.redirect('/admin/home');
             res.redirect(`/user/${user.user_id}/projects`);
         } else {
             res.render('loginPage', {loginError: "Incorrect email/password. Please try again."});
@@ -55,6 +56,6 @@ exports.createAccount = async (req, res) => {
         
     } catch (error) {
         console.log(error);
-        res.render('error');
+        res.redirect('/createaccount');
     }
 }

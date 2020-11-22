@@ -40,7 +40,7 @@ db.authenticate()
 
 
 app.get("/", (req, res) => {
-    res.send("Hello, World.");
+    res.redirect('/login');
 });
 
 

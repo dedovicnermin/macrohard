@@ -485,7 +485,7 @@ const removeMemberFromProject = async (email, projId) => {
     });
 
     await Project.update({
-        proj_membercount: count.proj_membercount - 1
+        proj_membercount: (count.proj_membercount - 1)
     }, {where: {proj_id: projId}});
 }
 
@@ -567,7 +567,7 @@ userRouter.get('/:userEmail/userexist', async (req, res) => {
 // get groups for this project
 userRouter.get('/:userId/:projectId/groups', async (req, res) => {
     try {
-        const data = await Project.findOne({
+        let data = await Project.findOne({
             where: {proj_id: req.params.projectId},
             include: {
                 model: Group,
@@ -580,11 +580,22 @@ userRouter.get('/:userId/:projectId/groups', async (req, res) => {
                 ]
             }
         });
+        
+        //on fresh creation of project
+        if (data == null) {
+            const p = await Project.findOne({where: {proj_id: req.params.projectId}, raw: true, attributes: ['proj_name']});
+            data = {};
+            data.groups = [];
+            data.proj_id = req.params.projectId;
+            data.proj_name = p.proj_name;
+        }
+
         const {groups, proj_id, proj_name} = data;
         const obj = {proj_id: proj_id, proj_name, user_id: req.params.userId, groups: groups}
 
         res.render('groupsPage', {obj, userId: req.params.userId, projId: req.params.projectId});
     } catch (err) {
+        console.log(err);
         res.render('error', {err});
     }
 });
@@ -787,6 +798,7 @@ userRouter.post('/:userId/:projId/:groupId/addself', async (req, res) => {
             user_id: req.params.userId,
             group_id: req.params.groupId
         });
+        
         await Group.update(
             {
                 total_members: sequelize.literal('total_members + 1')
@@ -1064,18 +1076,23 @@ userRouter.get('/:userId/:projId/:groupId/:taskId/:taskName', async (req, res) =
 userRouter.post('/:userId/:projId/:groupId/:taskId/submitreview', async (req, res) => {
     
     try {
+
         const keys = Object.keys(req.body);
         const values = Object.values(req.body);
-        const numReviews = parseInt(req.body.numReviews);
-        const badgesChosen = req.body.badgeAward;
+        const numReviews = parseInt(req.body.numReviews) - 1;
+        
         
         const forLoop = async _ => {
             for (let i = 0; i < numReviews; i++) {
-                //enter review
-                let badgeID = (badgesChosen[i] == 'none') ? null : badgesChosen[i].toString().split(':')[1]
+                let userId = keys[i];
+                let userScore = parseInt(values[i][0]);
+                let badgeID = (values[i][1] == 'none') ? null : parseInt(values[i][1]);
+
+                
+                
                 await Review.create({
-                    user_id: keys[i],
-                    review_score: values[i],
+                    user_id: userId,
+                    review_score: userScore,
                     task_id: req.params.taskId,
                     badge_id: badgeID,
                     proj_id: req.params.projId
@@ -1085,7 +1102,7 @@ userRouter.post('/:userId/:projId/:groupId/:taskId/submitreview', async (req, re
                 //update user_badge count
                 if (badgeID != null) {
                     const bCount = await UserBadge.findOne({
-                        where: {user_id: req.params.userId, badge_id: badgeID},
+                        where: {user_id: userId, badge_id: badgeID},
                         attributes: ['count']
                     });
                     await UserBadge.update(
@@ -1093,16 +1110,49 @@ userRouter.post('/:userId/:projId/:groupId/:taskId/submitreview', async (req, re
                             count: bCount.count + 1
                         },
                         {
-                            where: {user_id: keys[i], badge_id: badgeID}
+                            where: {user_id: userId, badge_id: badgeID}
                         }
                     );
                 }
-    
+
+
+                //updating first or tenth badge
+                const checkFirstTask = await UserBadge.findOne({
+                    where: {badge_id: 4, user_id: userId},
+                    attributes: ['count']
+                });
+
+                if (checkFirstTask && checkFirstTask.count == 0) {
+                    await UserBadge.update(
+                        {
+                            count: 1
+                        },
+                        {
+                            where: {user_id: userId, badge_id: 4}
+                        }
+                    );
+                }
+                const checkTenthTask = await UserBadge.findOne({
+                    where: {badge_id: 7, user_id: userId},
+                    attributes: ['count']
+                });
+
+                if (checkTenthTask && checkTenthTask.count == 0) {
+                    await UserBadge.update(
+                        {
+                            count: 1
+                        },
+                        {
+                            where: {user_id: userId, badge_id: 7}
+                        }
+                    );
+                }
                 
+          
     
                 //update user avg contribution
                 const numReviews = await Review.findAll({
-                    where: {user_id: keys[i]},
+                    where: {user_id: userId},
                     attributes: [
                         [sequelize.fn('sum', sequelize.col('review_score')), 'review_sum'],
                         [sequelize.fn('count', sequelize.col('review_score')), 'review_count']
@@ -1119,7 +1169,7 @@ userRouter.post('/:userId/:projId/:groupId/:taskId/submitreview', async (req, re
                         avg_contribution: newCont
                     },
                     {
-                        where: {user_id: keys[i]}
+                        where: {user_id: userId}
                     }
                 );    
             }
@@ -1299,7 +1349,6 @@ userRouter.get('/:userId/:projectId/stats', async (req, res) => {
 
 userRouter.get('/:userId/:projectId/stats/getstats', async (req, res) => {
     try {
-        console.log("Server side: gathering info about groups/tasks belonging to project...");
         const obj = await gatherTaskInfo(req.params.projectId);
         res.json(obj);
     } catch (err) {
@@ -1382,6 +1431,43 @@ const gatherTableInfo = async (projID, userID) => {
             })
             .catch(err => console.log(err));
         }
+        
+
+        const facultyLoop = async (list) => {
+            for (let i = 0; i < list.length; i++) {
+                const u_name = parseInt(list[i].USER);
+                const t_name = parseInt(list[i].TASK);
+                const userName = await User.findOne({
+                    where: {user_id: u_name},
+                    raw: true
+                });
+                const taskName = await Task.findOne({
+                    where: {task_id: t_name},
+                    raw: true
+                });
+                list[i].USERNAME = userName.user_name;
+                list[i].TASKNAME = taskName.task_name;
+            }
+        }
+
+        const userLoop = async (list) => {
+            for (let i = 0; i < list.length; i++) {
+                const t_name = parseInt(list[i].TASK);
+                const taskName = await Task.findOne({
+                    where: {task_id: t_name},
+                    raw: true
+                });
+                list[i].TASKNAME = taskName.task_name;
+            }
+        }
+
+
+        if (isFaculty) {
+            await facultyLoop(a);
+            a.sort(sortUserNames);
+        } else {
+            await userLoop(a);
+        }        
 
         return {rows:a, isFaculty: isFaculty};
 
@@ -1395,7 +1481,11 @@ const gatherTableInfo = async (projID, userID) => {
     }
 };
 
-
+const sortUserNames = (a, b) => {
+    if (a.USERNAME < b.USERNAME) return -1;
+    if (a.USERNAME > b.USERNAME) return 1;
+    return 0;
+}
 
 const gatherTaskInfo = async (projID) => {
     try {

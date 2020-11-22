@@ -5,7 +5,7 @@
     <div class="projPage__details">
         <h3 class="proj-page-identifier" id="projname"><%= proj.projName %> Details</h3>
         <div class="projPage__details--content">
-            <p style="margin-bottom: 3rem;" id="projDesc"><%= proj.description %></p>
+            <p style="margin-bottom: 3rem; font-size: 2.25rem; white-space: pre-wrap;" id="projDesc"><%= proj.description %></p>
         </div>
         
     </div>
@@ -54,10 +54,10 @@
     </div>
 
     <div class="popup__body">
-        <form method="post" id="fileUploadForm" enctype="multipart/form-data" action="" >
-                <label for="uploadfile" style="font-size: 2rem;">Upload File:</label>
-                <input type="file" id="uploadfile" placeholder="Upload File" name="uploadfile" style="height: 3rem; font-size: 1.5rem;">
-                <button type="submit" id="btnSubmit" style="width: 28.4rem; font-size: 2rem; margin-top: 1.5rem;" class="btnText">Upload</button>
+        <form method="post" id="fileUploadForm" enctype="multipart/form-data" action="" class="upload-forms">
+                <label for="uploadfile">Upload File:</label>
+                <input type="file" id="uploadfile" placeholder="Upload File" name="uploadfile" >
+                <button type="submit" id="btnSubmit" style="width: 28.4rem; font-size: 2rem; margin-top: 1.5rem;" class="btn btn__medium">Upload</button>
         </form>
     </div>
 </div>

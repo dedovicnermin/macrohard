@@ -97,11 +97,22 @@ label, input {
 
 input {
     border: 1px solid black;
-    margin: .5rem 0;
+    margin: 1rem 0;
+    font-size: 2.4rem;
+    width: 100%;
+    min-height: 4rem;
+    padding: 1rem;
 }
 label {
-    font-size: 2rem;
-    margin: .5rem 0;
+    font-size: 2.5rem;
+    margin: 1rem 0;
+}
+
+textarea {
+    padding: 1.5rem;
+    font-size: 2.6rem;
+    border: 1px solid black;
+    margin: 1rem 0;
 }
 
 select {
@@ -109,9 +120,17 @@ select {
     text-align: center;
     line-height: 24px;
     margin: 5px 0;
+    font-size: 2.4rem;
 }
 
 #submit {
     display: block;
     margin: 10px auto;
+}
+
+.upload-forms {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
 }

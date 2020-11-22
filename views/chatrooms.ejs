@@ -3,6 +3,9 @@
 <div id="chatroom-page-title" style="margin: 0 auto">Chatrooms</div>
 <div class="chatroom-page">
 <div class="room-container">
+    <% if (chatrooms.length == 0) { %>
+        <div style="font-size: 5rem; margin-top: 25%;">NO CHATROOMS - TRY CREATING ONE!</div>
+    <% } %>
     <% chatrooms.forEach(chat => { %>
         <div class="chatroom">
             <input type="hidden" value="<%= chat.cId %>">
@@ -41,8 +44,8 @@
             <label for="emails" style="font-size: 2.5rem; margin: 0 1.5rem;">Entered Emails:</label>
             <textarea name="emails" id="emails" cols="30" rows="10" style="width: 100%; padding: 1.5rem; border: 1px solid black; font-size: 2.2rem" readonly></textarea>
             
-            <input type="button" style="width: 100%; height: 2rem; font-size: 1.5rem;" onclick="reset()" value="Reset">
-            <input type="submit" style="width: 100%; height: 2rem; font-size: 1.5rem;">
+            <input type="button" style="width: 100%; height: 2rem;" onclick="reset()" value="Reset" class="btn btn__medium">
+            <input type="submit" style="width: 100%; height: 2rem;" class="btn btn__medium">
                 
             
         </form>

@@ -11,27 +11,30 @@
     }
     
     &__medium {
-        width: 10rem;
+        width: 18rem;
         padding: .5rem .5rem;
         background-color: gold;
         color: black;
         border: 2px solid black;
+        border-radius: 2rem;
     }
     
     &__large {
-        width: 15rem;
+        width: 20rem;
         padding: 2rem 2rem;
         background-color: gold;
         color: black;
         border: 2px solid black;
+        border-radius: 5rem;
     }
     
     &__xlarge {
         width: 40rem;
-        padding: 1rem 1rem;
+        padding: .5rem 1rem;
         background-color: gold;
         color: black;
         border: 2px solid black;
+        border-radius: 2rem;
     }
     
     &:link, &:visited {
@@ -106,6 +109,8 @@
     }
     
 }
+
+
 
 
 
